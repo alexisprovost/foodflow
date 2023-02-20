@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaWallet, FaUserAlt } from "react-icons/fa";
+import NavCart from "./Nav/NavCart";
 
 const Nav = () => {
 	return (
@@ -12,12 +13,17 @@ const Nav = () => {
 			<ul>
 				<li>
 					<Link to="/dashboard">
-						<FaWallet />
+						<FaWallet className="icon" />
 					</Link>
 				</li>
 				<li>
 					<Link to="/login">
-						<FaUserAlt />
+						<FaUserAlt className="icon" />
+					</Link>
+				</li>
+				<li>
+					<Link to="/cart">
+						<NavCart />
 					</Link>
 				</li>
 			</ul>
