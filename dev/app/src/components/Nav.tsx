@@ -9,6 +9,11 @@ const Nav = () => {
 						Accueil
 					</Link>
 				</li>
+				<li>
+					<Link to="/login">
+						Login
+					</Link>
+				</li>
 			</ul>
 		</nav>
 	);
