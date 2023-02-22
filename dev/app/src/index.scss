@@ -1,7 +1,12 @@
+/* Tailwind */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap');
+
+/* Colors */
 :root {
 	--primary: #263238;
 	--secondary: #314549;
@@ -22,4 +27,8 @@
 
 nav {
 	background-color: var(--nav-bg);
+
+	.branding {
+		font-family: 'Fugaz One', cursive;
+	}
 }
