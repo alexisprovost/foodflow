@@ -1,0 +1,60 @@
+CREATE TABLE "user" (
+  "id" serial PRIMARY KEY,
+  "firstname" varchar(40),
+  "name" varchar(40),
+  "email" varchar(120),
+  "date_of_birth" DATE,
+  "role" INT
+);
+
+CREATE TABLE "wallet" (
+  "id" serial PRIMARY KEY,
+  "balance" INT,
+  "owner" INT
+);
+
+CREATE TABLE "transaction" (
+  "id" serial PRIMARY KEY,
+  "date" DATE,
+  "user_id" INT
+);
+
+CREATE TABLE "product" (
+  "id" serial PRIMARY KEY,
+  "barcode" INT,
+  "name" varchar(30),
+  "added_date" DATE,
+  "quantity" INT,
+  "category" INT,
+  "format" varchar(30),
+  "url_image" TEXT
+);
+
+CREATE TABLE "category" (
+  "id" serial PRIMARY KEY,
+  "name" varchar(20)
+);
+
+CREATE TABLE "price" (
+  "id" serial PRIMARY KEY,
+  "product_barcode" INT,
+  "effective_date" DATE,
+  "value" NUMERIC(4,2)
+);
+
+CREATE TABLE "product_transaction" (
+  "id_product" INT,
+  "id_transaction" INT
+);
+
+ALTER TABLE "product" ADD FOREIGN KEY ("category") REFERENCES "category" ("id");
+
+ALTER TABLE "product_transaction" ADD FOREIGN KEY ("id_product") REFERENCES "product" ("id");
+
+ALTER TABLE "product_transaction" ADD FOREIGN KEY ("id_transaction") REFERENCES "transaction" ("id");
+
+ALTER TABLE "user" ADD FOREIGN KEY ("id") REFERENCES "transaction" ("user_id");
+
+ALTER TABLE "wallet" ADD FOREIGN KEY ("owner") REFERENCES "user" ("id");
+
+ALTER TABLE "price" ADD FOREIGN KEY ("product_barcode") REFERENCES "product" ("barcode");
