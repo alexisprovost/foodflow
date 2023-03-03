@@ -1,3 +1,4 @@
+import Holder from "../components/pageHolder/Holder";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const Home = () => {
@@ -5,7 +6,7 @@ const Home = () => {
 
 	return (
 		<div className="home-page">
-			<h1>Accueil</h1>
+			<Holder />
 		</div>
 	);
 };
