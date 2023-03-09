@@ -1,38 +1,15 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap');
+
 /* Tailwind */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap');
 
-/* Colors */
-:root {
-	--primary: #263238;
-	--secondary: #314549;
-	--nav-bg: #1e272c;
-	--primary-text: #ffffff;
-	--secondary-text: #949494;
-	--primary-button: #26373a;
-	--secondary-button: #3e747b;
-	--danger: #ff6969;
-	--success: #8ce790;
-	--warning: #f0ce7e;
-}
-
-.app {
-	background-color: var(--primary);
-	color: var(--primary-text);
-}
-
-nav {
-	background-color: var(--nav-bg);
-
-	.branding {
-		font-family: 'Fugaz One', cursive;
-	}
-}
-
-.holder {
-	background-color: var(--secondary);
+a,
+a:visited
+{
+	color: inherit;
+	text-decoration: none;
 }

@@ -9,7 +9,7 @@ import NotFound from "./views/NotFound";
 
 function App() {
 	return (
-		<div className="app h-screen w-screen">
+		<div className="bg-primary text-primaryText h-screen w-screen">
 			<div className="h-full w-24 fixed left-0 animate__animated animate__fadeInLeft">
 				<Nav />
 			</div>
