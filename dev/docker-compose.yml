@@ -10,6 +10,8 @@ services:
       POSTGRES_DB: foodflow
     volumes:
       - db-data:/var/lib/postgresql/data
+    networks:
+      - db-network
 
   pgadmin:
     image: dpage/pgadmin4
@@ -21,6 +23,12 @@ services:
       - "8080:80"
     depends_on:
       - db
+    networks:
+      - db-network
+
+networks:
+  db-network:
+    driver: bridge    
 
 volumes:
   db-data:
