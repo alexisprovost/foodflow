@@ -8,6 +8,7 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: Dzu%3IjGW831
       POSTGRES_DB: foodflow
+      PGDATA: /var/lib/postgresql/data
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
