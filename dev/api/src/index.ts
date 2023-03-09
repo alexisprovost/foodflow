@@ -1,12 +1,11 @@
-import express, { Express, Request, Response } from 'express';
+import express from 'express';
+import UserController from './controller/UserController';
 
-const app: Express = express();
+const app = express();
 const port = 3000;
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
-});
+app.use('/users', new UserController().router);
 
 app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+    console.log(`Server running on port ${port}`);
 });
