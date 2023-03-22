@@ -5,8 +5,10 @@ const Home = () => {
 	useDocumentTitle("Accueil");
 
 	return (
-		<div className="home-page">
-			<Holder />
+		<div className="home-page h-full">
+			<section className="p-6 h-full">
+				<Holder />
+			</section>
 		</div>
 	);
 };
