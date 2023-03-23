@@ -7,7 +7,7 @@ module.exports = {
     extend: {
       colors: {
         primary: "#263238",
-        secondary: "#314549",
+        secondary: "#2c4048",
         navBg: "#1e272c",
         primaryText: "#ffffff",
         secondaryText: "#949494",
