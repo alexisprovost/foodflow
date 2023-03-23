@@ -4,11 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const UserController_1 = __importDefault(require("./controller/UserController"));
 const app = (0, express_1.default)();
-const port = process.env.PORT;
-app.get('/', (req, res) => {
-    res.send('Express + TypeScript Server');
-});
+const port = 3000;
+app.use('/users', new UserController_1.default().router);
 app.listen(port, () => {
-    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+    console.log(`Server running on port ${port}`);
 });
