@@ -29,14 +29,14 @@ jobs:
       - name: Build and push API Docker image
         uses: docker/build-push-action@v2
         with:
-          context: ./api
+          context: ./dev/api
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/${{ env.REPO_NAME }}/api:latest
 
       - name: Build and push Vite.js Docker image
         uses: docker/build-push-action@v2
         with:
-          context: ./vite-app
+          context: ./dev/vite-app
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/${{ env.REPO_NAME }}/vite-app:latest
 
