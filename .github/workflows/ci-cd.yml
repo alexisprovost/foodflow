@@ -71,9 +71,13 @@ jobs:
         env:
           HOST: ${{ secrets.DEPLOY_SERVER_HOST }}
           USER: ${{ secrets.DEPLOY_SERVER_USER }}
-          TARGET_DIR: your_target_directory_on_the_server
+          TARGET_DIR: /home
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          git config --global core.sshCommand "ssh -i ${{ env.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no -F /dev/null"
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          git config --global core.sshCommand "ssh -i private_key.pem"
           git remote add deploy ssh://$USER@$HOST/$TARGET_DIR
           git push deploy HEAD:refs/heads/main --force
-          ssh -i ${{ env.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no $USER@$HOST "cd $TARGET_DIR && echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} > .env && echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env && echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env && docker-compose pull && docker-compose up --build -d"
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST "cd $TARGET_DIR && echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} > .env && echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env && echo POSTGRES_DB
+
