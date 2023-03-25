@@ -1,37 +1,36 @@
-version: '3'
+version: "3.9"
 
 services:
-  db:
-    image: postgres
-    restart: always
+  postgres:
+    image: postgres:latest
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: Dzu%3IjGW831
-      POSTGRES_DB: foodflow
-      PGDATA: /var/lib/postgresql/data
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
+    volumes:
+      - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    networks:
-      - db-network
+    restart: unless-stopped
 
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
+  api:
+    build: ./api
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: oqP5@7X1X1&2
-    ports:
-      - "8080:80"
+      DATABASE_URL: postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
+      JWT_SECRET: "fdsiofjdsijfio$%?&sjdisoja"
     depends_on:
-      - db
-    networks:
-      - db-network
+      - postgres
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
 
-networks:
-  db-network:
-    driver: bridge    
+  vite-app:
+    build: ./vite-app
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+    restart: unless-stopped
 
 volumes:
-  db-data:
+  db_data:

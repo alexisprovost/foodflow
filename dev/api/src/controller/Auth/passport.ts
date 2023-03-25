@@ -1,10 +1,9 @@
 import passport from "passport";
 import {Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt';
-import { JWTSECRET } from '../../../config';
 
 const jwtopts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: JWTSECRET,
+    secretOrKey: process.env.JWT_SECRET,
 };
 
 passport.use(
