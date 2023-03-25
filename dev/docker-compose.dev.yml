@@ -14,22 +14,31 @@ services:
     restart: unless-stopped
 
   api:
-    build: ./api
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
     environment:
       DATABASE_URL: postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
       JWT_SECRET: $JWT_SECRET
+      NODE_ENV: development
     depends_on:
       - postgres
     ports:
       - "3000:3000"
+    volumes:
+      - ./api/src:/app/src
     restart: unless-stopped
 
   vite-app:
-    build: ./vite-app
+    build: 
+      context: ./vite-app
+      dockerfile: Dockerfile.dev
     depends_on:
       - api
     ports:
       - "443:5173"
+    volumes:
+      - ./vite-app/src:/app/src
     restart: unless-stopped
 
 volumes:

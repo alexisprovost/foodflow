@@ -1,0 +1,19 @@
+FROM node:latest AS build
+
+WORKDIR /app
+
+COPY package*.json yarn.lock ./
+
+RUN yarn install
+
+COPY . .
+
+# Set environment variables for development
+ENV NODE_ENV=development
+ENV PORT=5173
+
+# Expose port 5173 for development
+EXPOSE 5173
+
+# Start the app with Vite's built-in development server
+CMD ["yarn", "dev"]

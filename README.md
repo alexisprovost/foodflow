@@ -7,5 +7,11 @@
 ## Description
 A virtual vending machine made for teams
 
+## Dev Usage
+```
+docker-compose -f docker-compose.dev.yml build
+docker-compose -f docker-compose.dev.yml up
+```
+
 ## Authors
 FoodFlow was created by Thomas and Alexis. 
