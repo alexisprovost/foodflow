@@ -1,10 +1,14 @@
 import { Router, Response } from 'express';
 
+import Dao from '../DAO';
+
 abstract class Controller {
     public router: Router;
+    protected dao: Dao;
 
-    constructor () {
+    constructor (dao: Dao) {
         this.router = Router();
+        this.dao = dao;
         this.initializeRoutes();
     }
 
