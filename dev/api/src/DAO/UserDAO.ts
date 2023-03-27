@@ -39,7 +39,6 @@ class UserDao {
 
   public async getUserByEmail(email: string) {
     const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
-    console.log(result);
     return result[0];
   }
 

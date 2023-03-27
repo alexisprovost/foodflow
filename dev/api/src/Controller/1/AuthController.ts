@@ -33,6 +33,9 @@ class AuthController extends Controller {
 							return done(null, false);
 						}
 
+						// Add the id property to the user object
+						user.id = payload.sub;
+
 						return done(null, user);
 					} catch (err) {
 						console.error("Error authenticating user:", err);
