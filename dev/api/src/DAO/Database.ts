@@ -71,7 +71,6 @@ class Database {
     `;
     try {
       await client.query(query);
-      console.log('Users table created or already exists');
     } catch (err) {
       console.error('Error creating users table:', err);
     }

@@ -26,7 +26,7 @@ class ControllerV1 extends Controller {
   private async defaultMessage(req: Request, res: Response): Promise<void> {
     this.successResponse(
       res,
-      "Welcome to the FoodFlow API! Please refer to the API documentation for usage instructions."
+      "Welcome to the FoodFlow API Version 1! Please refer to the API documentation for usage instructions."
     );
   }
 }
