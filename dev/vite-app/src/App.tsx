@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import MainFrame from "./components/pageHolder/MainFrame";
 
 import Nav from "./components/nav/Nav";
 import Home from "./views/Home";
@@ -13,15 +14,15 @@ function App() {
 			<div className="h-full w-24 fixed left-0 animate__animated animate__fadeInLeft">
 				<Nav />
 			</div>
-			<section className="ml-24 h-full">
+			<MainFrame>
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/login" element={<Login />} />
 					<Route path="/wallet" element={<Wallet />} />
 					<Route path="/cart" element={<Cart />} />
-					<Route path="*" element={<NotFound/>} />
+					<Route path="*" element={<NotFound />} />
 				</Routes>
-			</section>
+			</MainFrame>
 		</div>
 	);
 }
