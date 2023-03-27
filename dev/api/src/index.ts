@@ -1,25 +1,14 @@
 import express from "express";
 import bodyParser from "body-parser";
-
-import BaseController from "./controller/BaseController";
-import UserController from "./controller/UserController";
-import AuthController from "./controller/AuthController";
-
-import Dao from "./DAO";
+import Controller from "./Controller/1/RootController";
 
 const app = express();
-const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const dao = new Dao();
+app.use("1", new Controller().router);
 
-// create the controllers
-app.use("/auth", new AuthController(dao).router);
-app.use("/users", new UserController(dao).router);
-app.use("/", new BaseController(dao).router);
-
-app.listen(port, () => {
-	console.log(`Server running on port ${port}`);
+app.listen(3000, () => {
+	console.log(`The API is running use /api to access it.`);
 });

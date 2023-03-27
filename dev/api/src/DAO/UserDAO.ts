@@ -1,27 +1,47 @@
-import Dao from ".";
+import db from './Database';
 
 class UserDao {
-    private dao: Dao;
+  protected async getAllUsers() {
+    const result = await db.query('SELECT * FROM users');
+    return result;
+  }
 
-	constructor(dao: Dao) {
-        this.dao = dao;
-    }
+  public async getUserById(id: number) {
+    const result = await db.query('SELECT * FROM users WHERE id = $1', [id]);
+    return result[0];
+  }
 
-    public async createUser(name: string, email: string, password: string): Promise<any> {
-        return await this.dao.executeQuery('INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *', [name, email, password]);
-    }
+  public async createUser(name: string, email: string, password: string) {
+    const query = `
+      INSERT INTO users (name, email, password)
+      VALUES ($1, $2, $3)
+      RETURNING *;
+    `;
+    const result = await db.query(query, [name, email, password]);
+    return result[0];
+  }
 
-    public async getAllUsers(): Promise<any> {
-        return await this.dao.executeQuery('SELECT * FROM users');
-    }
+  public async updateUser(id: number, name: string, email: string, password: string) {
+    const query = `
+      UPDATE users
+      SET name = $2, email = $3, password = $4
+      WHERE id = $1
+      RETURNING *;
+    `;
+    const result = await db.query(query, [id, name, email, password]);
+    return result[0];
+  }
 
-    public async getUserById(id: number): Promise<any> {
-        return await this.dao.executeQuery('SELECT * FROM users WHERE id = $1', [id]);
-    }
+  public async getUserByEmail(email: string) {
+    const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    return result[0];
+  }
 
-    public async getUserByEmail(email: string): Promise<any> {
-        return await this.dao.executeQuery('SELECT * FROM users WHERE email = $1', [email]);
-    }
+  private async deleteUser(id: number) {
+    const query = 'DELETE FROM users WHERE id = $1 RETURNING *;';
+    const result = await db.query(query, [id]);
+    return result[0];
+  }
 }
 
 export default UserDao;
