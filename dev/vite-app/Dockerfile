@@ -12,22 +12,25 @@ RUN yarn run build
 
 FROM nginx:stable-alpine
 
-# Create certificates directory
-RUN mkdir -p /etc/nginx/certs
+# Install openssl for certificate generation
+RUN apk add openssl
 
-# Generate self-signed certificate for HTTPS
-RUN apk add openssl && \
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -keyout /etc/nginx/certs/server.key -out /etc/nginx/certs/server.crt \
-    -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
+# Generate self-signed SSL certificate
+RUN openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 \
+    -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost" \
+    -keyout /etc/ssl/private/nginx-selfsigned.key \
+    -out /etc/ssl/certs/nginx-selfsigned.crt
 
-# Copy nginx configuration file
+# Remove default nginx configuration
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy custom nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy built assets to nginx public directory
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expose port 5173
+# Expose port 443
 EXPOSE 5173
 
 # Start nginx server
