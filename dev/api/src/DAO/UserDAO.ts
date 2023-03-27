@@ -7,6 +7,10 @@ class UserDao {
         this.dao = dao;
     }
 
+    public async createUser(name: string, email: string, password: string): Promise<any> {
+        return await this.dao.executeQuery('INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *', [name, email, password]);
+    }
+
     public async getAllUsers(): Promise<any> {
         return await this.dao.executeQuery('SELECT * FROM users');
     }

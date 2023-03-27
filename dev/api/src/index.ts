@@ -1,4 +1,6 @@
 import express from "express";
+import bodyParser from "body-parser";
+
 import BaseController from "./controller/BaseController";
 import UserController from "./controller/UserController";
 import AuthController from "./controller/AuthController";
@@ -7,6 +9,9 @@ import Dao from "./DAO";
 
 const app = express();
 const port = 3000;
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 const dao = new Dao();
 

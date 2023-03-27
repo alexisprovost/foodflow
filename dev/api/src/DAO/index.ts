@@ -16,16 +16,44 @@ class Dao {
 			port: 5432,
 		});
 
-		this.pool.connect((err, client, release) => {
-			if (err) {
-				return console.error("Error acquiring client", err.stack);
-			}
-			client.query("SELECT NOW()", (err, result) => {
-				release();
-				if (err) {
-					return console.error("Error executing query", err.stack);
-				}
+		const tryConnect = async () => {
+			try {
+				const client = await this.pool.connect();
+				const result = await client.query("SELECT NOW()");
 				console.log(result.rows);
+			} catch (err: any) {
+				console.error("Error acquiring client", err.stack);
+				setTimeout(() => tryConnect(), 30000); // retry every 30 seconds
+			}
+		};
+
+		tryConnect().then(() => {
+			this.pool.connect(async (err, client, release) => {
+				if (err) {
+					return console.error("Error acquiring client", err.stack);
+				}
+
+				try {
+					const result = await client.query(
+						"SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'users') as exists"
+					);
+					if (!result.rows[0].exists) {
+						console.log("The 'users' table does not exist, creating...");
+						await client.query(`
+											CREATE TABLE users (
+												id SERIAL PRIMARY KEY,
+												name VARCHAR(255) NOT NULL, 
+												email VARCHAR(255) NOT NULL UNIQUE,
+												password VARCHAR(255) NOT NULL
+											)
+											`);
+						console.log("The 'users' table has been created.");
+					}
+				} catch (err: any) {
+					console.error("Error executing query", err.stack);
+				} finally {
+					release();
+				}
 			});
 		});
 	}
@@ -42,10 +70,7 @@ class Dao {
 		}
 	}
 
-	public async executeTransaction(
-		queries: string[],
-		params?: any[][]
-	): Promise<void> {
+	public async executeTransaction(queries: string[], params?: any[][]): Promise<void> {
 		const client = await this.pool.connect();
 		try {
 			await client.query("BEGIN");
