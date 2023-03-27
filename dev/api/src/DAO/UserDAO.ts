@@ -1,4 +1,5 @@
 import db from './Database';
+import Utils from '../Controller/1/Utils';
 
 class UserDao {
   protected async getAllUsers() {
@@ -11,29 +12,34 @@ class UserDao {
     return result[0];
   }
 
-  public async createUser(name: string, email: string, password: string) {
+  public async createUser(email: string, password: string) {
+    const hashedPassword = await Utils.hashPassword(password);
+
     const query = `
-      INSERT INTO users (name, email, password)
-      VALUES ($1, $2, $3)
+      INSERT INTO users (email, password)
+      VALUES ($1, $2)
       RETURNING *;
     `;
-    const result = await db.query(query, [name, email, password]);
+    const result = await db.query(query, [email, hashedPassword]);
     return result[0];
   }
 
   public async updateUser(id: number, name: string, email: string, password: string) {
+    const hashedPassword = await Utils.hashPassword(password);
+
     const query = `
       UPDATE users
       SET name = $2, email = $3, password = $4
       WHERE id = $1
       RETURNING *;
     `;
-    const result = await db.query(query, [id, name, email, password]);
+    const result = await db.query(query, [id, name, email, hashedPassword]);
     return result[0];
   }
 
   public async getUserByEmail(email: string) {
     const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    console.log(result);
     return result[0];
   }
 

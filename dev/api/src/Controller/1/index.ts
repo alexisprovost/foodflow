@@ -14,8 +14,8 @@ abstract class Controller {
     res.status(200).json({ success: true, data });
   }
 
-  protected errorResponse(res: Response, msg: string, statusCode: number) {
-    res.status(statusCode).json({ success: false, error: { msg } });
+  protected errorResponse(res: Response, message: string, statusCode: number) {
+    res.status(statusCode).json({ success: false, error: { message } });
   }
 
   protected handleAsync(fn: Function) {
