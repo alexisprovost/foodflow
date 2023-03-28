@@ -3,6 +3,7 @@ import Controller from ".";
 
 import UserController from "./UserController";
 import AuthController from "./AuthController";
+import ProductController from "./ProductController";
 
 class ControllerV1 extends Controller {
   public router: Router;
@@ -16,9 +17,11 @@ class ControllerV1 extends Controller {
   protected initializeRoutes(): void {
     const userController = new UserController();
     const authController = new AuthController();
+    const productController = new ProductController();
 
     this.router.use("/users", userController.router);
     this.router.use("/auth", authController.router);
+    this.router.use("/products", productController.router);
 
     this.router.get("/", this.defaultMessage.bind(this));
   }

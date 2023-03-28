@@ -67,13 +67,25 @@ class Database {
         name VARCHAR(255) NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL
+      ); 
+      CREATE TABLE IF NOT EXISTS products (
+        id SERIAL PRIMARY KEY,
+        barcode VARCHAR(255) NOT NULL UNIQUE,
+        name VARCHAR(255) NOT NULL,
+        added_date TIMESTAMP NOT NULL,
+        quantity INT NOT NULL,
+        category INT NOT NULL,
+        format VARCHAR(30) NOT NULL,
+        url_image TEXT NOT NULL,
       );
     `;
+   
     try {
       await client.query(query);
     } catch (err) {
-      console.error('Error creating users table:', err);
+      console.error('Error creating tables:', err);
     }
+    
   }
 }
 
