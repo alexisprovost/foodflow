@@ -21,7 +21,7 @@ class ProductDao {
 		format: string
 	) {
 		const query = `
-          INSERT INTO product (name, url_image, barcode, added_date, quantity, category, format)
+          INSERT INTO products (name, url_image, barcode, added_date, quantity, category, format)
           VALUES ($1, $2, $3, $4, $5, $6, $7)
           RETURNING *;
         `;
@@ -40,7 +40,7 @@ class ProductDao {
 		url_image: string
 	) {
 		const query = `
-          UPDATE product
+          UPDATE products
           SET name = $2, barcode = $3, added_date = $4, quantity = $5, category = $6, format = $7, url_image = $8
           WHERE id = $1
           RETURNING *;
