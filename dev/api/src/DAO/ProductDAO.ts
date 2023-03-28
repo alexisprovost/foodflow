@@ -11,15 +11,7 @@ class ProductDao {
 		return result[0];
 	}
 
-	public async createProduct(
-		name: string,
-		url_image: string,
-		barcode: string,
-		added_date: string,
-		quantity: number,
-		category: number,
-		format: string
-	) {
+	public async createProduct(name: string, url_image: string, barcode: string, added_date: string, quantity: number, category: number, format: string) {
 		const query = `
           INSERT INTO products (name, url_image, barcode, added_date, quantity, category, format)
           VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -29,16 +21,7 @@ class ProductDao {
 		return result[0];
 	}
 
-	public async updateProduct(
-		id: number,
-		name: string,
-		barcode: string,
-		added_date: string,
-		quantity: number,
-		category: number,
-		format: string,
-		url_image: string
-	) {
+	public async updateProduct(id: number, name: string, barcode: string, added_date: string, quantity: number, category: number, format: string, url_image: string) {
 		const query = `
           UPDATE products
           SET name = $2, barcode = $3, added_date = $4, quantity = $5, category = $6, format = $7, url_image = $8

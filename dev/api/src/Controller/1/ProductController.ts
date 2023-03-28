@@ -58,10 +58,10 @@ class ProductController extends Controller {
 
   private async updateProduct(req: Request, res: Response): Promise<void> {
     const productId = req.params.id;
-    const { name, url_image, barcode, added_date, quantity, category, format } = req.body;
+    const {name, barcode, added_date, quantity, category, format, url_image } = req.body;
 
     try {
-      const product = await this.productDao.updateProduct(parseInt(productId), name, url_image, barcode, added_date, quantity, category, format);
+      const product = await this.productDao.updateProduct(parseInt(productId), name, barcode, added_date, quantity, category, format, url_image);
       if (!product) {
         return this.errorResponse(res, "Product not found", 404);
       }
