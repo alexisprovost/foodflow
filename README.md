@@ -7,16 +7,20 @@
 ## Description
 A virtual vending machine made for teams
 
+## API Documentation
+[https://documenter.getpostman.com/view/26616031/2s93RRvYjD](https://documenter.getpostman.com/view/26616031/2s93RRvYjD)
+
 ## Dev Usage
 ```
 docker-compose -f docker-compose.dev.yml build
 docker-compose -f docker-compose.dev.yml up
 ```
 
-## Extra - PGADMIN container
+## First time setup
+To create the tables in the database you need access with a GET request this url to create the database structure.
 ```bash
-docker run -d --name pgadmin_container -p 5050:80 -e PGADMIN_DEFAULT_EMAIL="pgadmin4@pgadmin.org" -e PGADMIN_DEFAULT_PASSWORD="AAAaaa123" -e PGADMIN_CONFIG_SERVER_MODE=False --restart unless-stopped dpage/pgadmin4
+curl https://127.0.0.1/api/1/setup
 ```
 
 ## Authors
-FoodFlow was created by Thomas and Alexis. 
+FoodFlow was created by [Thomas](https://github.com/Thomkiller) and [Alexis](https://github.com/alexisprovost). 
