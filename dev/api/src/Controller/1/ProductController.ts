@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Controller from ".";
-import ProductDao from "../../DAO/ProductDao";
+import ProductDao from "../../DAO/ProductDAO";
 
 class ProductController extends Controller {
   private productDao: ProductDao;
@@ -11,11 +11,11 @@ class ProductController extends Controller {
   }
 
   protected initializeRoutes(): void {
-    this.router.get("/", this.handleAsync(this.getAllProducts));
-    this.router.get("/:id", this.handleAsync(this.getProductById));
-    this.router.post("/", this.handleAsync(this.createProduct));
-    this.router.put("/:id", this.handleAsync(this.updateProduct));
-    this.router.delete("/:id", this.handleAsync(this.deleteProduct));
+    this.router.get("/", this.getAllProducts.bind(this));
+    this.router.get("/:id", this.getProductById.bind(this));
+    this.router.post("/", this.createProduct.bind(this));
+    this.router.put("/:id", this.updateProduct.bind(this));
+    this.router.delete("/:id", this.deleteProduct.bind(this));
   }
 
   private async getAllProducts(req: Request, res: Response): Promise<void> {

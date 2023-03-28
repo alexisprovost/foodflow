@@ -76,7 +76,7 @@ class Database {
         quantity INT NOT NULL,
         category INT NOT NULL,
         format VARCHAR(30) NOT NULL,
-        url_image TEXT NOT NULL,
+        url_image TEXT NOT NULL
       );
     `;
    
