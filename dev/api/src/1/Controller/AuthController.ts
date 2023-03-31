@@ -88,8 +88,8 @@ class AuthController extends Controller {
 			}
 
 			try {
-				const token = await this.generateAuthToken(user);
-				this.successResponse(res, { token });
+				const { token, expires } = await this.generateAuthToken(user);
+				this.successResponse(res, { token, expires });
 			} catch (err) {
 				console.error("Error generating auth token:", err);
 				this.errorResponse(res, "Internal server error", 500);
@@ -116,10 +116,12 @@ class AuthController extends Controller {
 		}
 	}
 
-	private async generateAuthToken(user: any): Promise<string> {
+	private async generateAuthToken(user: any): Promise<{ token: string; expires: Date }> {
 		const payload = { sub: user.id };
-		const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: "1h" });
-		return token;
+		const expiresIn = "1h";
+		const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn });
+		const expires = new Date(Date.now() + parseInt(expiresIn, 10) * 1000); // Convert expiresIn to milliseconds
+		return { token, expires };
 	}
 }
 
