@@ -13,23 +13,23 @@ class UserController extends Controller {
 	}
 
 	protected initializeRoutes(): void {
-		this.router.get("/", requireAuth, this.handleAsync(this.getUser));
+		this.router.get("/", requireAuth, this.getUser.bind(this));
 	}
 
 	private async getUser(req: Request, res: Response): Promise<void> {
-    const userId = req.params.id;
+		const user: any = req.user;
 
-    try {
-      const user = await this.userDao.getUserById(parseInt(userId));
-      if (!user) {
-        return this.errorResponse(res, "User not found", 404);
-      }
+		try {
+			const userInfos = await this.userDao.getUserById(parseInt(user.id));
+			if (!userInfos) {
+				return super.errorResponse(res, "User not found", 404);
+			}
 
-      this.successResponse(res, user);
-    } catch (err) {
-      console.error("Error getting user:", err);
-      this.errorResponse(res, "Internal server error", 500);
-    }
+			super.successResponse(res, userInfos);
+		} catch (err) {
+			console.error("Error getting user:", err);
+			super.errorResponse(res, "Internal server error", 500);
+		}
 	}
 }
 
