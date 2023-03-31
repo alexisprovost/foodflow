@@ -3,7 +3,7 @@ import db from "./Database";
 class SetupDAO {
 	public async CreateTablesIfNotExist() {
 		const query = `
-        CREATE TABLE "user" (
+        CREATE TABLE "users" (
             "id" serial PRIMARY KEY,
             "firstname" VARCHAR(40),
             "name" VARCHAR(255),
@@ -59,9 +59,9 @@ class SetupDAO {
           
           ALTER TABLE "product_transaction" ADD FOREIGN KEY ("id_transaction") REFERENCES "transaction" ("id");
           
-          ALTER TABLE "wallet" ADD FOREIGN KEY ("owner") REFERENCES "user" ("id");
+          ALTER TABLE "wallet" ADD FOREIGN KEY ("owner") REFERENCES "users" ("id");
           
-          ALTER TABLE "transaction" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id");
+          ALTER TABLE "transaction" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
           
           ALTER TABLE "price" ADD FOREIGN KEY ("product_barcode") REFERENCES "product" ("id");
       `;

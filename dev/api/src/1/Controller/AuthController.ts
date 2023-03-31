@@ -88,8 +88,8 @@ class AuthController extends Controller {
 			}
 
 			try {
-				const { token, expires } = await this.generateAuthToken(user);
-				this.successResponse(res, { token, expires });
+				const token = await this.generateAuthToken(user);
+				this.successResponse(res, token);
 			} catch (err) {
 				console.error("Error generating auth token:", err);
 				this.errorResponse(res, "Internal server error", 500);
@@ -109,7 +109,7 @@ class AuthController extends Controller {
 			const newUser = await this.userDao.createUser(email, password);
 			const token = await this.generateAuthToken(newUser);
 
-			this.successResponse(res, { token });
+			this.successResponse(res, token);
 		} catch (err) {
 			console.error("Error creating user:", err);
 			this.errorResponse(res, "Internal server error", 500);
