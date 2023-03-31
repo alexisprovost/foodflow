@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import Controller from "./Controller/1/RootController";
+import Controller from "./1/Controller/RootController";
 
 const app = express();
 

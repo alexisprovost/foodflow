@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Controller from ".";
-import SetupDAO from "../../DAO/SetupDAO";
+import SetupDAO from "../DAO/SetupDAO";
 
 class SetupController extends Controller {
 	private db: SetupDAO;

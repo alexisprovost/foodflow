@@ -7,7 +7,7 @@ import Controller from ".";
 
 import Utils from "./Utils";
 
-import UserDao from "../../DAO/UserDao";
+import UserDao from "../DAO/UserDao";
 
 const JwtStrategy = passportJwt.Strategy;
 const LocalStrategy = passportLocal.Strategy;

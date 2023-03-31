@@ -1,5 +1,5 @@
 import db from "./Database";
-import Utils from "../Controller/1/Utils";
+import Utils from "../Controller/Utils";
 
 class UserDao {
 	protected async getAllUsers() {

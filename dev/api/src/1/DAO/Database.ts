@@ -1,4 +1,4 @@
-import { Pool, PoolClient, PoolConfig } from "pg";
+import { Pool, PoolConfig } from "pg";
 
 const poolConfig: PoolConfig = {
 	host: process.env.DB_HOST,

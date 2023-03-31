@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import passportJwt from "passport-jwt";
 
-import UserDao from "../../DAO/UserDao";
+import UserDao from "../DAO/UserDao";
 
 const JwtStrategy = passportJwt.Strategy;
 

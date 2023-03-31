@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Controller from ".";
-import UserDao from "../../DAO/UserDao";
+import UserDao from "../DAO/UserDao";
 
 import { requireAuth } from "./authMiddleware";
 
