@@ -12,11 +12,22 @@ class SetupController extends Controller {
 
 	protected initializeRoutes(): void {
 		this.router.get("/", this.setup.bind(this));
+		this.router.get("/add-samples", this.addSampleData.bind(this));
 	}
 
 	private async setup(req: Request, res: Response): Promise<void> {
 		try {
 			await this.db.CreateTablesIfNotExist();
+			this.successResponse(res, "Success");
+		} catch (err) {
+			console.error("Error creating table:", err);
+			this.errorResponse(res, "Internal server error", 500);
+		}
+	}
+
+	private async addSampleData(req: Request, res: Response): Promise<void> {
+		try {
+			await this.db.addSampleData();
 			this.successResponse(res, "Success");
 		} catch (err) {
 			console.error("Error creating table:", err);
