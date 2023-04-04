@@ -27,7 +27,7 @@ class SetupDAO {
           
           CREATE TABLE "products" (
             "id" serial PRIMARY KEY,
-            "barcode" INT NOT NULL UNIQUE,
+            "barcode" VARCHAR(255) NOT NULL UNIQUE,
             "name" VARCHAR(255) NOT NULL,
             "added_date" TIMESTAMP,
             "quantity" INT DEFAULT 1,
