@@ -45,10 +45,10 @@ class ProductController extends Controller {
   }
 
   private async createProduct(req: Request, res: Response): Promise<void> {
-    const { name, url_image, barcode, added_date, quantity, category, format } = req.body;
+    const { name, url_image, barcode, added_date, quantity, format, value, effective_date, category} = req.body;
 
     try {
-      const product = await this.productDao.createProduct(name, url_image, barcode, added_date, quantity, category, format);
+      const product = await this.productDao.createProduct(name, url_image, barcode, added_date, quantity, format, value, effective_date, category);
       this.successResponse(res, product);
     } catch (err) {
       console.error("Error creating product:", err);

@@ -31,7 +31,6 @@ class SetupDAO {
             "name" VARCHAR(255) NOT NULL,
             "added_date" TIMESTAMP,
             "quantity" INT DEFAULT 1,
-            "category" INT,
             "format" VARCHAR(30),
             "url_image" TEXT
           );
@@ -40,6 +39,11 @@ class SetupDAO {
             "id" serial PRIMARY KEY,
             "name" VARCHAR(255) NOT NULL
           );
+
+		  CREATE TABLE "category_products" (
+			"id_category" INT,
+			"id_product" INT
+		  );
           
           CREATE TABLE "price" (
             "id" serial PRIMARY KEY,
@@ -53,8 +57,6 @@ class SetupDAO {
             "id_transaction" INT
           );
           
-          ALTER TABLE "products" ADD FOREIGN KEY ("category") REFERENCES "category" ("id");
-          
           ALTER TABLE "product_transaction" ADD FOREIGN KEY ("id_product") REFERENCES "products" ("id");
           
           ALTER TABLE "product_transaction" ADD FOREIGN KEY ("id_transaction") REFERENCES "transaction" ("id");
@@ -64,6 +66,11 @@ class SetupDAO {
           ALTER TABLE "transaction" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
           
           ALTER TABLE "price" ADD FOREIGN KEY ("product_barcode") REFERENCES "products" ("id");
+
+		  ALTER TABLE "category_products" ADD CONSTRAINT "fk_category_id" FOREIGN KEY ("id_category") REFERENCES "category" ("id");
+		
+		  ALTER TABLE "category_products" ADD CONSTRAINT "fk_product_id" FOREIGN KEY ("id_product") REFERENCES "products" ("id");
+
       `;
 
 		try {
