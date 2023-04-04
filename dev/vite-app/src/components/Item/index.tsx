@@ -11,10 +11,9 @@ const Item: React.FC<ItemProps> = ({ name, image, quantity }) => {
 		<div className="bg-secondary p-4 rounded-[1rem]">
 			<div className="text-2xl font-bold mb-4">{name}</div>
 			<div
-				className="img h-48 w-full rounded-lg bg-cover bg-center"
+				className="img h-48 w-full rounded-lg bg-[length:auto_100%] bg-no-repeat bg-center"
 				style={{
 					backgroundImage: `url(${image})`,
-					backgroundSize: "cover",
 				}}
 			/>
 			<div className="text-right mt-4">{quantity}</div>
