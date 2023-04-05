@@ -29,7 +29,7 @@ class SetupDAO {
             "id" serial PRIMARY KEY,
             "barcode" VARCHAR(255) NOT NULL UNIQUE,
             "name" VARCHAR(255) NOT NULL,
-            "added_date" TIMESTAMP,
+            "added_date" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             "quantity" INT DEFAULT 1,
             "format" VARCHAR(30),
             "url_image" TEXT
@@ -47,7 +47,7 @@ class SetupDAO {
           
           CREATE TABLE "price" (
 			"id" serial PRIMARY KEY,
-			"product_barcode" INT NOT NULL,
+			"product_id" INT NOT NULL,
 			"effective_date" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			"value" NUMERIC(7,2)
 		  );		  
@@ -65,7 +65,7 @@ class SetupDAO {
           
           ALTER TABLE "transaction" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
           
-          ALTER TABLE "price" ADD FOREIGN KEY ("product_barcode") REFERENCES "products" ("id");
+          ALTER TABLE "price" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id");
 
 		  ALTER TABLE "category_products" ADD CONSTRAINT "fk_category_id" FOREIGN KEY ("id_category") REFERENCES "category" ("id");
 		
@@ -216,7 +216,7 @@ class SetupDAO {
   `;
 
 		const insertPriceQuery = `
-    INSERT INTO "price" (product_barcode, effective_date, value)
+    INSERT INTO "price" (product_id, effective_date, value)
     VALUES ($1, $2, $3)
   `;
 
@@ -245,7 +245,7 @@ class SetupDAO {
 
 				await db.query(insertCategoryProductQuery, [categoryId, productId]);
 
-				await db.query(insertPriceQuery, [snack.barcode, new Date(), snack.price]);
+				await db.query(insertPriceQuery, [productId, new Date(), snack.price]);
 			}
 		} catch (err) {
 			console.error("Error adding sample data:", err);
