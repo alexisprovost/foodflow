@@ -229,22 +229,22 @@ class SetupDAO {
 			// insert each product, its price, and category (if it doesn't exist)
 			for (const snack of snacks) {
 				// insert category if it doesn't exist
-				console.log(snack.category);
-				const categoryResult = await db.query('SELECT * FROM "category" WHERE name = $1', [snack.category]);
-				console.log(categoryResult);
-				let categoryId;
-				if (categoryResult.lenght === 0) {
-					const result = await db.query(insertCategoryQuery, [snack.category]);
-					categoryId = result[0].id;
-				} else {
-					categoryId = categoryResult[0].id;
-				}
+				// console.log(snack.category);
+				// const categoryResult = await db.query('SELECT * FROM "category" WHERE name = $1', [snack.category]);
+				// console.log(categoryResult);
+				// let categoryId;
+				// if (categoryResult.lenght === 0) {
+				// 	const result = await db.query(insertCategoryQuery, [snack.category]);
+				// 	categoryId = result[0].id;
+				// } else {
+				// 	categoryId = categoryResult[0].id;
+				// }
 
 				// insert product and price
 				const productResult = await db.query(insertProductQuery, [snack.barcode, snack.name, snack.added_date, snack.quantity, snack.format, snack.url_image]);
 				const productId = productResult[0].id;
 
-				await db.query(insertCategoryProductQuery, [categoryId, productId]);
+				// await db.query(insertCategoryProductQuery, [categoryId, productId]);
 
 				await db.query(insertPriceQuery, [snack.barcode, new Date(), snack.price]);
 			}
