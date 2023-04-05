@@ -46,11 +46,11 @@ class SetupDAO {
 		  );
           
           CREATE TABLE "price" (
-            "id" serial PRIMARY KEY,
-            "product_barcode" INT NOT NULL,
-            "effective_date" DATE DEFAULT CURRENT_DATE,
-            "value" NUMERIC(7,2)
-          );
+			"id" serial PRIMARY KEY,
+			"product_barcode" INT NOT NULL,
+			"effective_date" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			"value" NUMERIC(7,2)
+		  );		  
           
           CREATE TABLE "product_transaction" (
             "id_product" INT,
@@ -167,7 +167,7 @@ class SetupDAO {
 				name: "Planters Trail Mix",
 				added_date: new Date(),
 				quantity: 4,
-				category: "snackss",
+				category: "Snacks",
 				format: "170g",
 				url_image: "https://img.sshort.net/i/EJ2k.png",
 				price: 4.99,
@@ -229,22 +229,21 @@ class SetupDAO {
 			// insert each product, its price, and category (if it doesn't exist)
 			for (const snack of snacks) {
 				// insert category if it doesn't exist
-				// console.log(snack.category);
-				// const categoryResult = await db.query('SELECT * FROM "category" WHERE name = $1', [snack.category]);
-				// console.log(categoryResult);
-				// let categoryId;
-				// if (categoryResult.lenght === 0) {
-				// 	const result = await db.query(insertCategoryQuery, [snack.category]);
-				// 	categoryId = result[0].id;
-				// } else {
-				// 	categoryId = categoryResult[0].id;
-				// }
+				const categoryResult = await db.query('SELECT * FROM "category" WHERE name = $1', [snack.category]);
+				let categoryId;
+				if (categoryResult.length > 0) {
+					categoryId = categoryResult[0].id;
+				} else {
+					const result = await db.query(insertCategoryQuery, [snack.category]);
+					const ids = result.map((result: { id: any }) => result.id);
+					categoryId = ids[0];
+				}
 
 				// insert product and price
 				const productResult = await db.query(insertProductQuery, [snack.barcode, snack.name, snack.added_date, snack.quantity, snack.format, snack.url_image]);
-				const productId = productResult[0].id;
+				const productId = productResult.map((result: { id: any }) => result.id)[0];
 
-				// await db.query(insertCategoryProductQuery, [categoryId, productId]);
+				await db.query(insertCategoryProductQuery, [categoryId, productId]);
 
 				await db.query(insertPriceQuery, [snack.barcode, new Date(), snack.price]);
 			}

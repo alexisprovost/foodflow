@@ -1,16 +1,70 @@
 import db from "./Database";
 
+interface Product {
+	id: number;
+	name: string;
+	url_image: string;
+	barcode: string;
+	added_date: Date;
+	quantity: number;
+	format: string;
+	price: number;
+	categories: string[];
+}
+
 class ProductDao {
-	public async getAllProducts() {
-		const result = await db.query(
-			"SELECT p.*, COALESCE(json_agg(c.name ORDER BY c.name), '[]') AS categories, COALESCE(json_agg(pr.value ORDER BY pr.effective_date DESC), '[]') AS prices FROM products p LEFT JOIN category_products cp ON cp.id_product = p.id LEFT JOIN category c ON cp.id_category = c.id LEFT JOIN price pr ON pr.product_barcode = p.id GROUP BY p.id;"
+	public async getAllProducts(): Promise<Product[]> {
+		const queryResult = await db.query(
+			`SELECT p.*, 
+				COALESCE(json_agg(c.name ORDER BY c.name), '[]') AS categories, 
+				COALESCE((SELECT CAST(pr.value AS NUMERIC(7,2)) FROM price pr WHERE pr.product_barcode = p.id ORDER BY pr.effective_date DESC LIMIT 1), 0.00) AS price 
+		  FROM products p 
+		  LEFT JOIN category_products cp ON cp.id_product = p.id 
+		  LEFT JOIN category c ON cp.id_category = c.id 
+		  GROUP BY p.id;`
 		);
-		return result;
+		const products: Product[] = queryResult.map((singleProduct: any) => ({
+			id: singleProduct.id,
+			name: singleProduct.name,
+			url_image: singleProduct.url_image,
+			barcode: singleProduct.barcode,
+			added_date: new Date(singleProduct.added_date),
+			quantity: singleProduct.quantity,
+			format: singleProduct.format,
+			price: parseFloat(singleProduct.price),
+			categories: singleProduct.categories == "null" ? singleProduct.categories : [],
+		}));
+		return products;
 	}
 
-	public async getProductById(id: number) {
-		const result = await db.query("SELECT * FROM products WHERE id = $1", [id]);
-		return result[0];
+	public async getProductById(id: number): Promise<Product> {
+		const queryResult = await db.query(
+			`SELECT p.*, 
+				  COALESCE(json_agg(c.name ORDER BY c.name), '[]') AS categories, 
+				  COALESCE(CAST((SELECT pr.value FROM price pr WHERE pr.product_barcode = p.id ORDER BY pr.effective_date DESC LIMIT 1) AS NUMERIC(7,2)), 0.00) AS price 
+		  FROM products p 
+		  LEFT JOIN category_products cp ON cp.id_product = p.id 
+		  LEFT JOIN category c ON cp.id_category = c.id 
+		  WHERE p.id = $1 
+		  GROUP BY p.id;`,
+			[id]
+		);
+		if (queryResult.length === 0) {
+			throw new Error(`Product with id ${id} not found`);
+		}
+		const row = queryResult[0];
+		const product: Product = {
+			id: row.id,
+			name: row.name,
+			url_image: row.url_image,
+			barcode: row.barcode,
+			added_date: new Date(row.added_date),
+			quantity: row.quantity,
+			format: row.format,
+			price: parseFloat(row.price),
+			categories: row.categories,
+		};
+		return product;
 	}
 
 	public async createProduct(

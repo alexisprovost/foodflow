@@ -3,10 +3,11 @@ import React, { useState, useEffect } from "react";
 interface ItemProps {
 	name: string;
 	image: string;
-	quantity: string;
+	quantity?: string;
+	price?: string;
 }
 
-const Item: React.FC<ItemProps> = ({ name, image, quantity }) => {
+const Item: React.FC<ItemProps> = ({ name, image, quantity, price }) => {
 	return (
 		<div className="bg-secondary p-4 rounded-[1rem]">
 			<div className="text-2xl font-bold mb-4">{name}</div>
@@ -16,7 +17,7 @@ const Item: React.FC<ItemProps> = ({ name, image, quantity }) => {
 					backgroundImage: `url(${image})`,
 				}}
 			/>
-			<div className="text-right mt-4">{quantity}</div>
+			<div className="text-right mt-4">{price}</div>
 		</div>
 	);
 };
