@@ -92,7 +92,7 @@ class ProductDao {
 		if (categoryIds && Array.isArray(categoryIds) && categoryIds.length > 0) {
 			console.log("categoryIds", categoryIds);
 			const categoryProductQuery = `
-    INSERT INTO category_products (category_id, product_id)
+    INSERT INTO category_products (id_category, id_product)
     VALUES ($1, $2);
   `;
 			await Promise.all(categoryIds.map((categoryId) => db.query(categoryProductQuery, [categoryId, productId])));
