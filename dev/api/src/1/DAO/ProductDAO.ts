@@ -41,8 +41,6 @@ class ProductDao {
 					ELSE json_agg(c.name ORDER BY c.name) FILTER (WHERE c.name IS NOT NULL)
 				END),
 			'[]') AS categories,
-			
-						
 				COALESCE((SELECT CAST(pr.value AS NUMERIC(7,2)) FROM price pr WHERE pr.product_id = p.id ORDER BY pr.effective_date DESC LIMIT 1), 0.00) AS price 
 			FROM products p 
 			LEFT JOIN category_products cp ON cp.id_product = p.id 
@@ -59,9 +57,7 @@ class ProductDao {
 					WHEN json_typeof(json_agg(c.name ORDER BY c.name)) = 'null' THEN '[]'
 					ELSE json_agg(c.name ORDER BY c.name) FILTER (WHERE c.name IS NOT NULL)
 				END),
-			'[]') AS categories,
-			
-						
+			'[]') AS categories,	
 				  COALESCE(CAST((SELECT pr.value FROM price pr WHERE pr.product_id = p.id ORDER BY pr.effective_date DESC LIMIT 1) AS NUMERIC(7,2)), 0.00) AS price 
 			FROM products p 
 			LEFT JOIN category_products cp ON cp.id_product = p.id 

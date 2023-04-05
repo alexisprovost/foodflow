@@ -221,8 +221,9 @@ class SetupDAO {
   `;
 
 		const insertCategoryQuery = `
-    INSERT INTO "category" (name)
+    INSERT INTO "category" ("name")
     VALUES ($1)
+	RETURNING id
   `;
 
 		try {
