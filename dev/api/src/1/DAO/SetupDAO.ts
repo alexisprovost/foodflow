@@ -205,35 +205,46 @@ class SetupDAO {
 		];
 
 		const insertProductQuery = `
-        INSERT INTO "products" (barcode, name, added_date, quantity, category, format, url_image)
-        VALUES ($1, $2, $3, $4, (SELECT id FROM "category" WHERE name = $5), $6, $7)
-      `;
+    INSERT INTO "products" (barcode, name, added_date, quantity, format, url_image)
+    VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING id
+  `;
+
+		const insertCategoryProductQuery = `
+    INSERT INTO "category_products" (id_category, id_product)
+    VALUES ($1, $2)
+  `;
 
 		const insertPriceQuery = `
-        INSERT INTO "price" (product_barcode, effective_date, value)
-        VALUES ($1, $2, $3)
-      `;
+    INSERT INTO "price" (product_barcode, effective_date, value)
+    VALUES ($1, $2, $3)
+  `;
 
 		const insertCategoryQuery = `
-        INSERT INTO "category" (name)
-        VALUES ($1)
-      `;
+    INSERT INTO "category" (name)
+    VALUES ($1)
+  `;
 
 		try {
 			// insert each product, its price, and category (if it doesn't exist)
 			for (const snack of snacks) {
 				// insert category if it doesn't exist
-				// const categoryResult = await db.query('SELECT * FROM "category" WHERE name = $1', [snack.category]);
-				// let categoryId;
-				// if (categoryResult.rowCount === 0) {
-				// 	const result = await db.query(insertCategoryQuery, [snack.category]);
-				// 	categoryId = result.rows[0].id;
-				// } else {
-				// 	categoryId = categoryResult.rows[0].id;
-				// }
+				console.log(snack.category);
+				const categoryResult = await db.query('SELECT * FROM "category" WHERE name = $1', [snack.category]);
+				console.log(categoryResult);
+				let categoryId;
+				if (categoryResult.lenght === 0) {
+					const result = await db.query(insertCategoryQuery, [snack.category]);
+					categoryId = result[0].id;
+				} else {
+					categoryId = categoryResult[0].id;
+				}
 
 				// insert product and price
-				await db.query(insertProductQuery, [snack.barcode, snack.name, snack.added_date, snack.quantity, snack.category, snack.format, snack.url_image]);
+				const productResult = await db.query(insertProductQuery, [snack.barcode, snack.name, snack.added_date, snack.quantity, snack.format, snack.url_image]);
+				const productId = productResult[0].id;
+
+				await db.query(insertCategoryProductQuery, [categoryId, productId]);
 
 				await db.query(insertPriceQuery, [snack.barcode, new Date(), snack.price]);
 			}
