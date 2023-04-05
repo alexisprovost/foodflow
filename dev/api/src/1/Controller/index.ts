@@ -1,4 +1,5 @@
 import { Router, Response, Request, NextFunction } from "express";
+import bodyParser from "body-parser";
 
 abstract class Controller {
 	public router: Router;
@@ -33,6 +34,11 @@ abstract class Controller {
 				this.errorResponse(res, "Internal server error", 500);
 			}
 		};
+	}
+
+	// Add this method to parse JSON data in request body
+	protected useJsonBodyParser(): void {
+		this.router.use(bodyParser.json());
 	}
 }
 
