@@ -47,7 +47,7 @@ class SetupDAO {
           
           CREATE TABLE "price" (
 			"id" serial PRIMARY KEY,
-			"product_id" INT NOT NULL,
+			"id_product" INT NOT NULL,
 			"effective_date" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			"value" NUMERIC(7,2)
 		  );		  
@@ -65,11 +65,11 @@ class SetupDAO {
           
           ALTER TABLE "transaction" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
           
-          ALTER TABLE "price" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id");
+          ALTER TABLE "price" ADD FOREIGN KEY ("id_product") REFERENCES "products" ("id");
 
 		  ALTER TABLE "category_products" ADD CONSTRAINT "fk_category_id" FOREIGN KEY ("id_category") REFERENCES "category" ("id");
 		
-		  ALTER TABLE "category_products" ADD CONSTRAINT "fk_product_id" FOREIGN KEY ("id_product") REFERENCES "products" ("id");
+		  ALTER TABLE "category_products" ADD CONSTRAINT "fk_id_product" FOREIGN KEY ("id_product") REFERENCES "products" ("id");
 
       `;
 
@@ -216,7 +216,7 @@ class SetupDAO {
   `;
 
 		const insertPriceQuery = `
-    INSERT INTO "price" (product_id, effective_date, value)
+    INSERT INTO "price" (id_product, effective_date, value)
     VALUES ($1, $2, $3)
   `;
 

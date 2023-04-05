@@ -41,7 +41,7 @@ class ProductDao {
 					ELSE json_agg(c.name ORDER BY c.name) FILTER (WHERE c.name IS NOT NULL)
 				END),
 			'[]') AS categories,
-				COALESCE((SELECT CAST(pr.value AS NUMERIC(7,2)) FROM price pr WHERE pr.product_id = p.id ORDER BY pr.effective_date DESC LIMIT 1), 0.00) AS price 
+			COALESCE((SELECT CAST(pr.value AS NUMERIC(7,2)) FROM price pr WHERE pr.id_product = p.id ORDER BY pr.effective_date DESC LIMIT 1), 0.00) AS price 
 			FROM products p 
 			LEFT JOIN category_products cp ON cp.id_product = p.id 
 			LEFT JOIN category c ON cp.id_category = c.id 
@@ -58,7 +58,7 @@ class ProductDao {
 					ELSE json_agg(c.name ORDER BY c.name) FILTER (WHERE c.name IS NOT NULL)
 				END),
 			'[]') AS categories,	
-				  COALESCE(CAST((SELECT pr.value FROM price pr WHERE pr.product_id = p.id ORDER BY pr.effective_date DESC LIMIT 1) AS NUMERIC(7,2)), 0.00) AS price 
+			COALESCE(CAST((SELECT pr.value FROM price pr WHERE pr.id_product = p.id ORDER BY pr.effective_date DESC LIMIT 1) AS NUMERIC(7,2)), 0.00) AS price 
 			FROM products p 
 			LEFT JOIN category_products cp ON cp.id_product = p.id 
 			LEFT JOIN category c ON cp.id_category = c.id 
@@ -73,28 +73,24 @@ class ProductDao {
 
 	public async createProduct(name: string, url_image: string, barcode: string, quantity: number, format: string, price: number, categoryIds?: number[]) {
 		const productQuery = `
-		  INSERT INTO products (name, url_image, barcode, quantity, format)
-		  VALUES ($1, $2, $3, $4, $5)
-		  RETURNING id;
+			INSERT INTO products (name, url_image, barcode, quantity, format)
+			VALUES ($1, $2, $3, $4, $5)
+			RETURNING id;
 		`;
 		const productResult = await db.query(productQuery, [name, url_image, barcode, quantity, format]);
 		const productId = productResult[0].id;
 
 		const priceQuery = `
-		INSERT INTO price (product_id, value, effective_date)
-		VALUES ($1, $2, NOW());
+			INSERT INTO price (id_product, value, effective_date)
+			VALUES ($1, $2, NOW());
 		`;
 		await db.query(priceQuery, [productId, price]);
 
-		//cast to number[] to avoid type error
-		categoryIds = categoryIds as number[];
-
 		if (categoryIds && Array.isArray(categoryIds) && categoryIds.length > 0) {
-			console.log("categoryIds", categoryIds);
 			const categoryProductQuery = `
-    INSERT INTO category_products (id_category, id_product)
-    VALUES ($1, $2);
-  `;
+				INSERT INTO category_products (id_category, id_product)
+				VALUES ($1, $2);
+			`;
 			await Promise.all(categoryIds.map((categoryId) => db.query(categoryProductQuery, [categoryId, productId])));
 		}
 
@@ -102,26 +98,62 @@ class ProductDao {
 		return addedProduct;
 	}
 
-	public async updateProduct(id: number, name: string, barcode: string, added_date: string, quantity: number, categoryIds: number[], format: string, url_image: string) {
-		const query = `
-          UPDATE products
-          SET name = $2, barcode = $3, added_date = $4, quantity = $5, format = $6, url_image = $7
-          WHERE id = $1
-          RETURNING *;
-        `;
-		const result = await db.query(query, [id, name, barcode, added_date, quantity, format, url_image]);
-		const updatedProduct = this.mapProduct(result[0]);
+	public async updateProduct(
+		id: number,
+		updateData: Partial<{ name: string; barcode: string; quantity: number; categoryIds: number[]; format: string; url_image: string; price: number }>
+	) {
+		let query = "UPDATE products SET ";
+		const queryUpdates: string[] = [];
+		const queryParams: any[] = [];
 
-		const deleteCategoryProductQuery = "DELETE FROM category_products WHERE product_id = $1;";
-		await db.query(deleteCategoryProductQuery, [id]);
+		Object.entries(updateData).forEach(([key, value]) => {
+			if (key !== "categoryIds" && key !== "price" && value !== undefined) {
+				queryUpdates.push(`${key} = $${queryParams.length + 2}`);
+				queryParams.push(value);
+			}
+		});
 
-		if (categoryIds && categoryIds.length > 0) {
-			const categoryProductQuery = `
-			  INSERT INTO category_products (category_id, product_id)
-			  VALUES ($1, $2);
-			`;
-			await Promise.all(categoryIds.map((categoryId) => db.query(categoryProductQuery, [categoryId, id])));
+		if (queryUpdates.length === 0) {
+			throw new Error("No valid properties to update");
 		}
+
+		query += queryUpdates.join(", ");
+		query += " WHERE id = $1 RETURNING *;";
+		queryParams.unshift(id);
+
+		const result = await db.query(query, queryParams);
+
+		let updatedCategories;
+		if (updateData.categoryIds) {
+			const deleteCategoryProductQuery = "DELETE FROM category_products WHERE id_product = $1;";
+			await db.query(deleteCategoryProductQuery, [id]);
+
+			if (updateData.categoryIds.length > 0) {
+				const categoryProductQuery = `
+					INSERT INTO category_products (id_category, id_product)
+					VALUES ($1, $2)
+					RETURNING id_category;
+				`;
+				const categoryResults = await Promise.all(updateData.categoryIds.map((categoryId) => db.query(categoryProductQuery, [categoryId, id])));
+				updatedCategories = categoryResults.map((result) => result[0].id_category);
+			}
+		}
+
+		let newPrice;
+		if (updateData.price !== undefined) {
+			const priceInsertQuery = `
+				INSERT INTO price (id_product, effective_date, value)
+				VALUES ($1, NOW(), $2)
+				RETURNING value;
+			`;
+			const priceResult = await db.query(priceInsertQuery, [id, updateData.price]);
+			newPrice = priceResult[0].value;
+		}
+
+		result[0].categories = updatedCategories || result[0].categories;
+		result[0].price = newPrice || result[0].price;
+
+		const updatedProduct = this.mapProduct(result[0]);
 
 		return updatedProduct;
 	}
@@ -129,11 +161,11 @@ class ProductDao {
 	public async getProductByBarcode(barcode: string) {
 		const query = `
 			SELECT p.*, 
-				  COALESCE(json_agg(c.name ORDER BY c.name), '[]') AS categories, 
-				  COALESCE(CAST((SELECT pr.value FROM price pr WHERE pr.product_id = p.id ORDER BY pr.effective_date DESC LIMIT 1) AS NUMERIC(7,2)), 0.00) AS price 
+				COALESCE(json_agg(c.name ORDER BY c.name), '[]') AS categories, 
+				COALESCE(CAST((SELECT pr.value FROM price pr WHERE pr.id_product = p.id ORDER BY pr.effective_date DESC LIMIT 1) AS NUMERIC(7,2)), 0.00) AS price 
 			FROM products p 
-			LEFT JOIN category_products cp ON cp.product_id = p.id 
-			LEFT JOIN categories c ON cp.category_id = c.id 
+			LEFT JOIN category_products cp ON cp.id_category = p.id
+			LEFT JOIN categories c ON cp.category_id = c.id
 			WHERE p.barcode = $1 
 			GROUP BY p.id;`;
 		const products = await this.fetchProducts(query, [barcode]);
