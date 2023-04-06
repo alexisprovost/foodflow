@@ -54,6 +54,7 @@ class SetupDAO {
           
           CREATE TABLE "product_transaction" (
             "id_product" INT,
+			"quantity" INT,
             "id_transaction" INT
           );
           
