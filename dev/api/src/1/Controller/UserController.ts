@@ -13,7 +13,8 @@ class UserController extends Controller {
 	}
 
 	protected initializeRoutes(): void {
-		this.router.get("/", requireAuth, this.getUser.bind(this));
+		this.router.get("/", requireAuth, this.handleAsync(this.getUser.bind(this)));
+		this.router.put("/:id", requireAuth, this.handleAsync(this.updateUser.bind(this)));
 	}
 
 	private async getUser(req: Request, res: Response): Promise<void> {
@@ -30,6 +31,21 @@ class UserController extends Controller {
 			console.error("Error getting user:", err);
 			super.errorResponse(res, "Internal server error", 500);
 		}
+	}
+
+	private async updateUser(req: Request, res: Response): Promise<void> {
+		const userid: number = parseInt(req.params.id);
+		const updateData = req.body;
+	
+		
+			const userInfos = await this.userDao.updateUser(userid, updateData);
+			console.log("userInfos", userInfos);
+			if (!userInfos) {
+				return super.errorResponse(res, "User not found", 404);
+			}
+
+			super.successResponse(res, userInfos);
+	
 	}
 }
 
