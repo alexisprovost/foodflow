@@ -19,23 +19,36 @@ interface Product {
 const Home = () => {
 	useDocumentTitle("Accueil");
 	const [products, setProducts] = useState<Product[]>([]);
+	const [searchQuery, setSearchQuery] = useState<string>("");
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+
+	const getProduct = (apiUrl: string) => {
+		setError(false);
+		setLoading(true);
+
+		axios.get(apiUrl, {
+			params: {
+				searchQuery: searchQuery
+			}
+		}).then((response) => {
+			setProducts(response.data.data);
+			setLoading(false);
+		}).catch((error) => {
+			console.log(error);
+			setError(true);
+			setLoading(false);
+		});
+
+	};
 
 	const handleSearch = (query: string) => {
-		if (query.length > 0) {
-			console.log(`Search query: ${query}`);
-		}
+		setSearchQuery(query);
 	};
 
 	useEffect(() => {
-		axios
-			.get("/api/1/products")
-			.then((response) => {
-				setProducts(response.data.data);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	}, []);
+		getProduct("/api/1/products");
+	}, [searchQuery]);
 
 	return (
 		<>

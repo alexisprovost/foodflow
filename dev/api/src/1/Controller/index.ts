@@ -1,5 +1,4 @@
-import { Router, Response, Request, NextFunction } from "express";
-import bodyParser from "body-parser";
+import express, { Router, Response, Request, NextFunction } from "express";
 
 abstract class Controller {
 	public router: Router;
@@ -38,7 +37,7 @@ abstract class Controller {
 
 	// Add this method to parse JSON data in request body
 	protected useJsonBodyParser(): void {
-		this.router.use(bodyParser.json());
+		this.router.use(express.json());
 	}
 }
 
