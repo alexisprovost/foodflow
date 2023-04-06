@@ -27,12 +27,23 @@ class ProductDao {
 		};
 	}
 
-	private async fetchProducts(query: string, queryParams?: any[]): Promise<any[]> {
+	private async fetchProducts(
+		query: string,
+		queryParams?: any[]
+	): Promise<any[]> {
 		const queryResult = await db.query(query, queryParams);
 		return queryResult.map(this.mapProduct);
 	}
 
-	public async getAllProducts(): Promise<Product[]> {
+	public async getAllProducts(
+		itemsPerPage: number = 12,
+		currentPage: number = 1,
+		searchQuery: string = "",
+		categoryFilter: string[] = [],
+		minPrice: number = 0,
+		maxPrice: number = Number.MAX_SAFE_INTEGER
+	): Promise<Product[]> {
+		const offset = (currentPage - 1) * itemsPerPage;
 		const query = `
 			SELECT p.*, 
 			COALESCE(
@@ -45,8 +56,22 @@ class ProductDao {
 			FROM products p 
 			LEFT JOIN category_products cp ON cp.id_product = p.id 
 			LEFT JOIN category c ON cp.id_category = c.id 
-			GROUP BY p.id;`;
-		return this.fetchProducts(query);
+			LEFT JOIN unnest($6::text[]) AS filter_categories ON c.name = filter_categories
+			WHERE (LOWER(p.name) LIKE LOWER($1) OR LOWER(p.barcode) LIKE LOWER($1))
+			AND (ARRAY_LENGTH($6, 1) IS NULL OR c.name = filter_categories)
+			GROUP BY p.id 
+			HAVING COALESCE((SELECT CAST(pr.value AS NUMERIC(7,2)) FROM price pr WHERE pr.id_product = p.id ORDER BY pr.effective_date DESC LIMIT 1), 0.00) BETWEEN $4 AND $5
+			ORDER BY p.name
+			LIMIT $2 OFFSET $3;
+		`;
+		return this.fetchProducts(query, [
+			`%${searchQuery}%`,
+			itemsPerPage,
+			offset,
+			minPrice,
+			maxPrice,
+			categoryFilter,
+		]);
 	}
 
 	public async getProductById(id: number): Promise<Product> {
@@ -71,13 +96,27 @@ class ProductDao {
 		return products[0];
 	}
 
-	public async createProduct(name: string, url_image: string, barcode: string, quantity: number, format: string, price: number, categoryIds?: number[]) {
+	public async createProduct(
+		name: string,
+		url_image: string,
+		barcode: string,
+		quantity: number,
+		format: string,
+		price: number,
+		categoryIds?: number[]
+	) {
 		const productQuery = `
 			INSERT INTO products (name, url_image, barcode, quantity, format)
 			VALUES ($1, $2, $3, $4, $5)
 			RETURNING id;
 		`;
-		const productResult = await db.query(productQuery, [name, url_image, barcode, quantity, format]);
+		const productResult = await db.query(productQuery, [
+			name,
+			url_image,
+			barcode,
+			quantity,
+			format,
+		]);
 		const productId = productResult[0].id;
 
 		const priceQuery = `
@@ -91,7 +130,11 @@ class ProductDao {
 				INSERT INTO category_products (id_category, id_product)
 				VALUES ($1, $2);
 			`;
-			await Promise.all(categoryIds.map((categoryId) => db.query(categoryProductQuery, [categoryId, productId])));
+			await Promise.all(
+				categoryIds.map((categoryId) =>
+					db.query(categoryProductQuery, [categoryId, productId])
+				)
+			);
 		}
 
 		const addedProduct = await this.getProductById(productId);
@@ -100,7 +143,15 @@ class ProductDao {
 
 	public async updateProduct(
 		id: number,
-		updateData: Partial<{ name: string; barcode: string; quantity: number; categoryIds: number[]; format: string; url_image: string; price: number }>
+		updateData: Partial<{
+			name: string;
+			barcode: string;
+			quantity: number;
+			categoryIds: number[];
+			format: string;
+			url_image: string;
+			price: number;
+		}>
 	) {
 		let query = "UPDATE products SET ";
 		const queryUpdates: string[] = [];
@@ -125,7 +176,8 @@ class ProductDao {
 
 		let updatedCategories;
 		if (updateData.categoryIds) {
-			const deleteCategoryProductQuery = "DELETE FROM category_products WHERE id_product = $1;";
+			const deleteCategoryProductQuery =
+				"DELETE FROM category_products WHERE id_product = $1;";
 			await db.query(deleteCategoryProductQuery, [id]);
 
 			if (updateData.categoryIds.length > 0) {
@@ -134,8 +186,14 @@ class ProductDao {
 					VALUES ($1, $2)
 					RETURNING id_category;
 				`;
-				const categoryResults = await Promise.all(updateData.categoryIds.map((categoryId) => db.query(categoryProductQuery, [categoryId, id])));
-				updatedCategories = categoryResults.map((result) => result[0].id_category);
+				const categoryResults = await Promise.all(
+					updateData.categoryIds.map((categoryId) =>
+						db.query(categoryProductQuery, [categoryId, id])
+					)
+				);
+				updatedCategories = categoryResults.map(
+					(result) => result[0].id_category
+				);
 			}
 		}
 
@@ -146,7 +204,10 @@ class ProductDao {
 				VALUES ($1, NOW(), $2)
 				RETURNING value;
 			`;
-			const priceResult = await db.query(priceInsertQuery, [id, updateData.price]);
+			const priceResult = await db.query(priceInsertQuery, [
+				id,
+				updateData.price,
+			]);
 			newPrice = priceResult[0].value;
 		}
 
