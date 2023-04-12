@@ -5,9 +5,9 @@ const Cart = () => {
 	useDocumentTitle("Cart");
 
 	return (
-		<>
+		<div className="animate__animated animate__fadeIn animate__faster">
 			<Title text="Cart" />
-		</>
+		</div>
 	);
 };
 

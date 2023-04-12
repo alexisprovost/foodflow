@@ -5,9 +5,9 @@ const Wallet = () => {
 	useDocumentTitle("Wallet");
 
 	return (
-		<>
+		<div className="animate__animated animate__fadeIn animate__faster">
 			<Title text="Wallet" />
-		</>
+		</div>
 	);
 };
 

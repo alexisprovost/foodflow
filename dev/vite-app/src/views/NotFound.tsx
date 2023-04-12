@@ -6,7 +6,7 @@ const NotFound = () => {
 	useDocumentTitle("404");
 
 	return (
-		<div className="flex flex-col justify-center items-center h-[inherit]">
+		<div className="flex flex-col justify-center items-center h-[inherit] animate__animated animate__fadeIn animate__faster">
 			<h1 className="text-4xl font-bold mb-4">404 Not Found</h1>
 			<p className="text-lg mb-8">The page you are looking for does not exist.</p>
 			<Link to="/" className="text-blue-500 hover:underline">
