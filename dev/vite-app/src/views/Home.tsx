@@ -85,9 +85,7 @@ const Home = () => {
 					</div>
 				</div>
 			) : (
-				<div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-					{Array.isArray(products) && products.map((product) => <Item key={product.id} name={product.name} image={product.url_image} quantity={product.quantity.toString()} />)}
-				</div>
+				<div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">{Array.isArray(products) && products.map((product) => <Item key={product.id} name={product.name} image={product.url_image} quantity={product.quantity.toString()} />)}</div>
 			)}
 		</>
 	);

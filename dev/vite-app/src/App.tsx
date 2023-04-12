@@ -6,7 +6,7 @@ import { FaWallet, FaUserAlt, FaShoppingCart } from "react-icons/fa";
 import MainFrame from "./components/pageHolder/MainFrame";
 import Nav from "./components/nav/Nav";
 import Home from "./views/Home";
-import Login from "./views/Login";
+import Login from "./components/Login";
 import Wallet from "./views/Wallet";
 import Cart from "./views/Cart";
 import NotFound from "./views/NotFound";

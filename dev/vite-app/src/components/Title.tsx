@@ -4,7 +4,7 @@ interface StringComponentProps {
 
 const Title: React.FC<StringComponentProps> = ({ text }) => {
 	return (
-		<div >
+		<div>
 			<p className="text-5xl font-bold">{text}</p>
 		</div>
 	);
