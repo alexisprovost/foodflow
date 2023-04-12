@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from "react";
 
-interface ItemProps {
+export interface ItemProps {
+	id: number;
 	name: string;
-	image: string;
-	quantity?: string;
-	price?: string;
+	quantity?: number;
+	price?: number;
+	added_date?: string;
+	barcode?: string;
+	categories?: string[];
+	format?: string;
+	url_image?: string;
 }
 
-const Item: React.FC<ItemProps> = ({ name, image, quantity, price }) => {
+const Item: React.FC<ItemProps> = ({ name, url_image, quantity, price }) => {
 	return (
-		<div className="bg-secondary p-4 rounded-[1rem]">
-			<div className="text-2xl font-bold mb-4">{name}</div>
+		<div className="bg-secondary p-4 rounded-[1rem] flex items-end flex-wrap justify-between">
+			<div className="text-2xl font-bold pb-6">{name}</div>
 			<div
 				className="img h-48 w-full rounded-lg bg-[length:auto_100%] bg-no-repeat bg-center"
 				style={{
-					backgroundImage: `url(${image})`,
+					backgroundImage: `url(${url_image})`,
 				}}
 			/>
-			<div className="text-right mt-4">{price}</div>
+			<div className="w-full mt-4 text-right font-medium text-lg">${price}</div>
 		</div>
 	);
 };
