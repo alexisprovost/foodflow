@@ -1,12 +1,13 @@
 import useDocumentTitle from "../hooks/useDocumentTitle";
+import Title from "../components/Title";
 
 const Cart = () => {
 	useDocumentTitle("Cart");
 
 	return (
-		<div className="login-page">
-			<h1>Cart</h1>
-		</div>
+		<>
+			<Title text="Cart" />
+		</>
 	);
 };
 
