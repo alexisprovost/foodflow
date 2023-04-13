@@ -1,51 +1,48 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
-import axios from "axios";
 import { ItemProps } from "../components/Item";
 
-
-interface CartContextType{
-    addCartItems: (item: ItemProps) => void;
-    removeCartItems: (id: number) => void;
-    getCartItems: () => any;
+interface CartContextType {
+	addCartItems: (item: ItemProps) => void;
+	removeCartItems: (id: number) => void;
+	getCartItems: () => any;
 }
 
 export const CartContext = createContext<CartContextType>({
-    addCartItems: () => {},
-    removeCartItems: () => {},
-    getCartItems: () => {},
+	addCartItems: () => {},
+	removeCartItems: () => {},
+	getCartItems: () => {},
 });
 
-interface CartProps{
-    children: React.ReactNode;
+interface CartProps {
+	children: React.ReactNode;
 }
 
 const CartProvider: React.FC<CartProps> = ({ children }) => {
-    const [cartItems, setCartItems] = useState<ItemProps[]>([]);
+	const [cartItems, setCartItems] = useState<ItemProps[]>([]);
 
-    const addCartItems = (item: ItemProps) => {
-        setCartItems((prev) => [...prev, item]);
-        console.log("Cart Items: ", JSON.stringify(cartItems));
-        
-    };
+	const addCartItems = (item: ItemProps) => {
+		setCartItems((prev) => [...prev, item]);
+	};
 
-    const removeCartItems = (id: number) => {
-        setCartItems((prev) => {
-            const { [id]: _, ...rest } = prev;
-            return rest;
-        });
-    };
+	const removeCartItems = (id: number) => {
+		setCartItems((prev) => prev.filter((item) => item.id !== id));
+	};
 
-    const getCartItems = () => {
-        return cartItems;
-    };
+	useEffect(() => {
+		console.log("Cart Items: ", JSON.stringify(cartItems));
+	}, [cartItems]);
 
-    const contextValue = {
-        addCartItems,
-        removeCartItems,
-        getCartItems,
-    };
+	const getCartItems = () => {
+		return cartItems;
+	};
 
-    return <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>;
+	const contextValue = {
+		addCartItems,
+		removeCartItems,
+		getCartItems,
+	};
+
+	return <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>;
 };
 
 export default CartProvider;
