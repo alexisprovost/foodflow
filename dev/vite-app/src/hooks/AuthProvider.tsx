@@ -49,6 +49,7 @@ interface UserInfo {
 	email: string;
 	firstName: string;
 	lastName: string;
+    role: string;
 }
 
 const AuthProvider: React.FC<AuthProps> = ({ children }) => {
