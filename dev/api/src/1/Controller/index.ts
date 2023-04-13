@@ -10,21 +10,21 @@ abstract class Controller {
 
 	protected abstract initializeRoutes(): void;
 
-	protected successResponse(res: Response, data: any): void {
+	public successResponse(res: Response, data: any): void {
 		res.status(200).json({
 			status: "success",
 			data,
 		});
 	}
 
-	protected errorResponse(res: Response, message: string, status: number): void {
+	public errorResponse(res: Response, message: string, status: number): void {
 		res.status(status).json({
 			status: "error",
 			message,
 		});
 	}
 
-	protected handleAsync(fn: Function) {
+	public handleAsync(fn: Function) {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			try {
 				await fn(req, res, next);

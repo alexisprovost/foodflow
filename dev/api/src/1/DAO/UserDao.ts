@@ -1,6 +1,15 @@
 import db from "./Database";
 import Utils from "../Controller/Utils";
 
+export interface User {
+	id: number;
+	firstname: string;
+	name: string;
+	email: string;
+	date_of_birth: string;
+	role: string;
+}
+
 class UserDao {
 	protected async getAllUsers() {
 		const result = await db.query("SELECT * FROM users");
@@ -8,22 +17,20 @@ class UserDao {
 	}
 
 	public async getUserById(id: number) {
-		const result = await db.query("SELECT id, firstname, name, email, date_of_birth, role FROM users WHERE id = $1", [id]);
+		const result = await db.query("SELECT id, firstname, name, email, date_of_birth, role, refresh_token, refresh_token_expires FROM users WHERE id = $1", [id]);
 		return result[0];
 	}
 
-	public async createUser(email: string, password: string, refresh_token: string, refresh_token_expires: Date) {
+	public async createUser(email: string, password: string) {
 		const hashedPassword = await Utils.hash(password);
-		console.log("refresh_token", refresh_token);
-		const hashedRefreshToken = await Utils.hash(refresh_token);
 
 		const query = `
-			INSERT INTO users (email, password, refresh_token, refresh_token_expires)
-			VALUES ($1, $2, $3, $4)
-			RETURNING id, email, refresh_token, refresh_token_expires;
+			INSERT INTO users (email, password)
+			VALUES ($1, $2)
+			RETURNING id, email;
 		`;
 
-		const result = await db.query(query, [email, hashedPassword, hashedRefreshToken, refresh_token_expires]);
+		const result = await db.query(query, [email, hashedPassword]);
 		return result[0];
 	}
 
@@ -83,11 +90,13 @@ class UserDao {
 
 	public async saveRefreshToken(userId: number, refreshToken: string, expiresIn: number) {
 		const hashedToken = await Utils.hash(refreshToken);
-		const expiresAt = new Date(Date.now() + expiresIn * 1000).toISOString().slice(0, 19).replace("T", " ");
+		console.log("hashedToken", hashedToken);
+		console.log("expiresIn", expiresIn);
+		const expiresAt = new Date(Date.now() + expiresIn * 1000).toISOString();
 		const query = `
 		  UPDATE users
-		  SET refresh_token = ?, valid_until = ?
-		  WHERE id = ?
+		  SET refresh_token = $1, refresh_token_expires = $2
+		  WHERE id = $3
 		  RETURNING *;
 		`;
 		const result = await db.query(query, [hashedToken, expiresAt, userId]);
