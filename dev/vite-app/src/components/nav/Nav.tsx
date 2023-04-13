@@ -13,6 +13,8 @@ interface NavProps {
 }
 
 const Nav = ({ navItems }: NavProps) => {
+	const randomId = Math.random().toString(36).substr(2, 9);
+
 	return (
 		<nav className="bg-secondary top-1/2 transform -translate-y-1/2 h-3/4 w-24 fixed left-0 flex flex-col items-center justify-between p-4 rounded-tr-[2rem] rounded-br-[2rem] shadow-lg">
 			<Link to="/" className="font-fugazone">
@@ -20,7 +22,7 @@ const Nav = ({ navItems }: NavProps) => {
 			</Link>
 			<ul className="w-full ">
 				{navItems.map(({ icon, notification, link, onClick }) => (
-					<NavItem key={link} icon={icon} notification={notification} link={link} onClick={onClick} />
+					<NavItem key={link ? link : randomId} icon={icon} notification={notification} link={link} onClick={onClick} />
 				))}
 			</ul>
 		</nav>
