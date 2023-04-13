@@ -13,9 +13,10 @@ import NotFound from "./views/NotFound";
 import AppProvider from "./hooks/AppProvider";
 import AuthProvider from "./hooks/AuthProvider";
 import Account from "./views/Account";
+import CartProvider from "./hooks/CartProvider";
 
 function App() {
-	const initialProviders = { AuthProvider };
+	const initialProviders = { AuthProvider, CartProvider};
 
 	const [navItems, setNavItems] = useState([
 		{ icon: <FaStoreAlt />, link: "/" },
