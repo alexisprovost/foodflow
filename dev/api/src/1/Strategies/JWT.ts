@@ -101,7 +101,7 @@ async function handleRefreshToken(req: Request, res: Response, controller: AuthC
 			return controller.errorResponse(res, "Invalid refresh token", 401);
 		}
 
-		const user = await userDao.getUserById(userId);
+		const user = await userDao.getRefreshTokenbyUserId(userId);
 
 		if (!user) {
 			return controller.errorResponse(res, "Invalid refresh token", 401);

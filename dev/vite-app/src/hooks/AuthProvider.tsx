@@ -70,6 +70,8 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
 			const { token, refreshToken }: AuthResponse["data"] = response.data.data;
 			axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 			localStorage.setItem("refreshToken", refreshToken);
+			//get user info
+			getUserInfo();
 			setAuthState({
 				isAuthenticated: true,
 				accessToken: token,
@@ -113,7 +115,7 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
 	const getUserInfo = async () => {
 		try {
 			const response = await axios.get("/api/1/users");
-			setAuthState({ isAuthenticated: true, accessToken: authState.accessToken, userInfo: response.data });
+			setAuthState({ isAuthenticated: true, accessToken: authState.accessToken, userInfo: response.data.data });
 		} catch (error) {
 			console.error(error);
 		}
