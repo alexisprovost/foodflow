@@ -8,6 +8,8 @@ export interface User {
 	email: string;
 	date_of_birth: string;
 	role: string;
+	refresh_token: string;
+	refresh_token_expires: string;
 }
 
 class UserDao {

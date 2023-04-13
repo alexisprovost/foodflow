@@ -97,21 +97,15 @@ async function handleRefreshToken(req: Request, res: Response, controller: AuthC
 	try {
 		const userId = await controller.getUserIdFromRefreshToken(refreshToken);
 
-		console.log("userId", userId);
-
 		if (!userId) {
 			return controller.errorResponse(res, "Invalid refresh token", 401);
 		}
 
 		const user = await userDao.getUserById(userId);
 
-		console.log("user", user);
-
 		if (!user) {
 			return controller.errorResponse(res, "Invalid refresh token", 401);
 		}
-
-		console.log("user.refresh_token", user.refresh_token);
 
 		const isTokenMatch = user.refresh_token && typeof user.refresh_token === "string" ? await Utils.compareHash(refreshToken, user.refresh_token) : false;
 
