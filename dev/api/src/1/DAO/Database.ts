@@ -1,4 +1,5 @@
 import { Pool, PoolConfig } from "pg";
+import { createDBTablesQuery } from "./SetupDAO";
 
 const poolConfig: PoolConfig = {
 	host: process.env.DB_HOST,
@@ -12,6 +13,7 @@ class Database {
 	private static instance: Database;
 	private pool: Pool;
 	private retryDelay: number;
+	private createTablesTry: number = 0;
 
 	private constructor() {
 		this.retryDelay = 5000; // default delay of 1 second
@@ -43,15 +45,38 @@ class Database {
 		this.retryDelay = delay;
 	}
 
+	private async createTables(): Promise<void> {
+		try {
+			await this.query(createDBTablesQuery);
+			console.log("Tables created");
+		} catch (err) {
+			if (this.createTablesTry < 3) {
+				this.createTablesTry++;
+				console.log("Error creating tables, retrying...");
+				setTimeout(async () => {
+					await this.createTables();
+				}, this.retryDelay);
+			} else {
+				console.error("Error creating tables:", err);
+			}
+		}
+	}
+
 	public async query(text: string, params: any[] = []): Promise<any> {
 		let client;
+		const tablesCreated = /relation\s+"[^"]+"\s+does\s+not\s+exist/g;
+
 		try {
 			client = await this.pool.connect();
 			const result = await client.query(text, params);
 			return result.rows;
 		} catch (err) {
-			console.error("Error executing query:", err);
-			throw err;
+			if (tablesCreated.test((err as Error).message.toString())) {
+				// If the error is due to a missing table, create the table and try again
+				this.createTables();
+			}
+
+			console.error((err as Error).message);
 		} finally {
 			if (client) {
 				client.release();
