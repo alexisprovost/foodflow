@@ -24,7 +24,7 @@ class UserDao {
 	}
 
 	public async getRefreshTokenbyUserId(id: number) {
-		const result = await db.query("SELECT refresh_token, refresh_token_expires FROM users WHERE id = $1", [id]);
+		const result = await db.query("SELECT id, refresh_token, refresh_token_expires FROM users WHERE id = $1", [id]);
 		return result[0];
 	}
 
