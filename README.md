@@ -22,7 +22,7 @@ JWT_SECRET="CHANGE_THIS_JWT_SECRET"
 REFRESH_TOKEN_SECRET="CHANGE_THIS_JWT_REFRESH_SECRET"
 ```
 
-tip. you can use this command to generate jwt secrets [https://mojitocoder.medium.com/generate-a-random-jwt-secret-22a89e8be00d](Source)
+tip. you can use this command to generate jwt secrets [Source](https://mojitocoder.medium.com/generate-a-random-jwt-secret-22a89e8be00d)
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
