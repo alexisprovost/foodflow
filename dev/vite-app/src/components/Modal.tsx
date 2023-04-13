@@ -1,23 +1,20 @@
-import React, { useEffect } from "react";
-import ReactDOM from "react-dom";
+import React from "react";
 
 interface ModalProps {
-	children: React.ReactNode;
+  children: React.ReactNode;
+  isOpen: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ children }) => {
-	const modalRoot = document.getElementById("modal-root") as HTMLElement;
-	const modalElement = document.createElement("div");
-
-	useEffect(() => {
-		modalRoot.appendChild(modalElement);
-
-		return () => {
-			modalRoot.removeChild(modalElement);
-		};
-	}, [modalElement, modalRoot]);
-
-	return ReactDOM.createPortal(children, modalElement);
+const Modal: React.FC<ModalProps> = ({ children, isOpen }) => {
+  return (
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-200 ${
+        isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+      }`}
+    >
+      {children}
+    </div>
+  );
 };
 
 export default Modal;

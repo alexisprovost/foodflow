@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import { FaWallet, FaUserAlt, FaShoppingCart } from "react-icons/fa";
@@ -12,16 +12,14 @@ import Cart from "./views/Cart";
 import NotFound from "./views/NotFound";
 
 function App() {
-	const [showLoginModal, setShowLoginModal] = useState(true);
+	const [isLoginFormOpen, setIsLoginFormOpen] = useState(false);
 
-	const toggleModal = () => {
-		setShowLoginModal(!showLoginModal);
-	};
+	const handleLoginModal = useCallback(() => setIsLoginFormOpen(!isLoginFormOpen), [isLoginFormOpen]);
 
 	const [navItems, setNavItems] = useState([
 		{ icon: <FaWallet />, link: "/wallet" },
 		{ icon: <FaShoppingCart />, notification: 2, link: "/cart" },
-		{ icon: <FaUserAlt />, link: "/login" },
+		{ icon: <FaUserAlt />, onClick: handleLoginModal },
 	]);
 
 	return (
@@ -37,7 +35,7 @@ function App() {
 					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</MainFrame>
-			<Login isOpen={showLoginModal} toggleModal={toggleModal} />
+			<Login isOpen={isLoginFormOpen} toggleModal={handleLoginModal} />
 		</div>
 	);
 }

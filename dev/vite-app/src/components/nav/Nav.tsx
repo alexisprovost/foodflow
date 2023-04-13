@@ -4,7 +4,8 @@ import NavItem from "./NavItem";
 interface NavItemProps {
 	icon: JSX.Element;
 	notification?: number;
-	link: string;
+	link?: string;
+	onClick?: () => void;
 }
 
 interface NavProps {
@@ -18,8 +19,8 @@ const Nav = ({ navItems }: NavProps) => {
 				<h1 className="my-2 text-2xl">FF</h1>
 			</Link>
 			<ul className="w-full ">
-				{navItems.map(({ icon, notification, link }) => (
-					<NavItem key={link} icon={icon} notification={notification} link={link} />
+				{navItems.map(({ icon, notification, link, onClick }) => (
+					<NavItem key={link} icon={icon} notification={notification} link={link} onClick={onClick} />
 				))}
 			</ul>
 		</nav>
