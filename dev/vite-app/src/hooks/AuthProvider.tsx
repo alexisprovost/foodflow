@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
+import LoginForm from "../components/Login";
 
 interface AuthContextType {
 	isAuthenticated: boolean;
@@ -8,6 +8,7 @@ interface AuthContextType {
 	userInfo: UserInfo | null;
 	login: (email: string, password: string) => Promise<void>;
 	logout: () => void;
+    toggleModal: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -16,6 +17,7 @@ export const AuthContext = createContext<AuthContextType>({
 	userInfo: null,
 	login: async () => {},
 	logout: () => {},
+    toggleModal: () => {},
 });
 
 interface AuthProps {
@@ -55,6 +57,12 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
 		accessToken: "",
 		userInfo: null,
 	});
+
+	const [isLoginFormOpen, setIsLoginFormOpen] = useState(false);
+
+	const toggleModal = () => {
+		setIsLoginFormOpen(!isLoginFormOpen);
+	};
 
 	useEffect(() => {
 		const refreshToken = localStorage.getItem("refreshToken");
@@ -129,9 +137,11 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
 				userInfo: authState.userInfo,
 				login,
 				logout,
+                toggleModal,
 			}}
 		>
 			{children}
+            <LoginForm isOpen={isLoginFormOpen} toggleModal={toggleModal} />
 		</AuthContext.Provider>
 	);
 };

@@ -43,7 +43,6 @@ class AuthController extends Controller {
 
 	public async generateAuthToken(user: any): Promise<{ token: string; refreshToken: string; expires: Date }> {
 		const payload = { sub: user.id };
-		console.log("payload", payload);
 		const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: this.accessTokenExpiresIn });
 		const { refreshToken, expires: refreshExpiresAtDate } = await this.generateRefreshToken(user);
 		const expires = new Date(Date.now() + parseInt(this.accessTokenExpiresIn, 10) * 1000);

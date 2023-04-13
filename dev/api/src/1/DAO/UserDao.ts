@@ -72,7 +72,6 @@ class UserDao {
 			const hashedPassword = await Utils.hash(updateData.currentpassword);
 			// compare the two passwords to see if they match
 			if (await Utils.compareHash(updateData.currentpassword, resultcheckpassword[0].password)) {
-				console.log("hashednewPassword", updateData.newpassword);
 				const hashedNewPassword = await Utils.hash(updateData.newpassword);
 				const updatePasswordQuery = "UPDATE users SET password = $1 WHERE id = $2 RETURNING *;";
 				const resultnewpassword = await db.query(updatePasswordQuery, [hashedNewPassword, id]);
@@ -85,7 +84,6 @@ class UserDao {
 
 	public async getUserByRefreshToken(refreshToken: string) {
 		const hashedToken = await Utils.hash(refreshToken);
-		console.log("hashedToken", hashedToken);
 		const query = `
 		  SELECT id, firstname, name, email, date_of_birth, role
 		  FROM users
@@ -97,8 +95,6 @@ class UserDao {
 
 	public async saveRefreshToken(userId: number, refreshToken: string, expiresIn: number) {
 		const hashedToken = await Utils.hash(refreshToken);
-		console.log("hashedToken", hashedToken);
-		console.log("expiresIn", expiresIn);
 		const expiresAt = new Date(Date.now() + expiresIn * 1000).toISOString();
 		const query = `
 		  UPDATE users

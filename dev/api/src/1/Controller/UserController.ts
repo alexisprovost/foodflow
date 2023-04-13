@@ -39,7 +39,6 @@ class UserController extends Controller {
 	
 		
 			const userInfos = await this.userDao.updateUser(userid, updateData);
-			console.log("userInfos", userInfos);
 			if (!userInfos) {
 				return super.errorResponse(res, "User not found", 404);
 			}

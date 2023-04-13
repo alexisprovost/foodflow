@@ -5,43 +5,32 @@ import { AuthContext } from "../hooks/AuthProvider";
 
 const Account = () => {
 	useDocumentTitle("Account");
-	const { isAuthenticated, userInfo, logout } = useContext(AuthContext);
+	const { isAuthenticated, userInfo, toggleModal, logout } = useContext(AuthContext);
 
-	let content;
-	let userInfos: any = {};
-
-	if (isAuthenticated) {
-		if (userInfo && userInfo !== undefined) {
-			userInfos = userInfo;
-		}
+	let content = (
+		<div className="animate__animated animate__fadeIn animate__faster flex flex-col justify-center items-center h-[inherit]">
+			<p className="text-xl font-semibold">Not logged in</p>
+			<button className="bg-blue-500 text-white py-2 px-4 rounded mt-4" onClick={toggleModal}>
+				Log in
+			</button>
+		</div>
+	);
+	if (isAuthenticated && userInfo) {
+		const { email, id } = userInfo;
 		content = (
-			<div className="animate__animated animate__fadeIn animate__faster">
-				{userInfo ? (
-					<div>
-						<p>Logged in</p>
-						<p>{userInfos.username}</p>
-						<p>{userInfos.email}</p>
-						<p className="text-sm text-gray-500">{userInfo.id}</p>
-						<button onClick={logout}>Log out</button>
-					</div>
-				) : (
-					<>
-						<p>Logged in</p>
-						<button onClick={logout}>Log out</button>
-					</>
-				)}
-			</div>
-		);
-	} else {
-		content = (
-			<div className="animate__animated animate__fadeIn animate__faster">
-				<p>Not logged in</p>
+			<div className="animate__animated animate__fadeIn animate__faster flex flex-col justify-center items-center h-[inherit]">
+				<p className="text-xl font-semibold">Logged in</p>
+				<p className="my-2">{email}</p>
+				<p className="text-sm text-gray-500 my-2">{id}</p>
+				<button className="bg-blue-500 text-white py-2 px-4 rounded mt-4" onClick={logout}>
+					Log out
+				</button>
 			</div>
 		);
 	}
 
 	return (
-		<div className="animate__animated animate__fadeIn animate__faster">
+		<div className="animate__animated animate__fadeIn animate__faster h-full">
 			<Title text="Account" />
 			{content}
 		</div>

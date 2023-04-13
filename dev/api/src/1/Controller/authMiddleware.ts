@@ -38,8 +38,6 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
 		}
 
 		if (!user) {
-			console.log("Auth info:", info); // Log the info object to see the reason for the invalid token
-			console.log("Auth header:", req.headers.authorization); // Log the authorization header to check if the token is being sent correctly
 			return res.status(401).json({ message: "Unauthorized" });
 		}
 
