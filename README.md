@@ -19,6 +19,13 @@ POSTGRES_USER="CHANGE_THIS_DB_USER"
 POSTGRES_PASSWORD="CHANGE_THIS_DB_USER_PASS"
 POSTGRES_DB="CHANGE_THIS_DB_NAME"
 JWT_SECRET="CHANGE_THIS_JWT_SECRET"
+REFRESH_TOKEN_SECRET="CHANGE_THIS_JWT_REFRESH_SECRET"
+```
+
+tip. you can use this command to generate jwt secrets [https://mojitocoder.medium.com/generate-a-random-jwt-secret-22a89e8be00d](Source)
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
 2. To launch the project with Docker, use the docker-compose.yml file for the production version. For the development version, use the docker-compose.dev.yml file. Run these commands in the ./dev folder

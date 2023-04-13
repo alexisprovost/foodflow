@@ -16,7 +16,8 @@ export const createDBTablesQuery = `
 		"email" VARCHAR(255) NOT NULL UNIQUE,
 		"date_of_birth" DATE NULL,
 		"password" VARCHAR(255) NOT NULL,
-		"role" INT DEFAULT 0 NOT NULL
+		"role" INT DEFAULT 0 NOT NULL,
+		refresh_token VARCHAR(255) NULL
 	);
 	CREATE TABLE "wallet" (
 		"id" serial PRIMARY KEY,

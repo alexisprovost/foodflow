@@ -13,7 +13,7 @@ class UserDao {
 	}
 
 	public async createUser(email: string, password: string) {
-		const hashedPassword = await Utils.hashPassword(password);
+		const hashedPassword = await Utils.hash(password);
 
 		const query = `
       INSERT INTO users (email, password)
@@ -52,20 +52,42 @@ class UserDao {
 			// call the query
 			const resultcheckpassword = await db.query(checkPasswordQuery, [id]);
 			// hash the password given by the user
-			const hashedPassword = await Utils.hashPassword(updateData.currentpassword);
+			const hashedPassword = await Utils.hash(updateData.currentpassword);
 			// compare the two passwords to see if they match
-			if (await Utils.comparePassword(updateData.currentpassword, resultcheckpassword[0].password)) {
-				console.log ("hashednewPassword", updateData.newpassword)
-				const hashedNewPassword = await Utils.hashPassword(updateData.newpassword);
+			if (await Utils.compareHash(updateData.currentpassword, resultcheckpassword[0].password)) {
+				console.log("hashednewPassword", updateData.newpassword);
+				const hashedNewPassword = await Utils.hash(updateData.newpassword);
 				const updatePasswordQuery = "UPDATE users SET password = $1 WHERE id = $2 RETURNING *;";
 				const resultnewpassword = await db.query(updatePasswordQuery, [hashedNewPassword, id]);
-			}
-			else {
+			} else {
 				throw new Error("Wrong password");
-			}	
+			}
 		}
 		return result[0];
+	}
 
+	public async getUserByRefreshToken(refreshToken: string) {
+		const hashedToken = await Utils.hash(refreshToken);
+		const query = `
+		  SELECT id, firstname, name, email, date_of_birth, role
+		  FROM users
+		  WHERE refresh_token = $1;
+		`;
+		const result = await db.query(query, [hashedToken]);
+		return result[0];
+	}
+
+	public async saveRefreshToken(userId: number, refreshToken: string, expiresIn: number) {
+		const hashedToken = await Utils.hash(refreshToken);
+		const expiresAt = new Date(Date.now() + expiresIn * 1000).toISOString().slice(0, 19).replace("T", " ");
+		const query = `
+		  UPDATE users
+		  SET refresh_token = ?, valid_until = ?
+		  WHERE id = ?
+		  RETURNING *;
+		`;
+		const result = await db.query(query, [hashedToken, expiresAt, userId]);
+		return result[0];
 	}
 
 	public async getUserByEmail(email: string) {

@@ -9,19 +9,20 @@ services:
       POSTGRES_DB: $POSTGRES_DB
     volumes:
       - ./db_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     restart: unless-stopped
 
   api:
     build: ./api
     environment:
-      DATABASE_URL: postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: $POSTGRES_USER
+      DB_PASSWORD: $POSTGRES_PASSWORD
       JWT_SECRET: $JWT_SECRET
+      REFRESH_TOKEN_SECRET: $REFRESH_TOKEN_SECRET
+      NODE_ENV: production
     depends_on:
       - postgres
-    ports:
-      - "3000:3000"
     restart: unless-stopped
 
   vite-app:

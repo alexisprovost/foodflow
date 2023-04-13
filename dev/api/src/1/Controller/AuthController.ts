@@ -55,7 +55,7 @@ class AuthController extends Controller {
 				async (email, password, done) => {
 					try {
 						const user: any = await this.userDao.getUserByEmail(email);
-						const isValidPassword = await Utils.comparePassword(password, user.password);
+						const isValidPassword = await Utils.compareHash(password, user.password);
 						if (!user || !isValidPassword) {
 							return done(null, false);
 						}
@@ -73,6 +73,7 @@ class AuthController extends Controller {
 	protected initializeRoutes(): void {
 		this.router.post("/login", this.handleLogin.bind(this));
 		this.router.post("/register", this.handleRegister.bind(this));
+		this.router.post("/refresh", this.handleRefreshToken.bind(this));
 	}
 
 	private async handleLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -116,12 +117,47 @@ class AuthController extends Controller {
 		}
 	}
 
-	private async generateAuthToken(user: any): Promise<{ token: string; expires: Date }> {
+	private async handleRefreshToken(req: Request, res: Response): Promise<void> {
+		const { refreshToken } = req.body;
+
+		if (!refreshToken) {
+			return this.errorResponse(res, "Refresh token is missing", 400);
+		}
+
+		try {
+			const user = await this.userDao.getUserByRefreshToken(refreshToken);
+
+			if (!user) {
+				return this.errorResponse(res, "Invalid refresh token", 401);
+			}
+
+			const isTokenMatch = await Utils.compareHash(refreshToken, user.refresh_token);
+
+			if (!isTokenMatch) {
+				return this.errorResponse(res, "Invalid refresh token", 401);
+			}
+
+			const { token, refreshToken: newRefreshToken, expires } = await this.generateAuthToken(user);
+
+			await this.userDao.saveRefreshToken(user.id, newRefreshToken, expires.getTime());
+
+			this.successResponse(res, {
+				accessToken: token,
+				refreshToken: newRefreshToken,
+			});
+		} catch (err) {
+			console.error("Error handling refresh token:", err);
+			this.errorResponse(res, "Internal server error", 500);
+		}
+	}
+
+	private async generateAuthToken(user: any): Promise<{ token: string; refreshToken: string; expires: Date }> {
 		const payload = { sub: user.id };
 		const expiresIn = "1h";
 		const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn });
+		const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET as string);
 		const expires = new Date(Date.now() + parseInt(expiresIn, 10) * 1000); // Convert expiresIn to milliseconds
-		return { token, expires };
+		return { token, refreshToken, expires };
 	}
 }
 

@@ -7,7 +7,7 @@ import GithubLogo from "../../assets/githubLogo.svg";
 
 import Title from "../Title";
 import Modal from "../Modal";
-import OAuthProviderButton from "./oAuthProviderButton";
+import OAuthProviderButton from "./OAuthProviderButton";
 import Input from "./Input";
 
 interface LoginFormProps {
