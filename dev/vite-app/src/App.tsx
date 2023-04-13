@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { Routes, Route } from "react-router-dom";
 
-import { FaWallet, FaUserAlt, FaShoppingCart } from "react-icons/fa";
+import { FaWallet, FaUserAlt, FaShoppingCart, FaChessKnight } from "react-icons/fa";
 
 import MainFrame from "./components/pageHolder/MainFrame";
 import Nav from "./components/nav/Nav";
@@ -12,6 +12,7 @@ import Cart from "./views/Cart";
 import NotFound from "./views/NotFound";
 
 import AuthProvider from "./hooks/AuthProvider";
+import Account from "./views/Account";
 
 function App() {
 	const [isLoginFormOpen, setIsLoginFormOpen] = useState(false);
@@ -23,7 +24,8 @@ function App() {
 	const [navItems, setNavItems] = useState([
 		{ icon: <FaWallet />, link: "/wallet" },
 		{ icon: <FaShoppingCart />, notification: 2, link: "/cart" },
-		{ icon: <FaUserAlt />, onClick: handleLoginModal },
+		{ icon: <FaUserAlt />, link: "/account" },
+		{ icon: <FaChessKnight />, onClick: handleLoginModal },
 	]);
 
 	return (
@@ -37,6 +39,7 @@ function App() {
 						<Route path="/" element={<Home />} />
 						<Route path="/wallet" element={<Wallet />} />
 						<Route path="/cart" element={<Cart />} />
+						<Route path="/account" element={<Account />} />
 						<Route path="*" element={<NotFound />} />
 					</Routes>
 				</MainFrame>

@@ -1,27 +1,35 @@
 import React, { useContext } from "react";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import Title from "../components/Title";
-
 import { AuthContext } from "../hooks/AuthProvider";
 
-const Wallet = () => {
-	const { isAuthenticated, accessToken } = useContext(AuthContext);
-	useDocumentTitle("Wallet");
+const Account = () => {
+	useDocumentTitle("Account");
+	const { isAuthenticated, accessToken, userInfo } = useContext(AuthContext);
+
+	let content;
 
 	if (isAuthenticated) {
-		return (
+		console.log(userInfo);
+		content = (
 			<div className="animate__animated animate__fadeIn animate__faster">
-				<Title text="Wallet" />
-				<p>Logged in</p>
+				<p>a</p>
 			</div>
 		);
 	} else {
-		return (
+		content = (
 			<div className="animate__animated animate__fadeIn animate__faster">
 				<p>Not logged in</p>
 			</div>
 		);
 	}
+
+	return (
+		<div className="animate__animated animate__fadeIn animate__faster">
+			<Title text="Account" />
+			{content}
+		</div>
+	);
 };
 
-export default Wallet;
+export default Account;

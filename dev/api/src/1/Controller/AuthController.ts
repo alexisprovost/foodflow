@@ -9,12 +9,14 @@ import { configureLocalStrategy } from "../Strategies/Local";
 
 class AuthController extends Controller {
 	public userDao: UserDao;
-	public expiresIn;
+	public accessTokenExpiresIn;
+	public refreshTokenExpiresIn;
 
 	constructor() {
 		super();
 		this.userDao = new UserDao();
-		this.expiresIn = process.env.REFRESH_TOKEN_EXPIRES || "3600";
+		this.accessTokenExpiresIn = process.env.ACCESS_TOKEN_EXPIRES || "3600";
+		this.refreshTokenExpiresIn = process.env.REFRESH_TOKEN_EXPIRES || "604800"; // 1 week, for example
 
 		// Configure strategies
 		passport.use(configureJwtStrategy(this.userDao));
@@ -26,7 +28,7 @@ class AuthController extends Controller {
 	}
 
 	public async generateRefreshToken(user: any): Promise<{ refreshToken: string; expires: Date }> {
-		const expiresIn = parseInt(this.expiresIn, 10);
+		const expiresIn = parseInt(this.refreshTokenExpiresIn, 10);
 		const expires = new Date(Date.now() + expiresIn * 1000);
 		const payload = {
 			sub: user.id,
@@ -41,9 +43,9 @@ class AuthController extends Controller {
 
 	public async generateAuthToken(user: any): Promise<{ token: string; refreshToken: string; expires: Date }> {
 		const payload = { sub: user.id };
-		const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: this.expiresIn });
+		const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: this.accessTokenExpiresIn });
 		const { refreshToken, expires: refreshExpiresAtDate } = await this.generateRefreshToken(user);
-		const expires = new Date(Date.now() + parseInt(this.expiresIn, 10) * 1000);
+		const expires = new Date(Date.now() + parseInt(this.accessTokenExpiresIn, 10) * 1000);
 		return { token, refreshToken, expires };
 	}
 
