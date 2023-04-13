@@ -25,13 +25,13 @@ JWT_SECRET="CHANGE_THIS_JWT_SECRET"
 
 production
 
-```env
+```bash
 docker-compose up
 ```
 
 development
 
-```env
+```bash
 docker-compose -f docker-compose.dev.yml up
 ```
 
@@ -39,7 +39,7 @@ docker-compose -f docker-compose.dev.yml up
 
 When the node js packages changes. You need to run this command to rebuild the docker image with the updated packages in it.
 
-```env
+```bash
 docker-compose -f docker-compose.dev.yml build
 ```
 
