@@ -76,7 +76,7 @@ const Home = () => {
 					</div>
 				</div>
 			) : (
-				<div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate__animated animate__fadeIn animate__faster">{Array.isArray(products) && products.map((product) => <Item id={product.id} name={product.name} url_image={product.url_image} price={product.price} />)}</div>
+				<div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate__animated animate__fadeIn animate__faster">{Array.isArray(products) && products.map((product) => <div key={product.id}><Item name={product.name} url_image={product.url_image} price={product.price} /></div>)}</div>
 			)}
 		</div>
 	);
