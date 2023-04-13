@@ -11,10 +11,14 @@ import Wallet from "./views/Wallet";
 import Cart from "./views/Cart";
 import NotFound from "./views/NotFound";
 
+import AuthProvider from "./hooks/AuthProvider";
+
 function App() {
 	const [isLoginFormOpen, setIsLoginFormOpen] = useState(false);
 
-	const handleLoginModal = useCallback(() => setIsLoginFormOpen(!isLoginFormOpen), [isLoginFormOpen]);
+	const handleLoginModal = useCallback(() => {
+		setIsLoginFormOpen(!isLoginFormOpen);
+	}, [isLoginFormOpen]);
 
 	const [navItems, setNavItems] = useState([
 		{ icon: <FaWallet />, link: "/wallet" },
@@ -23,20 +27,22 @@ function App() {
 	]);
 
 	return (
-		<div className="bg-primary text-primaryText h-screen w-screen">
-			<div className="h-full w-24 fixed left-0 animate__animated animate__fadeInLeft">
-				<Nav navItems={navItems} />
+		<AuthProvider>
+			<div className="bg-primary text-primaryText h-screen w-screen">
+				<div className="h-full w-24 fixed left-0 animate__animated animate__fadeInLeft">
+					<Nav navItems={navItems} />
+				</div>
+				<MainFrame>
+					<Routes>
+						<Route path="/" element={<Home />} />
+						<Route path="/wallet" element={<Wallet />} />
+						<Route path="/cart" element={<Cart />} />
+						<Route path="*" element={<NotFound />} />
+					</Routes>
+				</MainFrame>
+				<Login isOpen={isLoginFormOpen} toggleModal={handleLoginModal} />
 			</div>
-			<MainFrame>
-				<Routes>
-					<Route path="/" element={<Home />} />
-					<Route path="/wallet" element={<Wallet />} />
-					<Route path="/cart" element={<Cart />} />
-					<Route path="*" element={<NotFound />} />
-				</Routes>
-			</MainFrame>
-			<Login isOpen={isLoginFormOpen} toggleModal={handleLoginModal} />
-		</div>
+		</AuthProvider>
 	);
 }
 

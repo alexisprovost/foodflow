@@ -8,7 +8,7 @@ import GithubLogo from "../../assets/githubLogo.svg";
 import Title from "../Title";
 import Modal from "../Modal";
 import OAuthProviderButton from "./OAuthProviderButton";
-import Input from "./Input";
+import { useAuth } from "../../hooks/AuthProvider";
 
 interface LoginFormProps {
 	isOpen: boolean;
@@ -18,6 +18,7 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ isOpen, toggleModal }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const { login } = useAuth();
 
 	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setEmail(e.target.value);
@@ -29,8 +30,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ isOpen, toggleModal }) => {
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		console.log("Email:", email);
-		console.log("Password:", password);
+		login(email, password);
 		toggleModal();
 	};
 
