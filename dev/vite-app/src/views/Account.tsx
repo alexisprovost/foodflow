@@ -5,7 +5,7 @@ import { AuthContext } from "../hooks/AuthProvider";
 
 const Account = () => {
 	useDocumentTitle("Account");
-	const { isAuthenticated, userInfo } = useContext(AuthContext);
+	const { isAuthenticated, userInfo, logout } = useContext(AuthContext);
 
 	let content;
 	let userInfos: any = {};
@@ -22,9 +22,13 @@ const Account = () => {
 						<p>{userInfos.username}</p>
 						<p>{userInfos.email}</p>
 						<p className="text-sm text-gray-500">{userInfo.id}</p>
+						<button onClick={logout}>Log out</button>
 					</div>
 				) : (
-					<p>Logged in</p>
+					<>
+						<p>Logged in</p>
+						<button onClick={logout}>Log out</button>
+					</>
 				)}
 			</div>
 		);
