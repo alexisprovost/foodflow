@@ -20,6 +20,7 @@ POSTGRES_PASSWORD="CHANGE_THIS_DB_USER_PASS"
 POSTGRES_DB="CHANGE_THIS_DB_NAME"
 JWT_SECRET="CHANGE_THIS_JWT_SECRET"
 REFRESH_TOKEN_SECRET="CHANGE_THIS_JWT_REFRESH_SECRET"
+REFRESH_TOKEN_EXPIRES=900
 ```
 
 tip. you can use this command to generate jwt secrets [Source](https://mojitocoder.medium.com/generate-a-random-jwt-secret-22a89e8be00d)

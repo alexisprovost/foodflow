@@ -24,6 +24,7 @@ services:
       DB_PASSWORD: $POSTGRES_PASSWORD
       JWT_SECRET: $JWT_SECRET
       REFRESH_TOKEN_SECRET: $REFRESH_TOKEN_SECRET
+      REFRESH_TOKEN_EXPIRES: $REFRESH_TOKEN_EXPIRES
       NODE_ENV: development
     depends_on:
       - postgres

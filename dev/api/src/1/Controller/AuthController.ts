@@ -107,8 +107,8 @@ class AuthController extends Controller {
 				return this.errorResponse(res, "User already exists", 409);
 			}
 
-			const newUser = await this.userDao.createUser(email, password);
-			const token = await this.generateAuthToken(newUser);
+			const token = await this.generateRefreshToken(email);
+			const newUser = await this.userDao.createUser(email, password, token.refreshToken, token.expires);
 
 			this.successResponse(res, token);
 		} catch (err) {
@@ -127,35 +127,43 @@ class AuthController extends Controller {
 		try {
 			const user = await this.userDao.getUserByRefreshToken(refreshToken);
 
+			console.log("user", user);
+
 			if (!user) {
 				return this.errorResponse(res, "Invalid refresh token", 401);
 			}
 
 			const isTokenMatch = await Utils.compareHash(refreshToken, user.refresh_token);
 
+			console.log("isTokenMatch", isTokenMatch);
+
 			if (!isTokenMatch) {
 				return this.errorResponse(res, "Invalid refresh token", 401);
 			}
 
-			const { token, refreshToken: newRefreshToken, expires } = await this.generateAuthToken(user);
+			const newTokens = await this.generateAuthToken(user);
 
-			await this.userDao.saveRefreshToken(user.id, newRefreshToken, expires.getTime());
+			await this.userDao.saveRefreshToken(user.id, newTokens.refreshToken, newTokens.expires.getTime());
 
-			this.successResponse(res, {
-				accessToken: token,
-				refreshToken: newRefreshToken,
-			});
+			return this.successResponse(res, newTokens);
 		} catch (err) {
 			console.error("Error handling refresh token:", err);
 			this.errorResponse(res, "Internal server error", 500);
 		}
 	}
 
-	private async generateAuthToken(user: any): Promise<{ token: string; refreshToken: string; expires: Date }> {
-		const payload = { sub: user.id };
-		const expiresIn = "1h";
-		const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn });
+	private async generateRefreshToken(payload: any): Promise<{ refreshToken: string; expires: Date }> {
+		const expiresIn = process.env.REFRESH_TOKEN_EXPIRES || "3600";
 		const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET as string);
+		const expires = new Date(Date.now() + parseInt(expiresIn, 10) * 1000);
+		return { refreshToken, expires };
+	}
+
+	private async generateAuthToken(user: any): Promise<{ token: string; refreshToken: string; expires: Date }> {
+		const payload = { sub: user.email };
+		const expiresIn = process.env.REFRESH_TOKEN_EXPIRES || "3600";
+		const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn });
+		const { refreshToken, expires: refreshExpiresAtDate } = await this.generateRefreshToken(payload);
 		const expires = new Date(Date.now() + parseInt(expiresIn, 10) * 1000); // Convert expiresIn to milliseconds
 		return { token, refreshToken, expires };
 	}

@@ -12,15 +12,18 @@ class UserDao {
 		return result[0];
 	}
 
-	public async createUser(email: string, password: string) {
+	public async createUser(email: string, password: string, refresh_token: string, refresh_token_expires: Date) {
 		const hashedPassword = await Utils.hash(password);
+		console.log("refresh_token", refresh_token);
+		const hashedRefreshToken = await Utils.hash(refresh_token);
 
 		const query = `
-      INSERT INTO users (email, password)
-      VALUES ($1, $2)
-      RETURNING *;
-    `;
-		const result = await db.query(query, [email, hashedPassword]);
+			INSERT INTO users (email, password, refresh_token, refresh_token_expires)
+			VALUES ($1, $2, $3, $4)
+			RETURNING id, email, refresh_token, refresh_token_expires;
+		`;
+
+		const result = await db.query(query, [email, hashedPassword, hashedRefreshToken, refresh_token_expires]);
 		return result[0];
 	}
 
@@ -68,6 +71,7 @@ class UserDao {
 
 	public async getUserByRefreshToken(refreshToken: string) {
 		const hashedToken = await Utils.hash(refreshToken);
+		console.log("hashedToken", hashedToken);
 		const query = `
 		  SELECT id, firstname, name, email, date_of_birth, role
 		  FROM users
