@@ -55,8 +55,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ isOpen, toggleModal }) => {
 						<button onClick={handleBackClick} className="absolute top-4 left-4 text-white hover:text-gray-100 focus:outline-none">
 							&larr; Back
 						</button>
-						<Title text="Sign In." className="text-primary" />
-						<h1 className="text-2xl font-bold mt-6 text-primary">Please sign in to your FoodFlow account to access the app</h1>
+						{isRegister ? <Title text="Sign Up." className="text-primary" /> : <Title text="Sign In." className="text-primary" />}
+						<h1 className="text-2xl font-bold mt-6 text-primary">Please {isRegister ? "sign up" : "sign in"} to access the app</h1>
 						<form onSubmit={handleSubmit} className="mt-4 text-primary">
 							<div className="mb-4">
 								<label htmlFor="email" className="text-base font-semibold block mb-2">
