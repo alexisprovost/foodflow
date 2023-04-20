@@ -11,8 +11,6 @@ interface CartItemProps {
 const CartItem: React.FC<CartItemProps> = ({ productId, quantity, onIncreaseQuantity, onDecreaseQuantity }) => {
 	const [product, setProduct] = useState({ name: "", price: 0, url_image: "" });
 
-	console.log(productId);
-
 	useEffect(() => {
 		const fetchProduct = async () => {
 			try {

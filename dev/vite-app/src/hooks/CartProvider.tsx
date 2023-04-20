@@ -65,12 +65,18 @@ const CartProvider: React.FC<CartProps> = ({ children }) => {
 		setItemChangeCallbacks((prev) => [...prev, callback]);
 	};
 
-	useEffect(() => {
-		// Load cart items from localStorage on component mount
+	const loadFromLocalStorage = () => {
 		const savedCartItems = localStorage.getItem(CART_STORAGE_KEY);
 		if (savedCartItems) {
-			setCartItems(JSON.parse(savedCartItems));
+			const parsedSavedCartItems = JSON.parse(savedCartItems);
+			if (Object.keys(parsedSavedCartItems).length > 0) {
+				setCartItems(parsedSavedCartItems);
+			}
 		}
+	};
+
+	useEffect(() => {
+		loadFromLocalStorage();
 	}, []);
 
 	useEffect(() => {
