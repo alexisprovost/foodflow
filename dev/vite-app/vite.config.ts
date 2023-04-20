@@ -5,12 +5,12 @@ import mkcert from "vite-plugin-mkcert";
 // https://vitejs.dev/config/
 export default defineConfig({
 	server: {
-		https: true,
-		hmr: {
-			host: "localhost",
-		},
 		host: "0.0.0.0",
 		port: 5173,
+		https: true,
+		hmr: {
+			protocol: 'wss'
+		},
 		proxy: {
 			"/api": {
 				target: "http://api:3000",
