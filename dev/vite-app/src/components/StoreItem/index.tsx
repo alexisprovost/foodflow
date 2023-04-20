@@ -15,13 +15,23 @@ export interface ItemProps {
 
 const StoreItem: React.FC<ItemProps> = ({ id, name, url_image, quantity, price }) => {
 	const { addCartItem } = useContext(CartContext);
+	const [isClicked, setIsClicked] = useState(false);
 
-	let onclickfunction = () => {
+	let onClickFunction = () => {
 		addCartItem(id, 1);
+		setIsClicked(true);
 	};
 
+	useEffect(() => {
+		if (isClicked) {
+			setTimeout(() => {
+				setIsClicked(false);
+			}, 250);
+		}
+	}, [isClicked]);
+
 	return (
-		<div onClick={onclickfunction} className="bg-secondary p-4 rounded-[1rem] flex items-end flex-wrap justify-between hover:cursor-pointer">
+		<div onClick={onClickFunction} className={`bg-secondary p-4 rounded-[1rem] flex items-end flex-wrap justify-between hover:cursor-pointer ${isClicked ? "bg-emerald-600" : ""}`} style={{ transition: "background-color 0.25s ease-in-out" }}>
 			<div className="xl:text-2xl lg:text-base md:text-sm sm:text-xs font-bold pb-6">{name}</div>
 			<div
 				className="img h-48 w-full rounded-lg bg-[length:auto_100%] bg-no-repeat bg-center"
