@@ -16,11 +16,11 @@ const Nav = ({ navItems }: NavProps) => {
 	const randomId = Math.random().toString(36).substr(2, 9);
 
 	return (
-		<nav className="bg-secondary top-1/2 transform -translate-y-1/2 h-3/4 w-24 fixed left-0 flex flex-col items-center justify-between p-4 rounded-tr-[2rem] rounded-br-[2rem] shadow-lg">
+		<nav className="md:top-1/2 bg-secondary bottom-0 transform md:-translate-y-1/2 md:h-3/4 md:w-24 h-24 w-full fixed md:left-0 flex md:flex-col flex-row items-center justify-between p-4 md:rounded-tr-[2rem] md:rounded-br-[2rem] shadow-lg">
 			<Link to="/" className="font-fugazone">
 				<h1 className="my-2 text-2xl">FF</h1>
 			</Link>
-			<ul className="w-full ">
+			<ul className="md:w-full flex">
 				{navItems.map(({ icon, notification, link, onClick }) => (
 					<NavItem key={link ? link : randomId} icon={icon} notification={notification} link={link} onClick={onClick} />
 				))}
