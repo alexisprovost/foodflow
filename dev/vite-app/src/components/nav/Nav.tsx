@@ -16,7 +16,7 @@ const Nav = ({ navItems }: NavProps) => {
 	const randomId = Math.random().toString(36).substr(2, 9);
 
 	return (
-		<nav className="md:top-1/2 bg-secondary bottom-0 transform md:-translate-y-1/2 md:h-3/4 md:w-24 h-24 w-full fixed md:left-0 flex md:flex-col flex-row items-center justify-between p-4 md:rounded-tr-[2rem] md:rounded-br-[2rem] shadow-lg">
+		<nav className="md:top-1/2 bg-secondary bottom-0 transform md:-translate-y-1/2 md:h-3/4 md:w-24 h-24 w-full fixed md:left-0 flex md:flex-col flex-row items-center justify-between p-4 md:rounded-tr-[2rem] rounded-tr-[2rem] rounded-tl-[2rem] md:rounded-br-[2rem] shadow-lg">
 			<Link to="/" className="font-fugazone">
 				<h1 className="my-2 text-2xl">FF</h1>
 			</Link>
