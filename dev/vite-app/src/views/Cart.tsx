@@ -4,6 +4,8 @@ import Title from "../components/Title";
 import CartItem from "../components/CartItem";
 import { CartContext } from "../hooks/CartProvider";
 
+import { Link } from "react-router-dom";
+
 const Cart = () => {
 	useDocumentTitle("Cart");
 	const { getCartItems, addCartItem, removeCartItem } = useContext(CartContext);
@@ -17,13 +19,12 @@ const Cart = () => {
 		removeCartItem(itemId);
 	};
 
-	// Consolidate items with the same id and sum their quantities
 	const consolidatedItems = Object.entries(cartItems)
 		.map(([itemId, quantity]) => ({
 			id: Number(itemId),
 			quantity,
 		}))
-		.reduce((accumulator, currentItem) => {
+		.reduce((accumulator: { id: number; quantity: number }[], currentItem) => {
 			const existingItemIndex = accumulator.findIndex((item) => item.id === currentItem.id);
 
 			if (existingItemIndex !== -1) {
@@ -39,7 +40,7 @@ const Cart = () => {
 		<div className="animate__animated animate__fadeIn animate__faster">
 			<Title text="Cart" />
 			<div className="my-8">
-				{Array.isArray(consolidatedItems) &&
+				{Array.isArray(consolidatedItems) && consolidatedItems.length > 0 ? (
 					consolidatedItems.map((item) => {
 						const { id, quantity } = item;
 						return (
@@ -47,7 +48,18 @@ const Cart = () => {
 								<CartItem productId={id} quantity={quantity ?? 0} onDecreaseQuantity={() => decreaseQuantity(id)} onIncreaseQuantity={() => increaseQuantity(id)} />
 							</div>
 						);
-					})}
+					})
+				) : (
+					<div className="loading" style={{ display: "flex", justifyContent: "center", padding: "0 0 4rem 0" }}>
+						<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+							<p className="text-white mt-4 pt-4 text-center">
+								Your cart is currently empty.
+								<br />
+								Please visit the <Link to="/">shop</Link> to add products to your cart.
+							</p>
+						</div>
+					</div>
+				)}
 			</div>
 		</div>
 	);

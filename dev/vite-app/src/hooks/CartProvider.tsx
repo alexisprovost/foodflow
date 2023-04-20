@@ -50,7 +50,7 @@ const CartProvider: React.FC<CartProps> = ({ children }) => {
 	};
 
 	const getNbCartItems = () => {
-		const itemIds = Object.keys(cartItems);
+		const itemIds = Object.keys(cartItems) as unknown as number[];
 		const totalQuantity = itemIds.reduce((total, itemId) => {
 			return total + cartItems[itemId];
 		}, 0);

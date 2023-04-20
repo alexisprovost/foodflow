@@ -20,19 +20,28 @@ import { CartContext } from "./hooks/CartProvider";
 function App() {
 	const { getCartItems, getNbCartItems } = useContext(CartContext);
 	const [nbCartItems, setNbCartItems] = useState(0);
-	const [totalCartItems, setTotalCartItems] = useState(0);
 	let cartItems = getCartItems();
 
-	// Update the notification count
 	useEffect(() => {
-		const newTotalCartItems = getNbCartItems();
-		setTotalCartItems(newTotalCartItems);
-	}, [getNbCartItems]);
+		const itemIds = Object.values(cartItems) as unknown as number[];
+		setNbCartItems(itemIds.reduce((acc, curr) => acc + curr, 0));
+	}, [cartItems]);
+
+	useEffect(() => {
+		setNavItems((prev) => {
+			return prev.map((item) => {
+				if (item.link === "/cart") {
+					return { ...item, notification: nbCartItems };
+				}
+				return item;
+			});
+		});
+	}, [nbCartItems]);
 
 	let [navItems, setNavItems] = useState([
 		{ icon: <FaStoreAlt />, link: "/" },
 		{ icon: <FaWallet />, link: "/wallet" },
-		{ icon: <FaShoppingCart />, notification: totalCartItems, link: "/cart" },
+		{ icon: <FaShoppingCart />, notification: nbCartItems, link: "/cart" },
 		{ icon: <FaUserAlt />, link: "/account" },
 	]);
 
