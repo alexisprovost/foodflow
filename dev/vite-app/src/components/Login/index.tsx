@@ -18,7 +18,8 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ isOpen, toggleModal }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const { login } = useAuth();
+	const [isRegister, setIsRegister] = useState(false);
+	const { login, register } = useAuth();
 
 	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setEmail(e.target.value);
@@ -30,8 +31,16 @@ const LoginForm: React.FC<LoginFormProps> = ({ isOpen, toggleModal }) => {
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		login(email, password);
+		if (isRegister) {
+			register(email, password);
+		} else {
+			login(email, password);
+		}
 		toggleModal();
+	};
+
+	const toggleType = () => {
+		setIsRegister(!isRegister);
 	};
 
 	const handleBackClick = () => {
@@ -61,15 +70,26 @@ const LoginForm: React.FC<LoginFormProps> = ({ isOpen, toggleModal }) => {
 								</label>
 								<input type="password" id="password" name="password" className="w-full text-lg px-5 py-3 font-bold bg-primary text-gray-200 border border-gray-700 rounded-2xl focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" value={password} onChange={handlePasswordChange} />
 							</div>
-							<div className="flex justify-between items-center m-6 text-center">
-								<div className="text-sm w-full">
+							<div className="flex justify-between items-center m-6">
+								<div className="text-sm">
+									{isRegister ? (
+										<div onClick={toggleType} className="cursor-pointer font-medium hover:text-indigo-500 focus:outline-none">
+											Already have an account?
+										</div>
+									) : (
+										<div onClick={toggleType} className="cursor-pointer font-medium hover:text-indigo-500 focus:outline-none">
+											Don't have an account?
+										</div>
+									)}
+								</div>
+								<div className="text-sm">
 									<a href="#" className="font-medium hover:text-indigo-500">
 										Forgot your password?
 									</a>
 								</div>
 							</div>
 							<button type="submit" className="w-full p-4 border border-transparent text-base font-semibold text-white bg-primary rounded-2xl shadow-sm hover:bg-secondary ease-in-out duration-300">
-								Sign in
+								{isRegister ? "Sign up" : "Sign in"}
 							</button>
 						</form>
 						<hr className="m-6" />

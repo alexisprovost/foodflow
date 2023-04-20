@@ -7,8 +7,9 @@ interface AuthContextType {
 	accessToken: string;
 	userInfo: UserInfo | null;
 	login: (email: string, password: string) => Promise<void>;
+	register: (email: string, password: string) => Promise<void>;
 	logout: () => void;
-    toggleModal: () => void;
+	toggleModal: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -16,8 +17,9 @@ export const AuthContext = createContext<AuthContextType>({
 	accessToken: "",
 	userInfo: null,
 	login: async () => {},
+	register: async () => {},
 	logout: () => {},
-    toggleModal: () => {},
+	toggleModal: () => {},
 });
 
 interface AuthProps {
@@ -49,7 +51,7 @@ interface UserInfo {
 	email: string;
 	firstName: string;
 	lastName: string;
-    role: string;
+	role: string;
 }
 
 const AuthProvider: React.FC<AuthProps> = ({ children }) => {
@@ -76,6 +78,24 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
 	const login = async (email: string, password: string) => {
 		try {
 			const response = await axios.post("/api/1/auth/login", { email, password });
+			const { token, refreshToken }: AuthResponse["data"] = response.data.data;
+			axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+			localStorage.setItem("refreshToken", refreshToken);
+			//get user info
+			getUserInfo();
+			setAuthState({
+				isAuthenticated: true,
+				accessToken: token,
+				userInfo: response.data.userInfo,
+			});
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const register = async (email: string, password: string) => {
+		try {
+			const response = await axios.post("/api/1/auth/register", { email, password });
 			const { token, refreshToken }: AuthResponse["data"] = response.data.data;
 			axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 			localStorage.setItem("refreshToken", refreshToken);
@@ -137,12 +157,13 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
 				accessToken: authState.accessToken,
 				userInfo: authState.userInfo,
 				login,
+				register,
 				logout,
-                toggleModal,
+				toggleModal,
 			}}
 		>
 			{children}
-            <LoginForm isOpen={isLoginFormOpen} toggleModal={toggleModal} />
+			<LoginForm isOpen={isLoginFormOpen} toggleModal={toggleModal} />
 		</AuthContext.Provider>
 	);
 };
