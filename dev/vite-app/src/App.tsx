@@ -18,28 +18,23 @@ import CartProvider from "./hooks/CartProvider";
 import { CartContext } from "./hooks/CartProvider";
 
 function App() {
-	const { getCartItems } = useContext(CartContext);
+	const { getCartItems, getNbCartItems } = useContext(CartContext);
 	const [nbCartItems, setNbCartItems] = useState(0);
+	const [totalCartItems, setTotalCartItems] = useState(0);
 	let cartItems = getCartItems();
+
+	// Update the notification count
+	useEffect(() => {
+		const newTotalCartItems = getNbCartItems();
+		setTotalCartItems(newTotalCartItems);
+	}, [getNbCartItems]);
 
 	let [navItems, setNavItems] = useState([
 		{ icon: <FaStoreAlt />, link: "/" },
 		{ icon: <FaWallet />, link: "/wallet" },
-		{ icon: <FaShoppingCart />, notification: cartItems.length, link: "/cart" },
+		{ icon: <FaShoppingCart />, notification: totalCartItems, link: "/cart" },
 		{ icon: <FaUserAlt />, link: "/account" },
 	]);
-
-	//get cart items by link
-	useEffect(() => {
-		setNavItems((prev) => {
-			return prev.map((item) => {
-				if (item.link === "/cart") {
-					return { ...item, notification: cartItems.length };
-				}
-				return item;
-			});
-		});
-	}, [cartItems]);
 
 	return (
 		<div className="bg-primary text-primaryText h-screen w-screen">

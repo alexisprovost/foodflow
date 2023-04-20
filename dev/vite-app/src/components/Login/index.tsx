@@ -61,14 +61,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ isOpen, toggleModal }) => {
 								</label>
 								<input type="password" id="password" name="password" className="w-full text-lg px-5 py-3 font-bold bg-primary text-gray-200 border border-gray-700 rounded-2xl focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" value={password} onChange={handlePasswordChange} />
 							</div>
-							<div className="flex justify-between items-center m-6">
-								<div className="flex items-center">
-									<input type="checkbox" id="remember" name="remember" className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
-									<label htmlFor="remember" className="ml-2 block text-sm text-gray-900">
-										Remember me
-									</label>
-								</div>
-								<div className="text-sm">
+							<div className="flex justify-between items-center m-6 text-center">
+								<div className="text-sm w-full">
 									<a href="#" className="font-medium hover:text-indigo-500">
 										Forgot your password?
 									</a>

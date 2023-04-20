@@ -11,7 +11,7 @@ const Account = () => {
 		<div className="animate__animated animate__fadeIn animate__faster flex flex-col justify-center items-center h-[inherit]">
 			<p className="text-xl font-semibold">Not logged in</p>
 			<button className="bg-blue-500 text-white py-2 px-4 rounded mt-4" onClick={toggleModal}>
-				Log in
+				Sign in
 			</button>
 		</div>
 	);

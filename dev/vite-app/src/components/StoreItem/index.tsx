@@ -13,11 +13,11 @@ export interface ItemProps {
 	url_image?: string;
 }
 
-const Item: React.FC<ItemProps> = ({ id, name, url_image, quantity, price }) => {
-	const { addCartItems } = useContext(CartContext);
+const StoreItem: React.FC<ItemProps> = ({ id, name, url_image, quantity, price }) => {
+	const { addCartItem } = useContext(CartContext);
 
 	let onclickfunction = () => {
-		addCartItems({ id, name, url_image, quantity, price });
+		addCartItem(id, 1);
 	};
 
 	return (
@@ -34,4 +34,4 @@ const Item: React.FC<ItemProps> = ({ id, name, url_image, quantity, price }) => 
 	);
 };
 
-export default Item;
+export default StoreItem;

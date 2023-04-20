@@ -1,53 +1,91 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
-import { ItemProps } from "../components/Item";
+import { ItemProps } from "../components/StoreItem";
 
 interface CartContextType {
-	addCartItems: (item: ItemProps) => void;
-	removeCartItems: (id: number) => void;
-	getCartItems: () => ItemProps[];
-	onCartItemsChange: (callback: (items: ItemProps[]) => void) => void;
+	addCartItem: (itemId: number, quantity: number) => void;
+	removeCartItem: (itemId: number) => void;
+	getCartItems: () => Record<number, number>;
+	onCartItemsChange: (callback: (items: Record<number, number>) => void) => void;
+	getNbCartItems: (itemId: number) => number;
 }
 
 export const CartContext = createContext<CartContextType>({
-	addCartItems: () => {},
-	removeCartItems: () => {},
-	getCartItems: () => [],
+	addCartItem: () => {},
+	removeCartItem: () => {},
+	getCartItems: () => ({}),
 	onCartItemsChange: () => {},
+	getNbCartItems: () => 0,
 });
 
 interface CartProps {
 	children: React.ReactNode;
 }
 
-const CartProvider: React.FC<CartProps> = ({ children }) => {
-	const [cartItems, setCartItems] = useState<ItemProps[]>([]);
-	const [itemChangeCallbacks, setItemChangeCallbacks] = useState<((items: ItemProps[]) => void)[]>([]);
+const CART_STORAGE_KEY = "cartItems";
 
-	const addCartItems = (item: ItemProps) => {
-		setCartItems((prev) => [...prev, item]);
+const CartProvider: React.FC<CartProps> = ({ children }) => {
+	const [cartItems, setCartItems] = useState<Record<number, number>>({});
+	const [itemChangeCallbacks, setItemChangeCallbacks] = useState<((items: Record<number, number>) => void)[]>([]);
+
+	const addCartItem = (itemId: number, quantity: number) => {
+		setCartItems((prev) => ({
+			...prev,
+			[itemId]: (prev[itemId] ?? 0) + quantity,
+		}));
 	};
 
-	const removeCartItems = (id: number) => {
-		setCartItems((prev) => prev.filter((item) => item.id !== id));
+	const removeCartItem = (itemId: number) => {
+		setCartItems((prev) => {
+			const newItems = { ...prev };
+			const currentQuantity = prev[itemId] ?? 0;
+
+			if (currentQuantity > 1) {
+				newItems[itemId] = currentQuantity - 1;
+			} else {
+				delete newItems[itemId];
+			}
+
+			return newItems;
+		});
+	};
+
+	const getNbCartItems = () => {
+		const itemIds = Object.keys(cartItems);
+		const totalQuantity = itemIds.reduce((total, itemId) => {
+			return total + cartItems[itemId];
+		}, 0);
+		return totalQuantity;
 	};
 
 	const getCartItems = () => {
 		return cartItems;
 	};
 
-	const onCartItemsChange = (callback: (items: ItemProps[]) => void) => {
+	const onCartItemsChange = (callback: (items: Record<number, number>) => void) => {
 		setItemChangeCallbacks((prev) => [...prev, callback]);
 	};
 
 	useEffect(() => {
+		// Load cart items from localStorage on component mount
+		const savedCartItems = localStorage.getItem(CART_STORAGE_KEY);
+		if (savedCartItems) {
+			setCartItems(JSON.parse(savedCartItems));
+		}
+	}, []);
+
+	useEffect(() => {
+		// Save cart items to localStorage whenever they change
+		localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+
 		itemChangeCallbacks.forEach((callback) => callback(cartItems));
 	}, [cartItems, itemChangeCallbacks]);
 
 	const contextValue = {
-		addCartItems,
-		removeCartItems,
+		addCartItem,
+		removeCartItem,
 		getCartItems,
 		onCartItemsChange,
+		getNbCartItems,
 	};
 
 	return <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>;

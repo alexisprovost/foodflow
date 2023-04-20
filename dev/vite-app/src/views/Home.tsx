@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import Title from "../components/Title";
 import SearchBar from "../components/SearchBar";
-import Item from "../components/Item";
+import StoreItem from "../components/StoreItem";
 import axios from "axios";
 import { GiDeadlyStrike } from "react-icons/gi";
 
 import { Oval } from "react-loading-icons";
 
-import { ItemProps } from "../components/Item";
+import { ItemProps } from "../components/StoreItem";
 
 const Home = () => {
 	useDocumentTitle("Accueil");
@@ -91,7 +91,7 @@ const Home = () => {
 					{Array.isArray(products) &&
 						products.map((product) => (
 							<div key={product.id}>
-								<Item {...product} />
+								<StoreItem {...product} />
 							</div>
 						))}
 				</div>
