@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import { FaStoreAlt, FaWallet, FaUserAlt, FaShoppingCart, FaChessKnight } from "react-icons/fa";
@@ -10,10 +10,7 @@ import Wallet from "./views/Wallet";
 import Cart from "./views/Cart";
 import NotFound from "./views/NotFound";
 
-import AppProvider from "./hooks/AppProvider";
-import AuthProvider from "./hooks/AuthProvider";
 import Account from "./views/Account";
-import CartProvider from "./hooks/CartProvider";
 
 import { CartContext } from "./hooks/CartProvider";
 
