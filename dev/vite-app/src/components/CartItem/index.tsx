@@ -11,11 +11,13 @@ interface CartItemProps {
 const CartItem: React.FC<CartItemProps> = ({ productId, quantity, onIncreaseQuantity, onDecreaseQuantity }) => {
 	const [product, setProduct] = useState({ name: "", price: 0, url_image: "" });
 
+	console.log(productId);
+
 	useEffect(() => {
 		const fetchProduct = async () => {
 			try {
-				const response = await axios.get(`/api/1/products/${productId}`);
-				setProduct(response.data);
+				const response = await axios.get(`/api/1/products/${productId.toString()}`);
+				setProduct(response.data.data);
 			} catch (error) {
 				console.error(error);
 			}
