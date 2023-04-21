@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
 
   api:
-    build: ./api
+    image: ghcr.io/alexisprovost/foodflow/api:latest
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
 
   vite-app:
-    build: ./vite-app
+    image: ghcr.io/alexisprovost/foodflow/vite-app:latest
     depends_on:
       - api
     ports:
