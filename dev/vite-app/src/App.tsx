@@ -44,7 +44,7 @@ function App() {
 
 	return (
 		<div className="bg-primary text-primaryText h-screen w-screen">
-			<div className="md:h-full w-full h-24 md:w-24 bottom-0 z-[100] fixed left-0 animate__animated animate__fadeInLeft">
+			<div className="md:h-full w-full h-24 md:w-24 bottom-0 z-[100] fixed left-0 animate__animated animate__fadeInUp md:animate__fadeInLeft animate__faster">
 				<Nav navItems={navItems} />
 			</div>
 			<MainFrame>

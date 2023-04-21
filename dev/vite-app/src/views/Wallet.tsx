@@ -11,6 +11,7 @@ const Wallet = () => {
 	if (!isAuthenticated) {
 		return (
 			<div className="animate__animated animate__fadeIn animate__faster">
+				<Title text="Wallet" />
 				<div className="my-8">
 					<p>Not logged in</p>
 				</div>
