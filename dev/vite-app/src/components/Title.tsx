@@ -4,7 +4,7 @@ interface StringComponentProps {
 }
 
 const Title: React.FC<StringComponentProps> = ({ text, className }) => {
-	let classes = "text-5xl font-bold"; //
+	let classes = "pt-4 md:pt-0 text-5xl font-bold"; //
 	if (className) {
 		classes += " " + className;
 	}
