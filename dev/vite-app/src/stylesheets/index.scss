@@ -12,6 +12,12 @@ a:visited {
 	text-decoration: none;
 }
 
+body {
+	background-color: hwb(213, 7%, 85%);
+	background-color: lch(9.302%, 6.038%, 261.233%);
+	background-color: lab(9.302%, -1.104%, -7.161%);
+}
+
 /*
     https://github.com/tailwindlabs/tailwindcss/discussions/2394
     https://github.com/tailwindlabs/tailwindcss/pull/5732

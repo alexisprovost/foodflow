@@ -59,7 +59,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ isOpen, toggleModal }) => {
 							</button>
 							{isRegister ? <Title text="Sign Up." className="text-primary" /> : <Title text="Sign In." className="text-primary" />}
 						</div>
-						<h1 className="text-2xl font-bold mt-6 text-primary">Please {isRegister ? "sign up" : "sign in"} to access the app</h1>
+						<h1 className="text-lg md:text-xl font-bold mt-6 text-primary">Please {isRegister ? "sign up" : "sign in"} to access the app</h1>
 						<form onSubmit={handleSubmit} className="mt-4 text-primary">
 							<div className="mb-4">
 								<label htmlFor="email" className="text-base font-semibold block mb-2">

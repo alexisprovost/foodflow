@@ -3,13 +3,24 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 import Title from "../components/Title";
 import { AuthContext } from "../hooks/AuthProvider";
 
+import Balance from "../components/Wallet/Balance";
+import ActionHolder from "../components/Wallet/ActionHolder";
+import LatestTransactions from "../components/Wallet/LatestTransactions";
+
+import { BsArrowBarUp, BsArrowBarDown } from "react-icons/bs";
+
 const Wallet = () => {
 	const { isAuthenticated, accessToken } = useContext(AuthContext);
 	useDocumentTitle("Wallet");
 
 	const walletContent = isAuthenticated ? (
 		<div className="my-8">
-			<p>Logged in</p>
+			<Balance />
+			<div className="py-6 flex overflow-auto no-scrollbar">
+				<ActionHolder title="Top up" icon={<BsArrowBarUp size={25} />} />
+				<ActionHolder title="Withdraw" icon={<BsArrowBarDown size={25} />} />
+			</div>
+			<LatestTransactions />
 		</div>
 	) : (
 		<div className="my-8">
