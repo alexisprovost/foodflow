@@ -4,6 +4,7 @@ import { ItemProps } from "../components/StoreItem";
 interface CartContextType {
 	addCartItem: (itemId: number, quantity: number) => void;
 	removeCartItem: (itemId: number) => void;
+	setCartItem: (itemId: number, newQuantity: number) => void;
 	getCartItems: () => Record<number, number>;
 	onCartItemsChange: (callback: (items: Record<number, number>) => void) => void;
 	getNbCartItems: (itemId: number) => number;
@@ -15,6 +16,7 @@ export const CartContext = createContext<CartContextType>({
 	getCartItems: () => ({}),
 	onCartItemsChange: () => {},
 	getNbCartItems: () => 0,
+	setCartItem: () => {},
 });
 
 interface CartProps {
@@ -41,6 +43,20 @@ const CartProvider: React.FC<CartProps> = ({ children }) => {
 
 			if (currentQuantity > 1) {
 				newItems[itemId] = currentQuantity - 1;
+			} else {
+				delete newItems[itemId];
+			}
+
+			return newItems;
+		});
+	};
+
+	const setCartItem = (itemId: number, newQuantity: number) => {
+		setCartItems((prev) => {
+			const newItems = { ...prev };
+
+			if (newQuantity > 0) {
+				newItems[itemId] = newQuantity;
 			} else {
 				delete newItems[itemId];
 			}
@@ -89,6 +105,7 @@ const CartProvider: React.FC<CartProps> = ({ children }) => {
 	const contextValue = {
 		addCartItem,
 		removeCartItem,
+		setCartItem,
 		getCartItems,
 		onCartItemsChange,
 		getNbCartItems,

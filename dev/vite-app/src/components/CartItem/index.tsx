@@ -6,11 +6,10 @@ import { BiPlus, BiMinus } from "react-icons/bi";
 interface CartItemProps {
 	productId: number;
 	quantity: number;
-	onIncreaseQuantity: () => void;
-	onDecreaseQuantity: () => void;
+	onQuantityChange: (newQuantity: number) => void;
 }
 
-const CartItem: React.FC<CartItemProps> = ({ productId, quantity, onIncreaseQuantity, onDecreaseQuantity }) => {
+const CartItem: React.FC<CartItemProps> = ({ productId, quantity, onQuantityChange }) => {
 	const [product, setProduct] = useState({ name: "", price: 0, url_image: "" });
 
 	useEffect(() => {
@@ -26,6 +25,11 @@ const CartItem: React.FC<CartItemProps> = ({ productId, quantity, onIncreaseQuan
 		fetchProduct();
 	}, [productId]);
 
+	const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const newQuantity = parseInt(e.target.value, 10);
+		onQuantityChange(isNaN(newQuantity) ? 0 : newQuantity);
+	};
+
 	return (
 		<div className="flex bg-secondary items-center p-3 my-8 shadow rounded-[1rem]">
 			<div
@@ -40,11 +44,14 @@ const CartItem: React.FC<CartItemProps> = ({ productId, quantity, onIncreaseQuan
 			</div>
 			<div className="ml-4">
 				<div className="flex flex-col items-center justify-content-center p-1 mt-1 bg-primaryButton rounded-[1rem] ">
-					<button className="flex items-center justify-center text-white py-1 rounded-md text-sm w-full" onClick={onIncreaseQuantity}>
+					<button className="flex items-center justify-center text-white py-1 rounded-md text-sm w-full" onClick={() => onQuantityChange(quantity + 1)}>
 						<BiPlus />
 					</button>
-					<p className="text-sm text-white mx-2">{quantity}</p>
-					<button className="flex items-center justify-center text-white py-1 rounded-md text-sm w-full" onClick={onDecreaseQuantity}>
+					<div className="relative">
+						<p className="text-sm text-white mx-2">{quantity}</p>
+						<input type="number" pattern="\d*" min="0" value={quantity} className="text-sm absolute top-0 left-0 w-full h-full opacity-0" onChange={handleQuantityChange} />
+					</div>
+					<button className="flex items-center justify-center text-white py-1 rounded-md text-sm w-full" onClick={() => onQuantityChange(quantity - 1)}>
 						<BiMinus />
 					</button>
 				</div>

@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 const Cart = () => {
 	useDocumentTitle("Cart");
-	const { getCartItems, addCartItem, removeCartItem } = useContext(CartContext);
+	const { getCartItems, addCartItem, removeCartItem, setCartItem } = useContext(CartContext);
 	const cartItems = getCartItems();
 
 	const increaseQuantity = (itemId: number) => {
@@ -17,6 +17,10 @@ const Cart = () => {
 
 	const decreaseQuantity = (itemId: number) => {
 		removeCartItem(itemId);
+	};
+
+	const handleQuantityChange = (itemId: number, newQuantity: number) => {
+		setCartItem(itemId, newQuantity);
 	};
 
 	const consolidatedItems = Object.entries(cartItems)
@@ -45,7 +49,7 @@ const Cart = () => {
 						const { id, quantity } = item;
 						return (
 							<div key={id}>
-								<CartItem productId={id} quantity={quantity ?? 0} onDecreaseQuantity={() => decreaseQuantity(id)} onIncreaseQuantity={() => increaseQuantity(id)} />
+								<CartItem productId={id} quantity={quantity ?? 0} onQuantityChange={(newQuantity) => handleQuantityChange(id, newQuantity)} />
 							</div>
 						);
 					})
