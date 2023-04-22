@@ -31,9 +31,9 @@ const CartItem: React.FC<CartItemProps> = ({ productId, quantity, onQuantityChan
 	};
 
 	return (
-		<div className="flex bg-secondary items-center p-3 my-8 shadow rounded-[1rem]">
+		<div className="flex bg-secondary items-center p-3 md:p-6 my-8 shadow rounded-[1rem]">
 			<div
-				className="h-12 w-12 bg-[auto_100%] bg-center bg-no-repeat rounded-md"
+				className="h-12 w-12 md:h-24 md:w-24 bg-[auto_100%] bg-center bg-no-repeat rounded-md"
 				style={{
 					backgroundImage: `url(${product.url_image})`,
 				}}

@@ -43,7 +43,7 @@ const Cart = () => {
 	return (
 		<div className="animate__animated animate__fadeIn animate__faster">
 			<Title text="Cart" />
-			<div className="my-8">
+			<div className="mt-8">
 				{Array.isArray(consolidatedItems) && consolidatedItems.length > 0 ? (
 					consolidatedItems.map((item) => {
 						const { id, quantity } = item;

@@ -14,16 +14,18 @@ const Wallet = () => {
 	useDocumentTitle("Wallet");
 
 	const walletContent = isAuthenticated ? (
-		<div className="my-8">
+		<div className="mt-8">
 			<Balance />
 			<div className="py-6 flex overflow-auto no-scrollbar">
 				<ActionHolder title="Top up" icon={<BsArrowBarUp />} />
 				<ActionHolder title="Withdraw" icon={<BsArrowBarDown />} />
+				<ActionHolder title="Transfer" icon={<BsArrowBarUp />} />
+				<ActionHolder title="Pay" icon={<BsArrowBarDown />} />
 			</div>
 			<LatestTransactions />
 		</div>
 	) : (
-		<div className="my-8">
+		<div className="mt-8">
 			<p>Not logged in</p>
 		</div>
 	);
