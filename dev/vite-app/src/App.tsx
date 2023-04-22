@@ -1,10 +1,10 @@
 import { useState, useContext, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
-import { FaStoreAlt, FaWallet, FaUserAlt, FaShoppingCart, FaChessKnight } from "react-icons/fa";
+import { FaStoreAlt, FaWallet, FaUserAlt, FaShoppingCart } from "react-icons/fa";
 
-import MainFrame from "./components/pageHolder/MainFrame";
-import Nav from "./components/nav/Nav";
+import MainFrame from "./components/MainFrame";
+import Nav from "./components/Nav";
 import Home from "./views/Home";
 import Wallet from "./views/Wallet";
 import Cart from "./views/Cart";
@@ -44,7 +44,7 @@ function App() {
 
 	return (
 		<div className="bg-primary text-primaryText h-screen w-screen">
-			<div className="md:h-full w-full h-24 md:w-24 bottom-0 z-[100] fixed left-0 animate__animated animate__fadeInUp md:animate__fadeInLeft animate__faster">
+			<div className="md:h-full w-full h-24 md:w-24 bottom-0 z-[100] fixed left-0 animate__animated animate__fadeIn animate__faster">
 				<Nav navItems={navItems} />
 			</div>
 			<MainFrame>
