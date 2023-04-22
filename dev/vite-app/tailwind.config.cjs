@@ -14,7 +14,7 @@ module.exports = {
 				secondary: "#1b2834",
 				primaryText: "#ffffff",
 				secondaryText: "#949494",
-				primaryButton: "#26373a",
+				primaryButton: "#14B8A6",
 				secondaryButton: "#3e747b",
 				danger: "#ff6969",
 				success: "#8ce790",

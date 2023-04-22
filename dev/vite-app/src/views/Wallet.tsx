@@ -17,8 +17,8 @@ const Wallet = () => {
 		<div className="my-8">
 			<Balance />
 			<div className="py-6 flex overflow-auto no-scrollbar">
-				<ActionHolder title="Top up" icon={<BsArrowBarUp size={25} />} />
-				<ActionHolder title="Withdraw" icon={<BsArrowBarDown size={25} />} />
+				<ActionHolder title="Top up" icon={<BsArrowBarUp />} />
+				<ActionHolder title="Withdraw" icon={<BsArrowBarDown />} />
 			</div>
 			<LatestTransactions />
 		</div>
