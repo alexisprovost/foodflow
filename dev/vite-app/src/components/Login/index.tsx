@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { MdClose } from "react-icons/md";
 
 import GoogleLogo from "../../assets/googleLogo.svg";
 import DiscordLogo from "../../assets/discordLogo.svg";
@@ -50,12 +51,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ isOpen, toggleModal }) => {
 	return (
 		<>
 			<Modal isOpen={isOpen}>
-				<div className="fixed inset-0 z-50 flex items-center justify-center animate__animated animate__fadeIn animate__faster">
-					<div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-md">
-						<button onClick={handleBackClick} className="absolute top-4 left-4 text-white hover:text-gray-100 focus:outline-none">
-							&larr; Back
-						</button>
-						{isRegister ? <Title text="Sign Up." className="text-primary" /> : <Title text="Sign In." className="text-primary" />}
+				<div className="fixed inset-0 z-50 md:z-[110] flex md:items-center justify-center">
+					<div className="bg-white overflow-auto pb-24 md:pb-8 no-scrollbar w-full max-w-md p-8 rounded-2xl shadow-md">
+						<div className="relative">
+							<button className="absolute top-0 right-0 p-2 text-gray-500 hover:text-gray-700" onClick={handleBackClick}>
+								<MdClose size={24} />
+							</button>
+							{isRegister ? <Title text="Sign Up." className="text-primary" /> : <Title text="Sign In." className="text-primary" />}
+						</div>
 						<h1 className="text-2xl font-bold mt-6 text-primary">Please {isRegister ? "sign up" : "sign in"} to access the app</h1>
 						<form onSubmit={handleSubmit} className="mt-4 text-primary">
 							<div className="mb-4">
