@@ -63,6 +63,9 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           
       - name: Install bzip2 on remote machine
+        env:
+            HOST: ${{ secrets.DEPLOY_SERVER_HOST }}
+            USER: ${{ secrets.DEPLOY_SERVER_USER }}
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST "sudo apt-get update && sudo apt-get install -y bzip2"
 
