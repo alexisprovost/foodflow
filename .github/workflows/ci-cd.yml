@@ -44,6 +44,23 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST "echo '${{ secrets.GITHUB_TOKEN }}' | docker login ghcr.io -u ${{ github.actor }} --password-stdin"
 
+      - name: Create .env file on remote machine
+        env:
+          HOST: ${{ secrets.DEPLOY_SERVER_HOST }}
+          USER: ${{ secrets.DEPLOY_SERVER_USER }}
+        run: |
+          ssh -o StrictHostKeyChecking=no $USER@$HOST "\
+          mkdir -p dev && \
+          echo 'POSTGRES_USER=${{ secrets.POSTGRES_USER }}' > dev/.env && \
+          echo 'POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}' >> dev/.env && \
+          echo 'POSTGRES_DB=${{ secrets.POSTGRES_DB }}' >> dev/.env && \
+          echo 'DB_USER=${{ secrets.DB_USER }}' >> dev/.env && \
+          echo 'DB_PASSWORD=${{ secrets.DB_PASSWORD }}' >> dev/.env && \
+          echo 'JWT_SECRET=${{ secrets.JWT_SECRET }}' >> dev/.env && \
+          echo 'REFRESH_TOKEN_SECRET=${{ secrets.REFRESH_TOKEN_SECRET }}' >> dev/.env && \
+          echo 'ACCESS_TOKEN_EXPIRES=${{ secrets.ACCESS_TOKEN_EXPIRES }}' >> dev/.env && \
+          echo 'REFRESH_TOKEN_EXPIRES=${{ secrets.REFRESH_TOKEN_EXPIRES }}' >> dev/.env"
+
       - name: Docker-Compose Remote Deployment
         uses: alex-ac/github-action-ssh-docker-compose@master
         with:
@@ -52,13 +69,3 @@ jobs:
           ssh_user: ${{ secrets.DEPLOY_SERVER_USER }}
           docker_compose_prefix: ${{ github.repository }}
           docker_compose_filename: "dev/docker-compose.yml"
-          POSTGRES_USER: ${POSTGRES_USER}
-          POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-          POSTGRES_DB: ${POSTGRES_DB}
-          DB_USER: ${POSTGRES_USER}
-          DB_PASSWORD: ${POSTGRES_PASSWORD}
-          JWT_SECRET: ${JWT_SECRET}
-          REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
-          ACCESS_TOKEN_EXPIRES: ${ACCESS_TOKEN_EXPIRES}
-          REFRESH_TOKEN_EXPIRES: ${REFRESH_TOKEN_EXPIRES}
-          
