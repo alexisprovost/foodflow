@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "dev/**"
 
 env:
   REGISTRY: ghcr.io
@@ -69,10 +71,12 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST "sudo apt-get update && sudo apt-get install -y bzip2"
 
-      - name: Set up Docker
+      - name: Install Docker and Docker Compose on remote machine
+        env:
+            HOST: ${{ secrets.DEPLOY_SERVER_HOST }}
+            USER: ${{ secrets.DEPLOY_SERVER_USER }}
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
+          ssh -o StrictHostKeyChecking=no $USER@$HOST "sudo apt-get update && sudo apt-get install -y docker.io && sudo curl -L 'https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose"
 
       - name: Docker-Compose Remote Deployment
         uses: alex-ac/github-action-ssh-docker-compose@master
