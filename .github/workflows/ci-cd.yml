@@ -44,7 +44,7 @@ jobs:
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh_user: ${{ secrets.DEPLOY_SERVER_USER }}
           docker_compose_prefix: ${{ github.repository }}
-          docker_compose_filename: ".dev/docker-compose.yml"
+          docker_compose_filename: "dev/docker-compose.yml"
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
