@@ -52,4 +52,13 @@ jobs:
           ssh_user: ${{ secrets.DEPLOY_SERVER_USER }}
           docker_compose_prefix: ${{ github.repository }}
           docker_compose_filename: "dev/docker-compose.yml"
-          use_stack: 'true'
+          POSTGRES_USER: ${POSTGRES_USER}
+          POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+          POSTGRES_DB: ${POSTGRES_DB}
+          DB_USER: ${POSTGRES_USER}
+          DB_PASSWORD: ${POSTGRES_PASSWORD}
+          JWT_SECRET: ${JWT_SECRET}
+          REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+          ACCESS_TOKEN_EXPIRES: ${ACCESS_TOKEN_EXPIRES}
+          REFRESH_TOKEN_EXPIRES: ${REFRESH_TOKEN_EXPIRES}
+          
