@@ -73,10 +73,11 @@ jobs:
             export REFRESH_TOKEN_EXPIRES=${{ secrets.REFRESH_TOKEN_EXPIRES }}
 
       - name: Docker-Compose Remote Deployment
-        uses: alex-ac/github-action-ssh-docker-compose@master
+        uses: alexisprovost/github-action-ssh-docker-compose@master
         with:
           ssh_host: ${{ secrets.DEPLOY_SERVER_HOST }}
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh_user: ${{ secrets.DEPLOY_SERVER_USER }}
           docker_compose_prefix: ${{ github.repository }}
           docker_compose_filename: "dev/docker-compose.yml"
+          docker_compose_down: 'true'
