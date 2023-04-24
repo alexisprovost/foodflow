@@ -60,9 +60,10 @@ jobs:
           CONTAINER_REGISTRY_USERNAME: ${{ env.CONTAINER_REGISTRY_USERNAME }}
           CONTAINER_REGISTRY_PASSWORD: ${{ env.CONTAINER_REGISTRY_PASSWORD }}
         with:
+          ssh_user: ${{ secrets.DEPLOY_SERVER_USER }}
           ssh_host: ${{ secrets.DEPLOY_SERVER_HOST }}
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          ssh_user: ${{ secrets.DEPLOY_SERVER_USER }}
+          ssh_host_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
           docker_compose_prefix: ${{ github.repository }}
           docker_compose_filename: "dev/docker-compose.yml"
           docker_env: |
