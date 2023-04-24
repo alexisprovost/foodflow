@@ -45,7 +45,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no $USER@$HOST "echo '${{ secrets.GITHUB_TOKEN }}' | docker login ghcr.io -u ${{ github.actor }} --password-stdin"
 
       - name: Docker-Compose Remote Deployment
-        uses: alexisprovost/github-action-ssh-docker-compose@master
+        uses: alexisprovost/docker-compose-remote-action@master
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
@@ -56,9 +56,25 @@ jobs:
           REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
           ACCESS_TOKEN_EXPIRES: ${{ secrets.ACCESS_TOKEN_EXPIRES }}
           REFRESH_TOKEN_EXPIRES: ${{ secrets.REFRESH_TOKEN_EXPIRES }}
+          CONTAINER_REGISTRY: ${{ env.CONTAINER_REGISTRY }}
+          CONTAINER_REGISTRY_USERNAME: ${{ env.CONTAINER_REGISTRY_USERNAME }}
+          CONTAINER_REGISTRY_PASSWORD: ${{ env.CONTAINER_REGISTRY_PASSWORD }}
         with:
           ssh_host: ${{ secrets.DEPLOY_SERVER_HOST }}
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh_user: ${{ secrets.DEPLOY_SERVER_USER }}
           docker_compose_prefix: ${{ github.repository }}
           docker_compose_filename: "dev/docker-compose.yml"
+          docker_env: |
+            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            DB_USER=${{ secrets.DB_USER }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            REFRESH_TOKEN_SECRET=${{ secrets.REFRESH_TOKEN_SECRET }}
+            ACCESS_TOKEN_EXPIRES=${{ secrets.ACCESS_TOKEN_EXPIRES }}
+            REFRESH_TOKEN_EXPIRES=${{ secrets.REFRESH_TOKEN_EXPIRES }}
+            CONTAINER_REGISTRY=${{ env.CONTAINER_REGISTRY }}
+            CONTAINER_REGISTRY_USERNAME=${{ env.CONTAINER_REGISTRY_USERNAME }}
+            CONTAINER_REGISTRY_PASSWORD=${{ env.CONTAINER_REGISTRY_PASSWORD }}
