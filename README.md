@@ -4,7 +4,7 @@
 
 ## Experience convenience at its finest with FoodFlow
 
-Food at your fingertips. A virtual vending machine made for teams
+FoodFlow is a web app designed to streamline the buying and selling of snacks and products among team members within an organization. Users can list items for sale, which their colleagues can then purchase. Sellers receive the proceeds to restock and offer more items on the platform. Upon completing a transaction, buyers are provided with a confirmation via an invoice, email, or QR code. Detailed information on item collection, such as office locations, is also included to ensure a seamless and efficient process.
 
 ## API Documentation
 
