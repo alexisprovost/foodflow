@@ -59,7 +59,7 @@ const Home = () => {
 
 	return (
 		<div className="animate__animated animate__fadeIn animate__faster">
-			<Title text="FoodFlows" />
+			<Title text="FoodFlow" />
 			<SearchBar onSearch={handleSearch} />
 
 			{loading ? (
