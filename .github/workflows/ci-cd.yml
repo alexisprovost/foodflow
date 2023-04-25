@@ -106,6 +106,7 @@ jobs:
           ssh_host_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
           docker_compose_prefix: ${{ github.repository }}
           docker_compose_filename: "dev/docker-compose.yml"
+          workspace_keep: true
           docker_env: |
             #!/bin/bash
             export POSTGRES_USER="${{ secrets.POSTGRES_USER }}"
