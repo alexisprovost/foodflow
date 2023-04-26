@@ -32,16 +32,15 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 2. To launch the project with Docker, use the docker-compose.yml file for the production version. For the development version, use the docker-compose.dev.yml file. Run these commands in the ./dev folder
 
-production
-
-```bash
-docker-compose up
-```
-
 development
 
 ```bash
 docker-compose -f docker-compose.dev.yml up
+```
+
+to stop use
+```bash
+docker-compose -f docker-compose.dev.yml down --remove-orphans
 ```
 
 #### Tips
