@@ -1,6 +1,6 @@
 import db from "./Database";
 
-interface Product {
+export interface Product {
 	id: number;
 	name: string;
 	url_image: string;

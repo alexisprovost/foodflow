@@ -5,6 +5,7 @@ import UserController from "./UserController";
 import AuthController from "./AuthController";
 import ProductController from "./ProductController";
 import SetupController from "./SetupController";
+import TransactionController from "./TransactionController";
 
 class ControllerV1 extends Controller {
   public router: Router;
@@ -20,12 +21,13 @@ class ControllerV1 extends Controller {
     const authController = new AuthController();
     const productController = new ProductController();
     const setupController = new SetupController();
+    const transactionController = new TransactionController();
 
     this.router.use("/users", userController.router);
     this.router.use("/auth", authController.router);
     this.router.use("/products", productController.router);
     this.router.use("/setup", setupController.router);
-
+    this.router.use("/transaction", transactionController.router);
     this.router.get("/", this.defaultMessage.bind(this));
   }
 
