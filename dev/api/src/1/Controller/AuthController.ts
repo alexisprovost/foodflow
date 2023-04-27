@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import Controller from ".";
 
 import UserDao from "../DAO/UserDao";
+import WalletController from "./WalletController";
 
 import { configureJwtStrategy, jwtRoutes } from "../Strategies/JWT";
 import { configureLocalStrategy } from "../Strategies/Local";

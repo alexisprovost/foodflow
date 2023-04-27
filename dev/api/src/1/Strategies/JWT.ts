@@ -5,6 +5,7 @@ import UserDao from "../DAO/UserDao";
 import { User } from "../DAO/UserDao";
 import Controller from "../Controller";
 import AuthController from "../Controller/AuthController";
+import WalletController from "../Controller/WalletController";
 
 import Utils from "../Controller/Utils";
 
@@ -35,10 +36,10 @@ export function configureJwtStrategy(userDao: UserDao) {
 	);
 }
 
-export function jwtRoutes(router: Router, controller: AuthController): void {
-	router.post("/login", controller.handleAsync((req: any, res: any, next: any) => handleLogin(req, res, next, controller)).bind(controller));
-	router.post("/register", controller.handleAsync((req: any, res: any) => handleRegister(req, res, controller)).bind(controller));
-	router.post("/refresh", controller.handleAsync((req: any, res: any, next: any) => handleRefreshToken(req, res, controller)).bind(controller));
+export function jwtRoutes(router: Router, authController: AuthController, walletController?: WalletController): void {
+	router.post("/login", authController.handleAsync((req: any, res: any, next: any) => handleLogin(req, res, next, authController)).bind(authController));
+	router.post("/register", authController.handleAsync((req: any, res: any) => handleRegister(req, res, authController)).bind(authController));
+	router.post("/refresh", authController.handleAsync((req: any, res: any, next: any) => handleRefreshToken(req, res, authController)).bind(authController));
 }
 
 async function handleLogin(req: Request, res: Response, next: NextFunction, controller: Controller): Promise<void> {
@@ -72,6 +73,7 @@ async function handleRegister(req: Request, res: Response, controller: AuthContr
 		}
 
 		const newUser = await controller.userDao.createUser(email, password);
+		//await walletController.createWallet(newUser.id);
 
 		const token = await controller.generateAuthToken(newUser);
 
@@ -100,8 +102,6 @@ async function handleRefreshToken(req: Request, res: Response, controller: AuthC
 		if (!userId) {
 			return controller.errorResponse(res, "Invalid refresh token", 401);
 		}
-
-
 
 		const user = await userDao.getRefreshTokenbyUserId(userId);
 

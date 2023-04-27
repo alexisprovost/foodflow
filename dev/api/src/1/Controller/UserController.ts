@@ -15,6 +15,7 @@ class UserController extends Controller {
 	protected initializeRoutes(): void {
 		this.router.get("/", requireAuth, this.handleAsync(this.getUser.bind(this)));
 		this.router.put("/:id", requireAuth, this.handleAsync(this.updateUser.bind(this)));
+		this.router.delete("/:id", requireAuth, this.handleAsync(this.deleteUser.bind(this)));
 	}
 
 	private async getUser(req: Request, res: Response): Promise<void> {
@@ -45,6 +46,16 @@ class UserController extends Controller {
 
 			super.successResponse(res, userInfos);
 	
+	}
+
+	private async deleteUser(req: Request, res: Response): Promise<void>{
+		const userid: number = parseInt(req.params.id);
+		const deleteUser = await this.userDao.deleteUser(userid);
+		if (!deleteUser){
+			return super.errorResponse(res, "No Deletion", 404);
+		}
+
+		super.successResponse(res, deleteUser);
 	}
 }
 

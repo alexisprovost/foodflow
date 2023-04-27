@@ -111,9 +111,20 @@ class UserDao {
 		return result[0];
 	}
 
-	private async deleteUser(id: number) {
-		const query = "DELETE FROM users WHERE id = $1 RETURNING *;";
-		const result = await db.query(query, [id]);
+	public async deleteUser(id: number) {
+		const deleteOrganisationUsersQuery = "DELETE FROM organisation_users WHERE user_id = $1;";
+		await db.query(deleteOrganisationUsersQuery, [id]);
+
+		const deleteWalletQuery = "DELETE FROM wallet WHERE owner = $1;";
+		await db.query(deleteWalletQuery, [id]);
+
+		// Delete rows in the 'transaction' table with the given user ID
+		const deleteTransactionQuery = "DELETE FROM transaction WHERE user_id = $1;";
+		await db.query(deleteTransactionQuery, [id]);
+
+		const deleteUserQuery = "DELETE FROM users WHERE id = $1 RETURNING *;";
+		const result = await db.query(deleteUserQuery, [id]);
+
 		return result[0];
 	}
 }
