@@ -2,9 +2,9 @@ import React, { ReactNode } from "react";
 import { FaQuestionCircle } from "react-icons/fa";
 
 interface TransactionProps {
-	icon: ReactNode;
-	itemList: string[];
-	date: Date;
+	icon?: ReactNode;
+	itemList?: string[];
+	date?: Date;
 }
 
 const Transaction = ({ icon = <FaQuestionCircle />, itemList = ["Custom"], date = new Date("1999-01-01") }: TransactionProps) => {
