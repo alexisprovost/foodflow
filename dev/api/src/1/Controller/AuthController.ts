@@ -3,21 +3,21 @@ import jwt from "jsonwebtoken";
 import Controller from ".";
 
 import UserDao from "../DAO/UserDao";
-import WalletController from "./WalletController";
+import WalletDao from "../DAO/WalletDAO";
 
 import { configureJwtStrategy, jwtRoutes } from "../Strategies/JWT";
 import { configureLocalStrategy } from "../Strategies/Local";
 
 class AuthController extends Controller {
 	public userDao: UserDao;
+	public walletDao: WalletDao;
 	public accessTokenExpiresIn;
 	public refreshTokenExpiresIn;
-	public walletController: WalletController;
 
-	constructor(walletController: WalletController) {
+	constructor() {
 		super();
 		this.userDao = new UserDao();
-		this.walletController = walletController;
+		this.walletDao = new WalletDao();
 		this.accessTokenExpiresIn = process.env.ACCESS_TOKEN_EXPIRES || "3600";
 		this.refreshTokenExpiresIn = process.env.REFRESH_TOKEN_EXPIRES || "604800"; // 1 week, for example
 

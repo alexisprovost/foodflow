@@ -20,7 +20,7 @@ class ControllerV1 extends Controller {
 	protected initializeRoutes(): void {
 		const userController = new UserController();
 		const walletController = new WalletController();
-		const authController = new AuthController(walletController);
+		const authController = new AuthController();
 		const productController = new ProductController();
 		const setupController = new SetupController();
 		const transactionController = new TransactionController();

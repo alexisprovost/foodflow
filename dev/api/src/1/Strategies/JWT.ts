@@ -5,7 +5,6 @@ import UserDao from "../DAO/UserDao";
 import { User } from "../DAO/UserDao";
 import Controller from "../Controller";
 import AuthController from "../Controller/AuthController";
-import WalletController from "../Controller/WalletController";
 
 import Utils from "../Controller/Utils";
 
@@ -63,28 +62,28 @@ async function handleLogin(req: Request, res: Response, next: NextFunction, cont
 	})(req, res, next);
 }
 
-async function handleRegister(req: Request, res: Response, controller: AuthController): Promise<void> {
+async function handleRegister(req: Request, res: Response, authController: AuthController): Promise<void> {
 	const { email, password } = req.body;
 
 	try {
-		const user = await controller.userDao.getUserByEmail(email);
+		const user = await authController.userDao.getUserByEmail(email);
 		if (user) {
-			return controller.errorResponse(res, "User already exists", 409);
+			return authController.errorResponse(res, "User already exists", 409);
 		}
 
-		const newUser = await controller.userDao.createUser(email, password);
-		await controller.walletController.createWallet(newUser.id);
+		const newUser = await authController.userDao.createUser(email, password);
+		await authController.walletDao.createWallet(newUser.id);
 
-		const token = await controller.generateAuthToken(newUser);
+		const token = await authController.generateAuthToken(newUser);
 
 		const expiresIn = (token.expires.getTime() - Date.now()) / 1000;
 
-		controller.userDao.saveRefreshToken(newUser.id, token.refreshToken, expiresIn);
+		authController.userDao.saveRefreshToken(newUser.id, token.refreshToken, expiresIn);
 
-		controller.successResponse(res, token);
+		authController.successResponse(res, token);
 	} catch (err) {
 		console.error("Error creating user:", err);
-		controller.errorResponse(res, "Internal server error", 500);
+		authController.errorResponse(res, "Internal server error", 500);
 	}
 }
 

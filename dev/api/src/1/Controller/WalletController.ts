@@ -19,15 +19,6 @@ class WalletController extends Controller {
 		this.router.post("/tip", requireAuth, this.handleAsync(this.tipMoney.bind(this)));
 	}
 
-	public async createWallet(userId: number): Promise<void> {
-		try {
-			await this.walletDao.createWallet(userId);
-		} catch (err) {
-			console.error("Error creating wallet:", err);
-			throw err;
-		}
-	}
-
 	private async getBalance(req: Request, res: Response): Promise<void> {
 		const user: any = req.user;
 
