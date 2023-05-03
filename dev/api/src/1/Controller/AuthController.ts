@@ -41,7 +41,7 @@ class AuthController extends Controller {
 			type: "refresh",
 		};
 		const options = {
-			expiresIn: expiresIn, // or any desired duration
+			expiresIn: expiresIn,
 		};
 		const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET as string, options);
 		return { refreshToken, expires };
@@ -59,7 +59,7 @@ class AuthController extends Controller {
 		try {
 			const decodedToken = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string) as { sub: string | number };
 
-			// check if the id is a number
+			// Check if the token is a refresh token
 			if (isNaN(decodedToken.sub as number)) {
 				return null;
 			}

@@ -8,7 +8,7 @@ class ProductController extends Controller {
 	constructor() {
 		super();
 		this.productDao = new ProductDao();
-		this.useJsonBodyParser(); // use body-parser to parse JSON data
+		this.useJsonBodyParser();
 	}
 
 	protected initializeRoutes(): void {

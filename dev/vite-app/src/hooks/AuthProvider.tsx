@@ -78,7 +78,7 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
 	}, []);
 
 	const scheduleRefresh = () => {
-		const expiresIn = tokenExpiresAt - Date.now() - 60000; // Refresh 1 minute before expiration
+		const expiresIn = tokenExpiresAt - Date.now() - 60000;
 		if (expiresIn > 0) {
 			setTimeout(() => {
 				refreshAccessToken();

@@ -11,7 +11,7 @@ class TransactionController extends Controller {
     super();
     this.productDao = new ProductDao();
     this.transactionDao = new TransactionDAO();
-    this.useJsonBodyParser(); // use body-parser to parse JSON data
+    this.useJsonBodyParser();
   }
 
   protected initializeRoutes(): void {
