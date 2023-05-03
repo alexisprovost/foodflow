@@ -1,5 +1,6 @@
 import db from "./Database";
 import type { Product } from "./ProductDAO";
+import WalletDao from "../DAO/WalletDAO";
 
 interface ProductTransaction {
   product: Product;
@@ -14,10 +15,14 @@ interface Transaction {
 }
 
 class TransactionDAO {
+walletDao = new WalletDao()
+async createTransaction(transaction: Transaction): Promise<Transaction> {
+  const { date, user_id, products } = transaction;
 
 
-  async createTransaction(transaction: Transaction): Promise<Transaction> {
-    const { date, user_id, products } = transaction;
+  try {
+    await db.query("BEGIN");
+
     const transactionQuery = `
       INSERT INTO transaction (date, user_id)
       VALUES ($1, $2)
@@ -26,6 +31,7 @@ class TransactionDAO {
 
     const transactionResult = await db.query(transactionQuery, [date, user_id]);
     const transactionId = transactionResult[0].id;
+
 
     const productTransactionQuery = `
       INSERT INTO product_transaction (id_product, quantity, id_transaction)
@@ -42,13 +48,24 @@ class TransactionDAO {
       )
     );
 
-    return {
-      id: transactionId,
-      date,
-      products,
-      user_id,
-    };
+    const totalAmount = products.reduce((sum, productTransaction) => {
+      return sum + productTransaction.product.price * productTransaction.quantity;
+    }, 0);
+
+    await this.walletDao.withdrawMoney(user_id, totalAmount);
+
+    await db.query("COMMIT");
+  } catch (error) {
+    await db.query("ROLLBACK");
+    throw error;
   }
+
+  return transaction;
+}
+
+  
+  
+  
 
   async getTransactionById(id: number): Promise<Transaction> {
     const transactionQuery = `
