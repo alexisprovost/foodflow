@@ -12,10 +12,12 @@ class AuthController extends Controller {
 	public userDao: UserDao;
 	public accessTokenExpiresIn;
 	public refreshTokenExpiresIn;
+	public walletController: WalletController;
 
-	constructor() {
+	constructor(walletController: WalletController) {
 		super();
 		this.userDao = new UserDao();
+		this.walletController = walletController;
 		this.accessTokenExpiresIn = process.env.ACCESS_TOKEN_EXPIRES || "3600";
 		this.refreshTokenExpiresIn = process.env.REFRESH_TOKEN_EXPIRES || "604800"; // 1 week, for example
 

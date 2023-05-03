@@ -1,8 +1,8 @@
 import db from "./Database";
 
 interface Wallet {
-    id: number;
-    balance: number;
+	id: number;
+	balance: number;
 }
 
 class WalletDao {
@@ -15,17 +15,17 @@ class WalletDao {
 		return result[0].balance;
 	}
 
-    public async createWallet(userId: number): Promise<void> {
-        const query = `INSERT INTO wallets (user_id, balance) VALUES ($1, 0)`;
-        const values = [userId];
+	public async createWallet(userId: number): Promise<void> {
+		const query = `INSERT INTO wallet (balance, owner) VALUES (0, $1)`;
+		const values = [userId];
 
-        try {
-            await db.query(query, values);
-        } catch (err) {
-            console.error("Error creating wallet:", err);
-            throw err;
-        }
-    }
+		try {
+			await db.query(query, values);
+		} catch (err) {
+			console.error("Error creating wallet:", err);
+			throw err;
+		}
+	}
 
 	public async addMoney(userId: number, amount: number): Promise<number> {
 		const query = "UPDATE wallet SET balance = balance + $1 WHERE owner = $2 RETURNING balance;";

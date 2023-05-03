@@ -36,7 +36,7 @@ export function configureJwtStrategy(userDao: UserDao) {
 	);
 }
 
-export function jwtRoutes(router: Router, authController: AuthController, walletController?: WalletController): void {
+export function jwtRoutes(router: Router, authController: AuthController): void {
 	router.post("/login", authController.handleAsync((req: any, res: any, next: any) => handleLogin(req, res, next, authController)).bind(authController));
 	router.post("/register", authController.handleAsync((req: any, res: any) => handleRegister(req, res, authController)).bind(authController));
 	router.post("/refresh", authController.handleAsync((req: any, res: any, next: any) => handleRefreshToken(req, res, authController)).bind(authController));
@@ -73,7 +73,7 @@ async function handleRegister(req: Request, res: Response, controller: AuthContr
 		}
 
 		const newUser = await controller.userDao.createUser(email, password);
-		//await walletController.createWallet(newUser.id);
+		await controller.walletController.createWallet(newUser.id);
 
 		const token = await controller.generateAuthToken(newUser);
 

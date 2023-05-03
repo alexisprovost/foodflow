@@ -19,11 +19,11 @@ class ControllerV1 extends Controller {
 
 	protected initializeRoutes(): void {
 		const userController = new UserController();
-		const authController = new AuthController();
+		const walletController = new WalletController();
+		const authController = new AuthController(walletController);
 		const productController = new ProductController();
 		const setupController = new SetupController();
 		const transactionController = new TransactionController();
-		const walletController = new WalletController();
 
 		this.router.use("/users", userController.router);
 		this.router.use("/auth", authController.router);
