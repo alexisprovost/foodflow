@@ -23,7 +23,7 @@ const Wallet = () => {
 					const response = await axios.get("/api/1/wallet/balance", {
 						headers: { Authorization: `Bearer ${accessToken}` },
 					});
-					setBalance(response.data.balance);
+					setBalance(response.data.data.balance);
 				} catch (error) {
 					console.error("Error fetching balance:", error);
 				}

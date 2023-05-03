@@ -17,11 +17,12 @@ passport.use(
 		async (payload, done) => {
 			try {
 				const user = await userDao.getUserById(payload.sub);
-				if (!user) {
+				
+				if (user) {
+					return done(null, user);
+				} else {
 					return done(null, false);
 				}
-
-				return done(null, user);
 			} catch (err) {
 				console.error("Error authenticating user:", err);
 				return done(err, false);
