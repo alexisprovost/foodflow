@@ -132,7 +132,7 @@ class TransactionDAO {
 
 	async getTransactionsByUserId(user_id: number): Promise<Transaction[]> {
 		const transactionQuery = `
-      SELECT * FROM transaction WHERE user_id = $1;
+      SELECT * FROM transaction WHERE user_id = $1 ORDER BY date DESC;
     `;
 
 		const transactionResult = await db.query(transactionQuery, [user_id]);
