@@ -11,7 +11,7 @@ const LatestTransactions = () => {
 		if (isAuthenticated) {
 			const fetchtransactions = async () => {
 				try {
-					const response = await axios.get("/api/1/transaction", {
+					const response = await axios.get("/api/1/transaction/", {
 						headers: { Authorization: `Bearer ${accessToken}` },
 					});
 					setTransactions(response.data.data);
@@ -26,7 +26,15 @@ const LatestTransactions = () => {
 		<div className="animate__animated animate__fadeIn animate__faster ">
 			<p className="text-primaryText text-lg font-medium">Latest Transactions</p>
 			<ul className="divide-y-[0.1px] divide-secondary">
-				{transactions.length > 0 ? <Transaction icon={<FaAppleAlt />} /> : <p className="text-primaryText text-lg font-medium py-6">No transactions</p>}
+				{transactions.length > 0 ? (
+					transactions.map((transaction) => (
+						<>
+							<Transaction icon={<FaAppleAlt />} date={new Date(transaction)} itemList={[transaction.products.map((product: any) => product.product.name)]} />
+						</>
+					))
+				) : (
+					<p className="text-primaryText text-lg font-medium py-6">No transactions</p>
+				)}
 			</ul>
 		</div>
 	);
