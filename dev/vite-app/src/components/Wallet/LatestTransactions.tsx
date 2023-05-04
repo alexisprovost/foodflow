@@ -27,10 +27,10 @@ const LatestTransactions = () => {
 			<p className="text-primaryText text-lg font-medium">Latest Transactions</p>
 			<ul className="divide-y-[0.1px] divide-secondary">
 				{transactions.length > 0 ? (
-					transactions.map((transaction) => (
-						<>
+					transactions.map((transaction: any) => (
+						<div key={transaction.id}>
 							<Transaction icon={<FaAppleAlt />} date={new Date(transaction.date)} itemList={transaction.products.map((product: any) => product.product.name)} />
-						</>
+						</div>
 					))
 				) : (
 					<p className="text-primaryText text-lg font-medium py-6">No transactions</p>
