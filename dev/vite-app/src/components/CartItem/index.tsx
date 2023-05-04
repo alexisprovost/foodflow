@@ -1,29 +1,12 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { ItemProps } from "../StoreItem";
 
 import { BiPlus, BiMinus } from "react-icons/bi";
 
-interface CartItemProps {
-	productId: number;
-	quantity: number;
-	onQuantityChange: (newQuantity: number) => void;
-}
+import { CartItemProps } from "../../views/Cart";
 
-const CartItem: React.FC<CartItemProps> = ({ productId, quantity, onQuantityChange }) => {
-	const [product, setProduct] = useState({ name: "", price: 0, url_image: "" });
-
-	useEffect(() => {
-		const fetchProduct = async () => {
-			try {
-				const response = await axios.get(`/api/1/products/${productId.toString()}`);
-				setProduct(response.data.data);
-			} catch (error) {
-				console.error(error);
-			}
-		};
-
-		fetchProduct();
-	}, [productId]);
+const CartItem: React.FC<CartItemProps> = ({ item, quantity, onQuantityChange }) => {
+	const [product, setProduct] = useState<ItemProps>(item);
 
 	const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const newQuantity = parseInt(e.target.value, 10);
@@ -40,7 +23,7 @@ const CartItem: React.FC<CartItemProps> = ({ productId, quantity, onQuantityChan
 			/>
 			<div className="ml-4 flex-grow">
 				<h3 className="text-base font-semibold text-white">{product.name}</h3>
-				<p className="text-base font-semibold ">${(product.price * quantity).toFixed(2)}</p>
+				<p className="text-base font-semibold ">${((product.price ? product.price : 0) * quantity).toFixed(2)}</p>
 			</div>
 			<div className="ml-4">
 				<div className="flex flex-col items-center justify-content-center p-1 mt-1 bg-primaryButton rounded-[1rem] ">
