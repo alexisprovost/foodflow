@@ -16,7 +16,7 @@ class TransactionController extends Controller {
 
   protected initializeRoutes(): void {
     this.router.get("/:id", this.handleAsync(this.getTransactionsByUserId.bind(this)));
-    this.router.get("/:id", this.handleAsync(this.getTransactionById.bind(this)));
+    this.router.get("/single/:id", this.handleAsync(this.getTransactionById.bind(this)));
     this.router.post("/", this.handleAsync(this.createTransaction.bind(this)));
     this.router.delete("/:id", this.handleAsync(this.deleteTransaction.bind(this)));
   }
