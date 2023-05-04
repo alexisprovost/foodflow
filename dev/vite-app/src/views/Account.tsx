@@ -47,6 +47,14 @@ const Account = () => {
 								</li>
 							</ul>
 						</div>
+						<div className="rounded-3xl shadow-md cursor-pointer bg-secondary flex flex-col items-center mt-6">
+							<h2 className="text-xl w-full py-4 px-6 font-semibold">Admin Settings</h2>
+							<ul className="w-full">
+								<li className="text-lg font-normal py-4 shadow-inner px-6 hover:bg-black/25 w-full">Products</li>
+								<li className="text-lg font-normal py-4 shadow-inner px-6 hover:bg-black/25 w-full">Users</li>
+								<li className="text-lg font-normal py-4 shadow-inner px-6 hover:bg-black/25 rounded-b-3xl w-full">Statistics</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
