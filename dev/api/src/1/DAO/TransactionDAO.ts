@@ -48,18 +48,18 @@ class TransactionDAO {
 		await this.walletDao.withdrawMoney(user_id, walletBalance - totalAmount);
 
 		const transactionQuery = `
-            INSERT INTO transactions (date, user_id, total_amount)
-            VALUES ($1, $2, $3)
-            RETURNING id;
-        `;
-		const transactionResult = await db.query(transactionQuery, [date, user_id, totalAmount]);
+			INSERT INTO transaction (date, user_id)
+			VALUES ($1, $2)
+			RETURNING id;
+		`;
+		const transactionResult = await db.query(transactionQuery, [date, user_id]);
 		const transactionId = transactionResult[0].id;
 
 		const productTransactionQuery = `
-            INSERT INTO product_transactions (transaction_id, product_id, quantity, price)
-            VALUES ($1, $2, $3, $4);
-        `;
-		await Promise.all(updatedProducts.map((productTransaction) => db.query(productTransactionQuery, [transactionId, productTransaction.product.id, productTransaction.quantity, productTransaction.product.price])));
+			INSERT INTO product_transaction (transaction_id, product_id)
+			VALUES ($1, $2);
+		`;
+		await Promise.all(updatedProducts.map((productTransaction) => db.query(productTransactionQuery, [transactionId, productTransaction.product.id])));
 
 		return {
 			id: transactionId,

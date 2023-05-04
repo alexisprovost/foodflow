@@ -22,7 +22,7 @@ export const createDBTablesQuery = `
 	);
 	CREATE TABLE "wallet" (
 		"id" serial PRIMARY KEY,
-		"balance" INT NULL,
+		"balance" NUMERIC(7,2) NULL,
 		"owner" INT NULL
 	);
 	CREATE TABLE "transaction" (

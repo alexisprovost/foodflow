@@ -12,7 +12,7 @@ class WalletDao {
 		if (result.length === 0) {
 			throw new Error(`User with id ${userId} has no wallet`);
 		}
-		return result[0].balance;
+		return parseFloat(result[0].balance); // Parse balance as a decimal number
 	}
 
 	public async createWallet(userId: number): Promise<void> {
@@ -33,21 +33,21 @@ class WalletDao {
 		if (result.length === 0) {
 			throw new Error(`User with id ${userId} has no wallet`);
 		}
-		return result[0].balance;
+		return parseFloat(result[0].balance); // Parse balance as a decimal number
 	}
 
 	async withdrawMoney(userId: number, amount: number) {
 		const query = `
-		  UPDATE wallet
-		  SET balance = balance - $1::NUMERIC(7,2)
-		  WHERE owner = $2
-		  RETURNING balance;
-		`;
+      UPDATE wallet
+      SET balance = balance - $1
+      WHERE owner = $2
+      RETURNING balance;
+    `;
 		const result = await db.query(query, [amount, userId]);
 		if (result.length === 0) {
 			throw new Error(`Failed to withdraw money from the wallet for user with id ${userId}`);
 		}
-		return result[0].balance;
+		return parseFloat(result[0].balance); // Parse balance as a decimal number
 	}
 
 	public async tipMoney(fromUserId: number, toUserId: number, amount: number): Promise<void> {
