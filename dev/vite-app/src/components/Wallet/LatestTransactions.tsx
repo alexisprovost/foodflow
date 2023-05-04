@@ -29,7 +29,7 @@ const LatestTransactions = () => {
 				{transactions.length > 0 ? (
 					transactions.map((transaction) => (
 						<>
-							<Transaction icon={<FaAppleAlt />} date={new Date(transaction.date)} itemList={[transaction.products.map((product: any) => product.product.name)]} />
+							<Transaction icon={<FaAppleAlt />} date={new Date(transaction.date)} itemList={transaction.products.map((product: any) => product.product.name)} />
 						</>
 					))
 				) : (

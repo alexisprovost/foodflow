@@ -11,8 +11,7 @@ const Transaction = ({ icon = <FaQuestionCircle />, itemList = ["Custom"], date 
 	const iconWithSize = React.cloneElement(icon as React.ReactElement, { size: 30, className: "flex-shrink-0" });
 
 	const formatDate = (date: Date) => {
-		const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-		//const localDate = date;
+		const localDate = date;
 		const hours24 = localDate.getHours();
 		const hours12 = hours24 % 12 || 12;
 		const minutes = localDate.getMinutes();
