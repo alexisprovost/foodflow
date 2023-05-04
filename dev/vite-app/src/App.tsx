@@ -6,7 +6,10 @@ import { FaStoreAlt, FaWallet, FaUserAlt, FaShoppingCart } from "react-icons/fa"
 import MainFrame from "./components/MainFrame";
 import Nav from "./components/Nav";
 import Home from "./views/Home";
+
 import Wallet from "./views/Wallet";
+import TopUp from "./views/Wallet/TopUp";
+
 import Cart from "./views/Cart";
 import NotFound from "./views/NotFound";
 
@@ -50,7 +53,10 @@ function App() {
 			<MainFrame>
 				<Routes>
 					<Route path="/" element={<Home />} />
+
 					<Route path="/wallet" element={<Wallet />} />
+					<Route path="/wallet/top-up" element={<TopUp />} />
+
 					<Route path="/cart" element={<Cart />} />
 					<Route path="/account" element={<Account />} />
 					<Route path="*" element={<NotFound />} />

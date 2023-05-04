@@ -1,19 +1,22 @@
 import { useContext, useEffect, useState } from "react";
-import useDocumentTitle from "../hooks/useDocumentTitle";
-import Title from "../components/Title";
-import { AuthContext } from "../hooks/AuthProvider";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+import Title from "../../components/Title";
+import { AuthContext } from "../../hooks/AuthProvider";
+
+import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
 
-import Balance from "../components/Wallet/Balance";
-import ActionHolder from "../components/Wallet/ActionHolder";
-import LatestTransactions from "../components/Wallet/LatestTransactions";
+import Balance from "../../components/Wallet/Balance";
+import ActionHolder from "../../components/Wallet/ActionHolder";
+import LatestTransactions from "../../components/Wallet/LatestTransactions";
 
 import { BsArrowBarUp, BsArrowBarDown } from "react-icons/bs";
 
 const Wallet = () => {
 	const { isAuthenticated, accessToken } = useContext(AuthContext);
 	const [balance, setBalance] = useState(0);
+	const navigate = useNavigate();
 	useDocumentTitle("Wallet");
 
 	useEffect(() => {
@@ -37,7 +40,7 @@ const Wallet = () => {
 		<div className="mt-8">
 			<Balance amount={balance} />
 			<div className="py-6 flex overflow-auto no-scrollbar">
-				<ActionHolder title="Top up" icon={<BsArrowBarUp />} onClick={() => console.log("Clicked")} />
+				<ActionHolder title="Top up" icon={<BsArrowBarUp />} onClick={() => navigate("/wallet/top-up", { replace: true })} />
 				<ActionHolder title="Withdraw" icon={<BsArrowBarDown />} onClick={() => console.log("Clicked")} />
 				<ActionHolder title="Transfer" icon={<BsArrowBarUp />} onClick={() => console.log("Clicked")} />
 				<ActionHolder title="Pay" icon={<BsArrowBarDown />} onClick={() => console.log("Clicked")} />
