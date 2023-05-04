@@ -44,14 +44,15 @@ class TransactionDAO {
 		const totalAmount = updatedProducts.reduce((sum, productTransaction) => {
 		  return sum + productTransaction.product.price * productTransaction.quantity;
 		}, 0);
-	    console.log(totalAmount)
+
 		const walletBalance = await this.walletDao.getBalance(user_id);
+
 	  
 		if (walletBalance < totalAmount) {
 		  throw new Error("Insufficient funds in the wallet.");
 		}
 	  
-		await this.walletDao.withdrawMoney(user_id, walletBalance);
+		await this.walletDao.withdrawMoney(user_id, totalAmount);
 	  
 		const transactionQuery = `
 		  INSERT INTO transaction (date, user_id)
@@ -62,11 +63,10 @@ class TransactionDAO {
 		const transactionId = transactionResult[0].id;
 	  
 		const productTransactionQuery = `
-		  INSERT INTO product_transaction (transaction_id, product_id)
+		  INSERT INTO product_transaction (id_transaction, id_product)
 		  VALUES ($1, $2);
 		`;
 	  
-		// Update product quantities
 		const updateProductQuantityQuery = `
 		  UPDATE products
 		  SET quantity = quantity - $1
