@@ -63,8 +63,8 @@ class TransactionDAO {
 		const transactionId = transactionResult[0].id;
 	  
 		const productTransactionQuery = `
-		  INSERT INTO product_transaction (id_transaction, id_product)
-		  VALUES ($1, $2);
+		  INSERT INTO product_transaction (id_transaction, id_product, quantity)
+		  VALUES ($1, $2, $3);
 		`;
 	  
 		const updateProductQuantityQuery = `
@@ -74,7 +74,7 @@ class TransactionDAO {
 		`;
 	  
 		await Promise.all(updatedProducts.map((productTransaction) => {
-		  db.query(productTransactionQuery, [transactionId, productTransaction.product.id]);
+		  db.query(productTransactionQuery, [transactionId, productTransaction.product.id, productTransaction.quantity]);
 		  db.query(updateProductQuantityQuery, [productTransaction.quantity, productTransaction.product.id]);
 		}));
 	  
