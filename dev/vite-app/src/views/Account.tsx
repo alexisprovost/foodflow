@@ -26,18 +26,25 @@ const Account = () => {
 					<div className="bg-secondary p-8 shadow-md rounded-3xl">
 						<div className="flex flex-col items-center">
 							<Gravatar email={email} size={100} defaultImage="mp" className="rounded-full" />
-							<p className="text-xl font-semibold mt-4">{firstName && name ? firstName + " " + name : email}</p>
-							<button className="bg-blue-500 rounded-xl w-full text-white py-2 px-4 mt-4 hover:bg-blue-500/80" onClick={logout}>
-								Log out
-							</button>
+							{firstName && name ? (
+								<>
+									<p className="text-xl font-semibold mt-4">{name + " " + firstName}</p>
+									<p className="text-xl font-semibold mt-4">{email}</p>
+								</>
+							) : (
+								<p className="text-xl font-semibold mt-4">{email}</p>
+							)}
 						</div>
 					</div>
 					<div className="h-3">
 						<div className="rounded-3xl shadow-md cursor-pointer bg-secondary flex flex-col items-center">
 							<h2 className="text-xl w-full py-4 px-6 font-semibold">User Settings</h2>
 							<ul className="w-full">
-								<li className="text-lg font-normal py-4 px-6 hover:bg-black/25 w-full">Orders</li>
-								<li className="text-lg font-normal py-4 px-6 rounded-b-3xl hover:bg-black/25 w-full">Wishlist</li>
+								<li className="text-lg font-normal py-4 shadow-inner px-6 hover:bg-black/25 w-full">Orders</li>
+								<li className="text-lg font-normal py-4 shadow-inner px-6 hover:bg-black/25 w-full">Wishlist</li>
+								<li className="text-lg font-normal py-4 shadow-inner px-6 rounded-b-3xl hover:bg-black/25 w-full" onClick={logout}>
+									Log out
+								</li>
 							</ul>
 						</div>
 					</div>
