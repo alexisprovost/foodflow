@@ -174,6 +174,24 @@ class ProductDao {
 		return updatedProduct;
 	}
 
+	async getAvailableQuantity(productId: number): Promise<number> {
+		const query = `
+		  SELECT quantity
+		  FROM products
+		  WHERE id = $1;
+		`;
+	
+		const result = await db.query(query, [productId]);
+	
+		if (result.length === 0) {
+		  throw new Error(`Product with ID: ${productId} not found.`);
+		}
+	
+		return result[0].quantity;
+	  }
+	
+	
+
 	public async getProductByBarcode(barcode: string) {
 		const query = `
 			SELECT p.*, 

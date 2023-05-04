@@ -44,6 +44,7 @@ class WalletDao {
       RETURNING balance;
     `;
 		const result = await db.query(query, [amount, userId]);
+		console.log(result.length);
 		if (result.length === 0) {
 			throw new Error(`Failed to withdraw money from the wallet for user with id ${userId}`);
 		}
