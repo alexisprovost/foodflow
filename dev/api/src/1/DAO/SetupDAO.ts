@@ -27,7 +27,7 @@ export const createDBTablesQuery = `
 	);
 	CREATE TABLE "transaction" (
 		"id" serial PRIMARY KEY,
-		"date" DATE NOT NULL,
+		"date" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 		"user_id" INT NOT NULL,
 		"organisation_id" INT NULL
 	);

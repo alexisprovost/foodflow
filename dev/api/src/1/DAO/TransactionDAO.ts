@@ -21,71 +21,71 @@ class TransactionDAO {
 
 	async createTransaction(transaction: Transaction): Promise<Transaction> {
 		const { date, user_id, products } = transaction;
-	  
+
 		const updatedProducts = await Promise.all(
-		  products.map(async (productTransaction) => {
-			const latestPrice = await this.productDao.getLatestPrice(productTransaction.product.id);
-			const availableQuantity = await this.productDao.getAvailableQuantity(productTransaction.product.id);
-	  
-			if (availableQuantity < productTransaction.quantity) {
-			  throw new Error(`Insufficient quantity available for product with ID: ${productTransaction.product.id}`);
-			}
-	  
-			return {
-			  ...productTransaction,
-			  product: {
-				...productTransaction.product,
-				price: latestPrice,
-			  },
-			};
-		  })
+			products.map(async (productTransaction) => {
+				const latestPrice = await this.productDao.getLatestPrice(productTransaction.product.id);
+				const availableQuantity = await this.productDao.getAvailableQuantity(productTransaction.product.id);
+
+				if (availableQuantity < productTransaction.quantity) {
+					throw new Error(`Insufficient quantity available for product with ID: ${productTransaction.product.id}`);
+				}
+
+				return {
+					...productTransaction,
+					product: {
+						...productTransaction.product,
+						price: latestPrice,
+					},
+				};
+			})
 		);
-	  
+
 		const totalAmount = updatedProducts.reduce((sum, productTransaction) => {
-		  return sum + productTransaction.product.price * productTransaction.quantity;
+			return sum + productTransaction.product.price * productTransaction.quantity;
 		}, 0);
 
 		const walletBalance = await this.walletDao.getBalance(user_id);
 
-	  
 		if (walletBalance < totalAmount) {
-		  throw new Error("Insufficient funds in the wallet.");
+			throw new Error("Insufficient funds in the wallet.");
 		}
-	  
+
 		await this.walletDao.withdrawMoney(user_id, totalAmount);
-	  
+
 		const transactionQuery = `
-		  INSERT INTO transaction (date, user_id)
-		  VALUES ($1, $2)
+		  INSERT INTO transaction (user_id)
+		  VALUES ($1)
 		  RETURNING id;
 		`;
-		const transactionResult = await db.query(transactionQuery, [date, user_id]);
+		const transactionResult = await db.query(transactionQuery, [user_id]);
 		const transactionId = transactionResult[0].id;
-	  
+
 		const productTransactionQuery = `
 		  INSERT INTO product_transaction (id_transaction, id_product, quantity)
 		  VALUES ($1, $2, $3);
 		`;
-	  
+
 		const updateProductQuantityQuery = `
 		  UPDATE products
 		  SET quantity = quantity - $1
 		  WHERE id = $2;
 		`;
-	  
-		await Promise.all(updatedProducts.map((productTransaction) => {
-		  db.query(productTransactionQuery, [transactionId, productTransaction.product.id, productTransaction.quantity]);
-		  db.query(updateProductQuantityQuery, [productTransaction.quantity, productTransaction.product.id]);
-		}));
-	  
+
+		await Promise.all(
+			updatedProducts.map((productTransaction) => {
+				db.query(productTransactionQuery, [transactionId, productTransaction.product.id, productTransaction.quantity]);
+				db.query(updateProductQuantityQuery, [productTransaction.quantity, productTransaction.product.id]);
+			})
+		);
+
 		return {
-		  id: transactionId,
-		  date,
-		  user_id,
-		  products: updatedProducts,
+			id: transactionId,
+			date,
+			user_id,
+			products: updatedProducts,
 		};
-	  }
-	  
+	}
 
 	async getTransactionById(id: number): Promise<Transaction> {
 		const transactionQuery = `
