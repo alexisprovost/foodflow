@@ -28,6 +28,7 @@ const Wallet = () => {
 					console.error("Error fetching balance:", error);
 				}
 			};
+
 			fetchBalance();
 		}
 	}, [isAuthenticated, accessToken]);
