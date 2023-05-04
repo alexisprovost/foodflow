@@ -36,13 +36,17 @@ class WalletDao {
 		return result[0].balance;
 	}
 
-	public async withdrawMoney(userId: number, amount: number): Promise<number> {
-		const balance = await this.getBalance(userId);
-		if (balance < amount) {
-			throw new Error("Insufficient balance");
-		}
-		const query = "UPDATE wallet SET balance = balance - $1 WHERE owner = $2 RETURNING balance;";
+	async withdrawMoney(userId: number, amount: number) {
+		const query = `
+		  UPDATE wallet
+		  SET balance = balance - $1::NUMERIC(7,2)
+		  WHERE owner = $2
+		  RETURNING balance;
+		`;
 		const result = await db.query(query, [amount, userId]);
+		if (result.length === 0) {
+			throw new Error(`Failed to withdraw money from the wallet for user with id ${userId}`);
+		}
 		return result[0].balance;
 	}
 
