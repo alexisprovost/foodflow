@@ -35,7 +35,7 @@ abstract class Controller {
 		};
 	}
 
-	// Add this method to parse JSON data in request body
+	// This method is used to parse the request body as JSON
 	protected useJsonBodyParser(): void {
 		this.router.use(express.json());
 	}

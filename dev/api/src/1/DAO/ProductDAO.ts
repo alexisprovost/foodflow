@@ -27,22 +27,12 @@ class ProductDao {
 		};
 	}
 
-	private async fetchProducts(
-		query: string,
-		queryParams?: any[]
-	): Promise<any[]> {
+	private async fetchProducts(query: string, queryParams?: any[]): Promise<any[]> {
 		const queryResult = await db.query(query, queryParams);
 		return queryResult.map(this.mapProduct);
 	}
 
-	public async getAllProducts(
-		itemsPerPage: number = 12,
-		currentPage: number = 1,
-		searchQuery: string = "",
-		categoryFilter: string[] = [],
-		minPrice: number = 0,
-		maxPrice: number = Number.MAX_SAFE_INTEGER
-	): Promise<Product[]> {
+	public async getAllProducts(itemsPerPage: number = 12, currentPage: number = 1, searchQuery: string = "", categoryFilter: string[] = [], minPrice: number = 0, maxPrice: number = Number.MAX_SAFE_INTEGER): Promise<Product[]> {
 		const offset = (currentPage - 1) * itemsPerPage;
 		const query = `
 			SELECT p.*, 
@@ -64,14 +54,7 @@ class ProductDao {
 			ORDER BY p.name
 			LIMIT $2 OFFSET $3;
 		`;
-		return this.fetchProducts(query, [
-			`%${searchQuery}%`,
-			itemsPerPage,
-			offset,
-			minPrice,
-			maxPrice,
-			categoryFilter,
-		]);
+		return this.fetchProducts(query, [`%${searchQuery}%`, itemsPerPage, offset, minPrice, maxPrice, categoryFilter]);
 	}
 
 	public async getProductById(id: number): Promise<Product> {
@@ -96,27 +79,13 @@ class ProductDao {
 		return products[0];
 	}
 
-	public async createProduct(
-		name: string,
-		url_image: string,
-		barcode: string,
-		quantity: number,
-		format: string,
-		price: number,
-		categoryIds?: number[]
-	) {
+	public async createProduct(name: string, url_image: string, barcode: string, quantity: number, format: string, price: number, categoryIds?: number[]) {
 		const productQuery = `
 			INSERT INTO products (name, url_image, barcode, quantity, format)
 			VALUES ($1, $2, $3, $4, $5)
 			RETURNING id;
 		`;
-		const productResult = await db.query(productQuery, [
-			name,
-			url_image,
-			barcode,
-			quantity,
-			format,
-		]);
+		const productResult = await db.query(productQuery, [name, url_image, barcode, quantity, format]);
 		const productId = productResult[0].id;
 
 		const priceQuery = `
@@ -130,11 +99,7 @@ class ProductDao {
 				INSERT INTO category_products (id_category, id_product)
 				VALUES ($1, $2);
 			`;
-			await Promise.all(
-				categoryIds.map((categoryId) =>
-					db.query(categoryProductQuery, [categoryId, productId])
-				)
-			);
+			await Promise.all(categoryIds.map((categoryId) => db.query(categoryProductQuery, [categoryId, productId])));
 		}
 
 		const addedProduct = await this.getProductById(productId);
@@ -176,8 +141,7 @@ class ProductDao {
 
 		let updatedCategories;
 		if (updateData.categoryIds) {
-			const deleteCategoryProductQuery =
-				"DELETE FROM category_products WHERE id_product = $1;";
+			const deleteCategoryProductQuery = "DELETE FROM category_products WHERE id_product = $1;";
 			await db.query(deleteCategoryProductQuery, [id]);
 
 			if (updateData.categoryIds.length > 0) {
@@ -186,14 +150,8 @@ class ProductDao {
 					VALUES ($1, $2)
 					RETURNING id_category;
 				`;
-				const categoryResults = await Promise.all(
-					updateData.categoryIds.map((categoryId) =>
-						db.query(categoryProductQuery, [categoryId, id])
-					)
-				);
-				updatedCategories = categoryResults.map(
-					(result) => result[0].id_category
-				);
+				const categoryResults = await Promise.all(updateData.categoryIds.map((categoryId) => db.query(categoryProductQuery, [categoryId, id])));
+				updatedCategories = categoryResults.map((result) => result[0].id_category);
 			}
 		}
 
@@ -204,10 +162,7 @@ class ProductDao {
 				VALUES ($1, NOW(), $2)
 				RETURNING value;
 			`;
-			const priceResult = await db.query(priceInsertQuery, [
-				id,
-				updateData.price,
-			]);
+			const priceResult = await db.query(priceInsertQuery, [id, updateData.price]);
 			newPrice = priceResult[0].value;
 		}
 
@@ -218,6 +173,24 @@ class ProductDao {
 
 		return updatedProduct;
 	}
+
+	async getAvailableQuantity(productId: number): Promise<number> {
+		const query = `
+		  SELECT quantity
+		  FROM products
+		  WHERE id = $1;
+		`;
+	
+		const result = await db.query(query, [productId]);
+	
+		if (result.length === 0) {
+		  throw new Error(`Product with ID: ${productId} not found.`);
+		}
+	
+		return result[0].quantity;
+	  }
+	
+	
 
 	public async getProductByBarcode(barcode: string) {
 		const query = `
@@ -234,6 +207,24 @@ class ProductDao {
 			throw new Error(`Product with barcode ${barcode} not found`);
 		}
 		return products[0];
+	}
+
+	async getLatestPrice(productId: number): Promise<number> {
+		const priceQuery = `
+            SELECT CAST(value AS NUMERIC(7,2)) AS price
+            FROM price
+            WHERE id_product = $1
+            ORDER BY effective_date DESC
+            LIMIT 1;
+        `;
+
+		const priceResult = await db.query(priceQuery, [productId]);
+
+		if (priceResult.length === 0) {
+			throw new Error(`Price for product_id ${productId} not found.`);
+		}
+
+		return parseFloat(priceResult[0].price);
 	}
 
 	public async deleteProduct(id: number) {

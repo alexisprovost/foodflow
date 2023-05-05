@@ -48,9 +48,10 @@ interface AuthResponse {
 
 interface UserInfo {
 	id: string;
-	email: string;
 	firstName: string;
-	lastName: string;
+	name: string;
+	email: string;
+	date_of_birth: string;
 	role: string;
 }
 
@@ -60,6 +61,7 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
 		accessToken: "",
 		userInfo: null,
 	});
+	const [tokenExpiresAt, setTokenExpiresAt] = useState(0);
 
 	const [isLoginFormOpen, setIsLoginFormOpen] = useState(false);
 
@@ -73,16 +75,27 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
 		if (refreshToken) {
 			refreshAccessToken();
 		}
+		scheduleRefresh();
 	}, []);
+
+	const scheduleRefresh = () => {
+		const expiresIn = tokenExpiresAt - Date.now() - 60000;
+		if (expiresIn > 0) {
+			setTimeout(() => {
+				refreshAccessToken();
+			}, expiresIn);
+		}
+	};
 
 	const login = async (email: string, password: string) => {
 		try {
 			const response = await axios.post("/api/1/auth/login", { email, password });
-			const { token, refreshToken }: AuthResponse["data"] = response.data.data;
+			const { token, refreshToken, expires }: AuthResponse["data"] = response.data.data;
+			setTokenExpiresAt(new Date(expires).getTime());
 			axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 			localStorage.setItem("refreshToken", refreshToken);
 			//get user info
-			getUserInfo();
+			getUserInfo(token);
 			setAuthState({
 				isAuthenticated: true,
 				accessToken: token,
@@ -96,11 +109,12 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
 	const register = async (email: string, password: string) => {
 		try {
 			const response = await axios.post("/api/1/auth/register", { email, password });
-			const { token, refreshToken }: AuthResponse["data"] = response.data.data;
+			const { token, refreshToken, expires }: AuthResponse["data"] = response.data.data;
+			setTokenExpiresAt(new Date(expires).getTime());
 			axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 			localStorage.setItem("refreshToken", refreshToken);
 			//get user info
-			getUserInfo();
+			getUserInfo(token);
 			setAuthState({
 				isAuthenticated: true,
 				accessToken: token,
@@ -134,17 +148,27 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
 					accessToken: token,
 					userInfo: authState.userInfo,
 				});
-				getUserInfo();
+
+				getUserInfo(token);
+				setTokenExpiresAt(new Date(response.data.expires).getTime());
+				scheduleRefresh();
 			}
 		} catch (error) {
 			console.error(error);
 		}
 	};
 
-	const getUserInfo = async () => {
+	const getUserInfo = async (accessToken: string) => {
 		try {
-			const response = await axios.get("/api/1/users");
-			setAuthState({ isAuthenticated: true, accessToken: authState.accessToken, userInfo: response.data.data });
+			const response = await axios.get("/api/1/users", {
+				headers: { Authorization: `Bearer ${accessToken}` },
+			});
+			setAuthState((prevState) => ({
+				...prevState,
+				isAuthenticated: true,
+				accessToken,
+				userInfo: response.data.data,
+			}));
 		} catch (error) {
 			console.error(error);
 		}

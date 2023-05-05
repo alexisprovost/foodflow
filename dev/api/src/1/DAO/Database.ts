@@ -16,18 +16,18 @@ class Database {
 	private createTablesTry: number = 0;
 
 	private constructor() {
-		this.retryDelay = 5000; // default delay of 1 second
+		this.retryDelay = 5000;
 		this.pool = new Pool(poolConfig);
 
-		// Add event listener for connect events
+		// Add event listener for successful connections
 		this.pool.on("connect", (client) => {
 			console.log("PostgreSQL connected");
 		});
 
-		// Add event listener for error events
+		// Add event listener for errors
 		this.pool.on("error", (err) => {
 			console.error("Unexpected error on idle client", err);
-			// Close any active clients and try to connect again with a delay
+			// Destroy the client
 			setTimeout(() => {
 				this.pool = new Pool(poolConfig);
 			}, this.retryDelay);

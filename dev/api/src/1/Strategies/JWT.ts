@@ -35,10 +35,10 @@ export function configureJwtStrategy(userDao: UserDao) {
 	);
 }
 
-export function jwtRoutes(router: Router, controller: AuthController): void {
-	router.post("/login", controller.handleAsync((req: any, res: any, next: any) => handleLogin(req, res, next, controller)).bind(controller));
-	router.post("/register", controller.handleAsync((req: any, res: any) => handleRegister(req, res, controller)).bind(controller));
-	router.post("/refresh", controller.handleAsync((req: any, res: any, next: any) => handleRefreshToken(req, res, controller)).bind(controller));
+export function jwtRoutes(router: Router, authController: AuthController): void {
+	router.post("/login", authController.handleAsync((req: any, res: any, next: any) => handleLogin(req, res, next, authController)).bind(authController));
+	router.post("/register", authController.handleAsync((req: any, res: any) => handleRegister(req, res, authController)).bind(authController));
+	router.post("/refresh", authController.handleAsync((req: any, res: any, next: any) => handleRefreshToken(req, res, authController)).bind(authController));
 }
 
 async function handleLogin(req: Request, res: Response, next: NextFunction, controller: Controller): Promise<void> {
@@ -62,27 +62,28 @@ async function handleLogin(req: Request, res: Response, next: NextFunction, cont
 	})(req, res, next);
 }
 
-async function handleRegister(req: Request, res: Response, controller: AuthController): Promise<void> {
+async function handleRegister(req: Request, res: Response, authController: AuthController): Promise<void> {
 	const { email, password } = req.body;
 
 	try {
-		const user = await controller.userDao.getUserByEmail(email);
+		const user = await authController.userDao.getUserByEmail(email);
 		if (user) {
-			return controller.errorResponse(res, "User already exists", 409);
+			return authController.errorResponse(res, "User already exists", 409);
 		}
 
-		const newUser = await controller.userDao.createUser(email, password);
+		const newUser = await authController.userDao.createUser(email, password);
+		await authController.walletDao.createWallet(newUser.id);
 
-		const token = await controller.generateAuthToken(newUser);
+		const token = await authController.generateAuthToken(newUser);
 
 		const expiresIn = (token.expires.getTime() - Date.now()) / 1000;
 
-		controller.userDao.saveRefreshToken(newUser.id, token.refreshToken, expiresIn);
+		authController.userDao.saveRefreshToken(newUser.id, token.refreshToken, expiresIn);
 
-		controller.successResponse(res, token);
+		authController.successResponse(res, token);
 	} catch (err) {
 		console.error("Error creating user:", err);
-		controller.errorResponse(res, "Internal server error", 500);
+		authController.errorResponse(res, "Internal server error", 500);
 	}
 }
 
@@ -100,8 +101,6 @@ async function handleRefreshToken(req: Request, res: Response, controller: AuthC
 		if (!userId) {
 			return controller.errorResponse(res, "Invalid refresh token", 401);
 		}
-
-
 
 		const user = await userDao.getRefreshTokenbyUserId(userId);
 

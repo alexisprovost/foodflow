@@ -96,7 +96,7 @@ const CartProvider: React.FC<CartProps> = ({ children }) => {
 	}, []);
 
 	useEffect(() => {
-		// Save cart items to localStorage whenever they change
+		// Save to local storage
 		localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
 
 		itemChangeCallbacks.forEach((callback) => callback(cartItems));
