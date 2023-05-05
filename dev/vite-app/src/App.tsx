@@ -9,6 +9,9 @@ import Home from "./views/Home";
 
 import Wallet from "./views/Wallet";
 import TopUp from "./views/Wallet/TopUp";
+import Tip from "./views/Wallet/Tip";
+import Withdraw from "./views/Wallet/Withdraw";
+
 
 import Cart from "./views/Cart";
 import NotFound from "./views/NotFound";
@@ -56,6 +59,8 @@ function App() {
 
 					<Route path="/wallet" element={<Wallet />} />
 					<Route path="/wallet/top-up" element={<TopUp />} />
+					<Route path="/wallet/withdraw" element={<Withdraw />} />
+					<Route path="/wallet/tip" element={<Tip />} />
 
 					<Route path="/cart" element={<Cart />} />
 					<Route path="/account" element={<Account />} />

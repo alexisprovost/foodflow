@@ -11,7 +11,9 @@ import Balance from "../../components/Wallet/Balance";
 import ActionHolder from "../../components/Wallet/ActionHolder";
 import LatestTransactions from "../../components/Wallet/LatestTransactions";
 
-import { BsArrowBarUp, BsArrowBarDown } from "react-icons/bs";
+import { RiMoneyDollarBoxLine } from "react-icons/ri";
+import { BiMoneyWithdraw } from "react-icons/bi";
+import { TbPigMoney } from "react-icons/tb";
 
 const Wallet = () => {
 	const { isAuthenticated, accessToken } = useContext(AuthContext);
@@ -39,11 +41,10 @@ const Wallet = () => {
 	const walletContent = isAuthenticated ? (
 		<div className="mt-8">
 			<Balance amount={balance} />
-			<div className="py-6 flex overflow-auto no-scrollbar">
-				<ActionHolder title="Top up" icon={<BsArrowBarUp />} onClick={() => navigate("/wallet/top-up", { replace: true })} />
-				<ActionHolder title="Withdraw" icon={<BsArrowBarDown />} onClick={() => console.log("Clicked")} />
-				<ActionHolder title="Transfer" icon={<BsArrowBarUp />} onClick={() => console.log("Clicked")} />
-				<ActionHolder title="Pay" icon={<BsArrowBarDown />} onClick={() => console.log("Clicked")} />
+			<div className="py-6 flex no-scrollbar overflow-scroll overflow-scrolling-touch">
+				<ActionHolder title="Top up" icon={<RiMoneyDollarBoxLine />} onClick={() => navigate("/wallet/top-up")} />
+				<ActionHolder title="Withdraw" icon={<BiMoneyWithdraw />} onClick={() => navigate("/wallet/withdraw")} />
+				<ActionHolder title="Tip" icon={<TbPigMoney />} onClick={() => navigate("/wallet/tip")} />
 			</div>
 			<LatestTransactions />
 		</div>

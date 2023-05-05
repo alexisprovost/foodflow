@@ -75,11 +75,11 @@ const Cart = () => {
 						{itemComp}
 						<div className="flex flex-col justify-end w-full md:w-[25rem] md:float-right">
 							<p className="text-white font-semibold py-4 px-4 pt-0 text-right text-xl">Total: ${consolidatedItems.reduce((acc, curr) => acc + (curr.item.price ? curr.item.price : 0) * curr.quantity, 0).toFixed(2)}</p>
-							<div className="flex flex-col items-center justify-content-center p-1 mt-1 bg-primaryButton rounded-3xl">
-								<Link to="/checkout">
+							<Link to="/checkout">
+								<div className="flex flex-col items-center justify-content-center p-1 mt-1 bg-primaryButton rounded-3xl">
 									<button className="flex items-center justify-center text-white text-base font-semibold py-2">Checkout</button>
-								</Link>
-							</div>
+								</div>
+							</Link>
 						</div>
 					</>
 				) : (
