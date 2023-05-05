@@ -19,7 +19,7 @@ const Cart = () => {
 	useDocumentTitle("Cart");
 	const { getCartItems, addCartItem, removeCartItem, setCartItem } = useContext(CartContext);
 	const cartItems = getCartItems();
-	const [products, setProducts] = useState([]);
+	const [products, setProducts] = useState<ItemProps[]>([]); // Added a type for useState
 
 	useEffect(() => {
 		const fetchProducts = async () => {
@@ -27,7 +27,8 @@ const Cart = () => {
 			const requests = itemIds.map((itemId) => axios.get(`/api/1/products/${itemId}`));
 			try {
 				const responses = await Promise.all(requests);
-				const products = responses.map((response) => response.data);
+				const fetchedProducts = responses.map((response) => response.data.data);
+				setProducts(fetchedProducts); // Set the fetched products to the state
 			} catch (error) {
 				console.error(error);
 			}
@@ -48,34 +49,24 @@ const Cart = () => {
 		setCartItem(itemId, newQuantity);
 	};
 
-	const consolidatedItems = Object.entries(cartItems)
-		.map(([itemId, quantity]) => ({
-			id: Number(itemId),
-			quantity,
-		}))
-		.reduce((accumulator: { id: number; quantity: number }[], currentItem) => {
-			const existingItemIndex = accumulator.findIndex((item) => item.id === currentItem.id);
-
-			if (existingItemIndex !== -1) {
-				accumulator[existingItemIndex].quantity += currentItem.quantity;
-			} else {
-				accumulator.push(currentItem);
-			}
-
-			return accumulator;
-		}, []);
+	const consolidatedItems = products.map((product) => {
+		return {
+			item: product,
+			quantity: cartItems[product.id],
+			onQuantityChange: (newQuantity: number) => handleQuantityChange(product.id, newQuantity),
+		};
+	});
 
 	return (
 		<div className="animate__animated animate__fadeIn animate__faster">
 			<Title text="Cart" />
 			<div className="mt-8">
-				{Array.isArray(consolidatedItems) && consolidatedItems.length > 0 ? (
+				{consolidatedItems.length > 0 ? (
 					consolidatedItems.map((cartItem: CartItemProps) => {
 						const { item, quantity } = cartItem;
-						const { id } = item;
 						return (
 							<div key={item.id}>
-								<CartItem item={item} quantity={quantity ?? 0} onQuantityChange={(newQuantity) => handleQuantityChange(id, newQuantity)} />
+								<CartItem item={item} quantity={quantity ?? 0} onQuantityChange={(newQuantity) => handleQuantityChange(item.id, newQuantity)} />
 							</div>
 						);
 					})

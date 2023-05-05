@@ -38,7 +38,7 @@ const StoreItem: React.FC<ItemProps> = ({ id, name, url_image, quantity = 0, pri
 		if (isClicked) {
 			setTimeout(() => {
 				setIsClicked(false);
-			}, 3500);
+			}, 700);
 		}
 	}, [isClicked]);
 
@@ -47,7 +47,7 @@ const StoreItem: React.FC<ItemProps> = ({ id, name, url_image, quantity = 0, pri
 			<div className={`absolute inset-0 flex items-center justify-center bg-black ${isClicked ? "opacity-50" : "opacity-0"} transition-opacity duration-500 rounded-[1rem]`} />
 			{isClicked && (
 				<div className="absolute inset-0 flex items-center justify-center z-[1]">
-					<Lottie options={defaultOptions} height={150} width={150} isStopped={!isClicked} isPaused={!isClicked} />
+					<Lottie options={defaultOptions} height={75} width={75} speed={3} isStopped={!isClicked} isPaused={!isClicked} />
 				</div>
 			)}
 			<div className={`${isClicked ? "blur-md" : ""}`}>
