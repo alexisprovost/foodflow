@@ -77,7 +77,7 @@ const Cart = () => {
 						{itemComp}
 						<div className="flex flex-row md:justify-end">
 							<div className="flex flex-col justify-end w-full md:w-[25rem]">
-								<p className="text-white font-semibold py-4 px-4 pt-0 text-right text-xl">Total: ${}</p>
+								<p className="text-white font-semibold py-4 px-4 pt-0 text-right text-xl">Total: ${subtotal}</p>
 								<Link to="/cart/checkout">
 									<div className="flex flex-col items-center justify-content-center p-1 mt-1 bg-primaryButton rounded-3xl">
 										<button className="flex items-center justify-center text-white text-base font-semibold py-2">Checkout</button>

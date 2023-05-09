@@ -16,7 +16,7 @@ const CartCheckoutItem: React.FC<CartItemProps> = ({ item, quantity }) => {
 			/>
 			<div className="ml-4 flex-grow">
 				<h3 className="text-base font-semibold text-white">{product.name}</h3>
-				<p className="text-base font-semibold ">${((product.price ? product.price : 0) * quantity).toFixed(2)}</p>
+				<p className="text-base font-semibold ">${((product.price ? product.price : 0) * quantity).toFixed(2)} x {quantity}</p>
 			</div>
 		</div>
 	);
