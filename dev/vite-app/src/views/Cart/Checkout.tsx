@@ -4,6 +4,8 @@ import Title from "../../components/Title";
 import CartCheckoutItem from "../../components/Cart/CartCheckoutItem";
 import { CartContext } from "../../hooks/CartProvider";
 
+import { AuthContext } from "../../hooks/AuthProvider";
+
 import axios from "axios";
 
 import { Link } from "react-router-dom";
@@ -12,9 +14,28 @@ import { CartItemProps } from ".";
 
 const Checkout = () => {
 	useDocumentTitle("Cart");
+	const { isAuthenticated, accessToken } = useContext(AuthContext);
 	const { getCartItems, addCartItem, removeCartItem, setCartItem } = useContext(CartContext);
 	const cartItems = getCartItems();
+	const [balance, setBalance] = useState(0);
 	const [products, setProducts] = useState<ItemProps[]>([]);
+
+	useEffect(() => {
+		if (isAuthenticated) {
+			const fetchBalance = async () => {
+				try {
+					const response = await axios.get("/api/1/wallet/balance", {
+						headers: { Authorization: `Bearer ${accessToken}` },
+					});
+					setBalance(response.data.data.balance);
+				} catch (error) {
+					console.error("Error fetching balance:", error);
+				}
+			};
+
+			fetchBalance();
+		}
+	}, [isAuthenticated, accessToken]);
 
     useEffect(() => {
 		const fetchProducts = async () => {
@@ -77,9 +98,24 @@ const Checkout = () => {
 						</div>
                         <div className="bg-secondary p-8 mt-8 shadow-md rounded-3xl w-full">
 							Payment method
+							<div className="flex items-center mt-4">
+								<input type="radio" name="payment" id="payment" className="mr-2" />
+								<label htmlFor="payment">Balance (${balance})</label>
+
+							</div>
 						</div>
                         <div className="bg-secondary p-8 mt-8 shadow-md rounded-3xl w-full">
 							Shipping
+							<div className="flex flex-col items-center mt-4">
+								<div className="w-full">
+									<input type="radio" name="no-shipping" id="no-shipping" className="mr-2" />
+									<label htmlFor="no-shipping">No Shipping</label>
+								</div>
+								<div className="w-full">
+									<input type="radio" name="shipping" id="shipping" className="mr-2 mt-4" />
+									<label htmlFor="shipping">Shipping</label>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div className="h-full md:h-auto">
