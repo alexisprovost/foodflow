@@ -19,6 +19,7 @@ import NotFound from "./views/NotFound";
 import Account from "./views/Account";
 
 import { CartContext } from "./hooks/CartProvider";
+import Checkout from "./views/Cart/Checkout";
 
 function App() {
 	const { getCartItems, getNbCartItems } = useContext(CartContext);
@@ -63,6 +64,7 @@ function App() {
 					<Route path="/wallet/tip" element={<Tip />} />
 
 					<Route path="/cart" element={<Cart />} />
+					<Route path="/cart/checkout" element={<Checkout />} />
 					<Route path="/account" element={<Account />} />
 					<Route path="*" element={<NotFound />} />
 				</Routes>
