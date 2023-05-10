@@ -16,8 +16,11 @@ interface CheckoutProductProps {
 	quantity: number;
 }
 
-interface CheckoutFormProps {
-	products: CheckoutFormProps[];
+interface FormState {
+	products: CheckoutProductProps[];
+	paymentMethod: string;
+	shippingMethod: string;
+	shippingDetails: string;
 }
 
 const Checkout = () => {
@@ -28,7 +31,33 @@ const Checkout = () => {
 	const [balance, setBalance] = useState(0);
 	const [products, setProducts] = useState<ItemProps[]>([]);
 
-	const [formData, setFormData] = useState({
+	const [consolidatedItems, setConsolidatedItems] = useState<CheckoutProductProps[]>([]);
+
+	useEffect(() => {
+		const newConsolidatedItems = products.map((product) => {
+			return {
+				product: product,
+				quantity: cartItems[product.id],
+			};
+		});
+
+		setConsolidatedItems(newConsolidatedItems);
+	}, [products, cartItems]);
+
+	useEffect(() => {
+		setFormData((prevState) => ({ ...prevState, products: consolidatedItems }));
+	}, [consolidatedItems]);
+
+	let itemComp = consolidatedItems.map((cartItem: CheckoutProductProps) => {
+		const { product, quantity } = cartItem;
+		return (
+			<li key={product.id}>
+				<CartCheckoutItem item={product} quantity={quantity ?? 0} />
+			</li>
+		);
+	});
+
+	const [formData, setFormData] = useState<FormState>({
 		products: [],
 		paymentMethod: "balance",
 		shippingMethod: "no-shipping",
@@ -68,21 +97,9 @@ const Checkout = () => {
 		fetchProducts();
 	}, [cartItems]);
 
-	const consolidatedItems = products.map((product) => {
-		return {
-			item: product,
-			quantity: cartItems[product.id],
-		};
-	});
-
-	let itemComp = consolidatedItems.map((cartItem: CartItemProps) => {
-		const { item, quantity } = cartItem;
-		return (
-			<li key={item.id}>
-				<CartCheckoutItem item={item} quantity={quantity ?? 0} />
-			</li>
-		);
-	});
+	useEffect(() => {
+		setFormData((prevState) => ({ ...prevState, products: consolidatedItems }));
+	}, [consolidatedItems]);
 
 	const handlePaymentMethodChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setFormData((prevState) => ({ ...prevState, paymentMethod: e.target.value }));
@@ -112,7 +129,7 @@ const Checkout = () => {
 		console.log(formData);
 	};
 
-	let subtotal = consolidatedItems.reduce((acc, curr) => acc + (curr.item.price ? curr.item.price : 0) * curr.quantity, 0).toFixed(2);
+	let subtotal = consolidatedItems.reduce((acc, curr) => acc + (curr.product.price ? curr.product.price : 0) * curr.quantity, 0).toFixed(2);
 
 	return (
 		<div className="animate__animated animate__fadeIn animate__faster">
@@ -165,7 +182,9 @@ const Checkout = () => {
 								</ul>
 							</div>
 
-							<button className="bg-green-500 w-full text-white font-semibold rounded-3xl shadow-md px-8 py-4 mt-8 transition-all hover:bg-green-600">Place order</button>
+							<button className="bg-green-500 w-full text-white font-semibold rounded-3xl shadow-md px-8 py-4 mt-8 transition-all hover:bg-green-600 disabled:bg-grey-600" disabled={itemComp.length === 0}>
+								Place order
+							</button>
 						</div>
 					</div>
 				</form>
