@@ -37,7 +37,7 @@ const StoreItem: React.FC<ItemProps> = ({ id, name, url_image, quantity = 0, pri
 			};
 
 			const anim = lottie.loadAnimation(animationConfig);
-			anim.setSpeed(3); // Set animation speed to x3
+			anim.setSpeed(3);
 
 			const onAnimationComplete = () => {
 				setIsClicked(false);

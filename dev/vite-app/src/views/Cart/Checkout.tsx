@@ -11,6 +11,8 @@ import axios from "axios";
 import { ItemProps } from "../../components/StoreItem";
 import { Oval } from "react-loading-icons";
 
+import { useNavigate } from "react-router-dom";
+
 interface CheckoutProductProps {
 	product: ItemProps;
 	quantity: number;
@@ -30,6 +32,8 @@ const Checkout = () => {
 	const cartItems = getCartItems();
 	const [balance, setBalance] = useState(0);
 	const [products, setProducts] = useState<ItemProps[]>([]);
+
+	const navigate = useNavigate();
 
 	const [consolidatedItems, setConsolidatedItems] = useState<CheckoutProductProps[]>([]);
 
@@ -135,7 +139,9 @@ const Checkout = () => {
 				headers: { Authorization: `Bearer ${accessToken}` },
 			})
 			.then((response) => {
-				console.log(response);
+				if (response.status === 201) {
+					navigate("/cart/checkout/success");
+				}
 				setTransactionIsLoading(false);
 			})
 			.catch((error) => {
