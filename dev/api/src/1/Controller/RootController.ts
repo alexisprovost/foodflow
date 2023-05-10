@@ -8,6 +8,7 @@ import SetupController from "./SetupController";
 import TransactionController from "./TransactionController";
 import WalletController from "./WalletController";
 import StatsController from "./StatsController";
+import ProductSuggestionController from "./ProductSuggestionController";
 
 class ControllerV1 extends Controller {
 	public router: Router;
@@ -26,6 +27,7 @@ class ControllerV1 extends Controller {
 		const setupController = new SetupController();
 		const transactionController = new TransactionController();
 		const statsController = new StatsController();
+		const productSuggestionController = new ProductSuggestionController(); 
 
 		this.router.use("/users", userController.router);
 		this.router.use("/auth", authController.router);
@@ -34,6 +36,7 @@ class ControllerV1 extends Controller {
 		this.router.use("/transaction", transactionController.router);
 		this.router.use("/wallet", walletController.router);
 		this.router.use("/stats", statsController.router);
+		this.router.use("/product-suggestion", productSuggestionController.router);
 		this.router.get("/", this.defaultMessage.bind(this));
 	}
 
