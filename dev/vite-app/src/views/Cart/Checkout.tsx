@@ -9,7 +9,7 @@ import { AuthContext } from "../../hooks/AuthProvider";
 import axios from "axios";
 
 import { ItemProps } from "../../components/StoreItem";
-import { CartItemProps } from ".";
+import { Oval } from "react-loading-icons";
 
 interface CheckoutProductProps {
 	product: ItemProps;
@@ -32,6 +32,8 @@ const Checkout = () => {
 	const [products, setProducts] = useState<ItemProps[]>([]);
 
 	const [consolidatedItems, setConsolidatedItems] = useState<CheckoutProductProps[]>([]);
+
+	const [transactionIsLoading, setTransactionIsLoading] = useState(false);
 
 	useEffect(() => {
 		const newConsolidatedItems = products.map((product) => {
@@ -114,19 +116,33 @@ const Checkout = () => {
 	};
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault(); // prevent default form submission behavior
-		/*axios
-			.post("/api/form", formData) // send post request to server
+		e.preventDefault();
+
+		setTransactionIsLoading(true);
+
+		let transformedItems = consolidatedItems.map((item) => ({
+			product: { id: item.product.id },
+			quantity: item.quantity,
+		}));
+
+		let newFormData = {
+			...formData,
+			products: transformedItems,
+		};
+
+		axios
+			.post("/api/1/transaction", newFormData, {
+				headers: { Authorization: `Bearer ${accessToken}` },
+			})
 			.then((response) => {
-				console.log(response); // log response to console
-				// do something else with response data
+				console.log(response);
+				setTransactionIsLoading(false);
 			})
 			.catch((error) => {
-				console.error(error); // log error to console
-				// do something else with error data
-			});*/
+				console.error(error);
+			});
 
-		console.log(formData);
+		console.log(newFormData);
 	};
 
 	let subtotal = consolidatedItems.reduce((acc, curr) => acc + (curr.product.price ? curr.product.price : 0) * curr.quantity, 0).toFixed(2);
@@ -182,8 +198,8 @@ const Checkout = () => {
 								</ul>
 							</div>
 
-							<button className="bg-green-500 w-full text-white font-semibold rounded-3xl shadow-md px-8 py-4 mt-8 transition-all hover:bg-green-600 disabled:bg-grey-600" disabled={itemComp.length === 0}>
-								Place order
+							<button className="bg-green-500 w-full text-white font-semibold rounded-3xl shadow-md flex justify-center px-8 py-4 mt-8 transition-all hover:bg-green-600" disabled={itemComp.length === 0}>
+								{transactionIsLoading ? <Oval className="w-6 h-6" strokeWidth={5} speed={5} /> : "Checkout"}
 							</button>
 						</div>
 					</div>
