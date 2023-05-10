@@ -5,7 +5,7 @@ import checkAnimationData from "../../assets/lotties/add-to-cart.json";
 
 export interface ItemProps {
 	id: number;
-	name: string;
+	name?: string;
 	quantity?: number;
 	price?: number;
 	added_date?: string;
