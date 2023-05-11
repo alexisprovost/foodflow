@@ -17,20 +17,13 @@ class EmailService {
 	}
 
 	public async send(to: string, subject: string, message: string): Promise<void> {
-		const data = {
-			from: "foodflow@foodflow.sshort.net",
-			to: to,
-			subject: subject,
-			text: message,
-		};
-
 		this.client.messages
 			.create(this.mailgun_domain, {
 				from: "FoodFlow <mailgun@" + this.mailgun_domain + ">",
 				to: [to],
 				subject: "FoodFlow - Order Confirmation",
 				text: "Hi, thanks for ordering with FoodFlow!",
-				html: "<h1>Hi, thanks for ordering with FoodFlow! </h1>",
+				html: message,
 			})
 			.then((msg: any) => console.log(msg))
 			.catch((err: any) => console.log(err));
