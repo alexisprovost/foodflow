@@ -6,7 +6,7 @@ import BackButton from "../../components/BackButton";
 
 const Withdraw = () => {
 	const { isAuthenticated } = useContext(AuthContext);
-	useDocumentTitle("TopUp");
+	useDocumentTitle("Withdraw");
 
 	const walletTopUpContent = isAuthenticated ? (
 		<div className="animate__animated animate__fadeIn animate__faster pt-8">

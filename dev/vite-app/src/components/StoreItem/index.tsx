@@ -5,7 +5,7 @@ import checkAnimationData from "../../assets/lotties/add-to-cart.json";
 
 export interface ItemProps {
 	id: number;
-	name: string;
+	name?: string;
 	quantity?: number;
 	price?: number;
 	added_date?: string;
@@ -37,7 +37,7 @@ const StoreItem: React.FC<ItemProps> = ({ id, name, url_image, quantity = 0, pri
 			};
 
 			const anim = lottie.loadAnimation(animationConfig);
-			anim.setSpeed(3); // Set animation speed to x3
+			anim.setSpeed(3);
 
 			const onAnimationComplete = () => {
 				setIsClicked(false);

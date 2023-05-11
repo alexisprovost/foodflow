@@ -12,13 +12,14 @@ import TopUp from "./views/Wallet/TopUp";
 import Tip from "./views/Wallet/Tip";
 import Withdraw from "./views/Wallet/Withdraw";
 
-
 import Cart from "./views/Cart";
+import Success from "./views/Cart/Success";
 import NotFound from "./views/NotFound";
 
 import Account from "./views/Account";
 
 import { CartContext } from "./hooks/CartProvider";
+import Checkout from "./views/Cart/Checkout";
 
 function App() {
 	const { getCartItems, getNbCartItems } = useContext(CartContext);
@@ -63,6 +64,8 @@ function App() {
 					<Route path="/wallet/tip" element={<Tip />} />
 
 					<Route path="/cart" element={<Cart />} />
+					<Route path="/cart/checkout" element={<Checkout />} />
+					<Route path="/cart/checkout/success" element={<Success />} />
 					<Route path="/account" element={<Account />} />
 					<Route path="*" element={<NotFound />} />
 				</Routes>

@@ -31,6 +31,48 @@ class ProductDao {
 		const queryResult = await db.query(query, queryParams);
 		return queryResult.map(this.mapProduct);
 	}
+	async getPurchasedProducts(user_id: number): Promise<Product[]> {
+		const query = `
+		SELECT p.*, COALESCE(pr.value, 0) AS price
+		FROM products p
+		INNER JOIN product_transaction pt ON p.id = pt.id_product
+		INNER JOIN transaction t ON t.id = pt.id_transaction
+		LEFT JOIN price pr ON p.id = pr.id_product AND pr.effective_date = (SELECT MAX(effective_date) FROM price WHERE id_product = p.id)
+		WHERE t.user_id = $1;
+		`;
+	  
+		try {
+		  const result = await db.query(query, [user_id]);
+		  const purchasedProducts = result.map(this.mapProduct);
+
+		  console.log('Purchased products:', purchasedProducts);
+		  return purchasedProducts;
+		} catch (err) {
+		  console.error('Error fetching purchased products:', err);
+		  throw err;
+		}
+	  }
+
+	  public async getAllPurchasedProducts(): Promise<Product[]> {
+		const query = `
+		  SELECT p.*, 
+		  COALESCE(
+			  (CASE
+				WHEN json_typeof(json_agg(c.name ORDER BY c.name)) = 'null' THEN '[]'
+				ELSE json_agg(c.name ORDER BY c.name) FILTER (WHERE c.name IS NOT NULL)
+			  END),
+			'[]') AS categories,
+		  COALESCE((SELECT CAST(pr.value AS NUMERIC(7,2)) FROM price pr WHERE pr.id_product = p.id ORDER BY pr.effective_date DESC LIMIT 1), 0.00) AS price 
+		  FROM products p 
+		  INNER JOIN product_transaction pt ON p.id = pt.id_product
+		  INNER JOIN transaction t ON t.id = pt.id_transaction
+		  LEFT JOIN category_products cp ON cp.id_product = p.id 
+		  LEFT JOIN category c ON cp.id_category = c.id 
+		  GROUP BY p.id 
+		  ORDER BY p.name;
+		`;
+		return this.fetchProducts(query);
+	  }
 
 	public async getAllProducts(itemsPerPage: number = 12, currentPage: number = 1, searchQuery: string = "", categoryFilter: string[] = [], minPrice: number = 0, maxPrice: number = Number.MAX_SAFE_INTEGER): Promise<Product[]> {
 		const offset = (currentPage - 1) * itemsPerPage;

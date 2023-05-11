@@ -1,18 +1,18 @@
 import { useContext, useEffect, useState } from "react";
-import useDocumentTitle from "../hooks/useDocumentTitle";
-import Title from "../components/Title";
-import CartItem from "../components/CartItem";
-import { CartContext } from "../hooks/CartProvider";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+import Title from "../../components/Title";
+import CartItem from "../../components/Cart/CartItem";
+import { CartContext } from "../../hooks/CartProvider";
 
 import axios from "axios";
 
 import { Link } from "react-router-dom";
-import { ItemProps } from "../components/StoreItem";
+import { ItemProps } from "../../components/StoreItem";
 
 export interface CartItemProps {
 	item: ItemProps;
 	quantity: number;
-	onQuantityChange: (newQuantity: number) => void;
+	onQuantityChange?: (newQuantity: number) => void;
 }
 
 const Cart = () => {
@@ -66,6 +66,8 @@ const Cart = () => {
 		);
 	});
 
+	let subtotal = consolidatedItems.reduce((acc, curr) => acc + (curr.item.price ? curr.item.price : 0) * curr.quantity, 0).toFixed(2);
+
 	return (
 		<div className="animate__animated animate__fadeIn animate__faster">
 			<Title text="Cart" />
@@ -75,8 +77,8 @@ const Cart = () => {
 						{itemComp}
 						<div className="flex flex-row md:justify-end">
 							<div className="flex flex-col justify-end w-full md:w-[25rem]">
-								<p className="text-white font-semibold py-4 px-4 pt-0 text-right text-xl">Total: ${consolidatedItems.reduce((acc, curr) => acc + (curr.item.price ? curr.item.price : 0) * curr.quantity, 0).toFixed(2)}</p>
-								<Link to="/checkout">
+								<p className="text-white font-semibold py-4 px-4 pt-0 text-right text-xl">Total: ${subtotal}</p>
+								<Link to="/cart/checkout">
 									<div className="flex flex-col items-center justify-content-center p-1 mt-1 bg-primaryButton rounded-3xl">
 										<button className="flex items-center justify-center text-white text-base font-semibold py-2">Checkout</button>
 									</div>
