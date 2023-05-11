@@ -7,8 +7,8 @@ class EmailService {
     this.transporter = nodemailer.createTransport({
       service: "outlook",
       auth: {
-        user: "thomaspelletier@hotmail.ca",
-        pass: "20Decembre",
+        user: "",
+        pass: "",
       },
     });
   }
