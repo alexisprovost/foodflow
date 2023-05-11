@@ -3,12 +3,16 @@ import formData from "form-data";
 
 class EmailService {
 	private client: any;
+	private mailgun_api_key: string;
+	private mailgun_domain: string;
 
 	constructor() {
 		const mailgun = new Mailgun(formData);
+		this.mailgun_api_key = process.env.MAILGUN_API_KEY || "";
+		this.mailgun_domain = process.env.MAILGUN_DOMAIN || "";
 		this.client = mailgun.client({
 			username: "api",
-			key: process.env.MAILGUN_API_KEY || "",
+			key: this.mailgun_api_key,
 		});
 	}
 
@@ -21,14 +25,14 @@ class EmailService {
 		};
 
 		this.client.messages
-			.create("sandbox100154ae304043ff97f7a20862b44fe1.mailgun.org", {
-				from: "FoodFlow <mailgun@sandbox100154ae304043ff97f7a20862b44fe1.mailgun.org>",
+			.create(this.mailgun_domain, {
+				from: "FoodFlow <" + this.mailgun_domain + ">",
 				to: [to],
 				subject: "FoodFlow - Order Confirmation",
 				text: "Hi, thanks for ordering with FoodFlow!",
 				html: "<h1>Hi, thanks for ordering with FoodFlow! </h1>",
 			})
-			.then((msg: any) => console.log(msg)) // logs response data
+			.then((msg: any) => console.log(msg))
 			.catch((err: any) => console.log(err));
 	}
 }

@@ -100,6 +100,7 @@ jobs:
           ACCESS_TOKEN_EXPIRES: ${{ secrets.ACCESS_TOKEN_EXPIRES }}
           REFRESH_TOKEN_EXPIRES: ${{ secrets.REFRESH_TOKEN_EXPIRES }}
           MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+          MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
         with:
           ssh_user: ${{ secrets.DEPLOY_SERVER_USER }}
           ssh_host: ${{ secrets.DEPLOY_SERVER_HOST }}
@@ -120,3 +121,4 @@ jobs:
             export ACCESS_TOKEN_EXPIRES="${{ secrets.ACCESS_TOKEN_EXPIRES }}"
             export REFRESH_TOKEN_EXPIRES="${{ secrets.REFRESH_TOKEN_EXPIRES }}"
             export MAILGUN_API_KEY="${{ secrets.MAILGUN_API_KEY }}"
+            export MAILGUN_DOMAIN="${{ secrets.MAILGUN_DOMAIN }}"
