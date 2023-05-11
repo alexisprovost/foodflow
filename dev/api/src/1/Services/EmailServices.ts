@@ -26,7 +26,7 @@ class EmailService {
 
 		this.client.messages
 			.create(this.mailgun_domain, {
-				from: "FoodFlow <" + this.mailgun_domain + ">",
+				from: "FoodFlow <mailgun@" + this.mailgun_domain + ">",
 				to: [to],
 				subject: "FoodFlow - Order Confirmation",
 				text: "Hi, thanks for ordering with FoodFlow!",
