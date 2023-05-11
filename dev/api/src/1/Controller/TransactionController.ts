@@ -3,15 +3,22 @@ import Controller from ".";
 import ProductDao from "../DAO/ProductDAO";
 import TransactionDAO from "../DAO/TransactionDAO";
 import { requireAuth } from "./authMiddleware";
+import EmailService from "../Services/EmailServices";
+import UserDao from "../DAO/UserDao";
 
 class TransactionController extends Controller {
 	private productDao: ProductDao;
 	private transactionDao: TransactionDAO;
+	private emailService: EmailService;
+	private userDao: UserDao;
+
 
 	constructor() {
 		super();
 		this.productDao = new ProductDao();
 		this.transactionDao = new TransactionDAO();
+		this.emailService = new EmailService();
+		this.userDao = new UserDao();
 		this.useJsonBodyParser();
 	}
 
@@ -38,6 +45,11 @@ class TransactionController extends Controller {
 		const user: any = req.user;
 		const transactionData = req.body;
 		transactionData.user_id = user.id;
+		const getEmail = await this.userDao.getUserById(user.id);
+		const email = getEmail.email;
+		transactionData.products
+
+		this.emailService.send(email, "", "Thank you for your purchase!")
 		const newTransaction = await this.transactionDao.createTransaction(transactionData);
 		res.status(201).json(newTransaction);
 	}
