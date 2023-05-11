@@ -21,7 +21,7 @@ class Database {
 
 		// Add event listener for successful connections
 		this.pool.on("connect", (client) => {
-			console.log("PostgreSQL connected");
+			//Connected to the db
 		});
 
 		// Add event listener for errors
