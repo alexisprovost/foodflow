@@ -12,7 +12,6 @@ class TransactionController extends Controller {
 	private emailService: EmailService;
 	private userDao: UserDao;
 
-
 	constructor() {
 		super();
 		this.productDao = new ProductDao();
@@ -26,6 +25,7 @@ class TransactionController extends Controller {
 		this.router.get("/", requireAuth, this.handleAsync(this.getTransactionsByUserId.bind(this)));
 		this.router.get("/single/:id", requireAuth, this.handleAsync(this.getTransactionById.bind(this)));
 		this.router.post("/", requireAuth, this.handleAsync(this.createTransaction.bind(this)));
+		// We need to check the permission to ensure that this path is protected as admin only
 		//this.router.delete("/:id", this.handleAsync(this.deleteTransaction.bind(this)));
 	}
 
@@ -47,9 +47,9 @@ class TransactionController extends Controller {
 		transactionData.user_id = user.id;
 		const getEmail = await this.userDao.getUserById(user.id);
 		const email = getEmail.email;
-		transactionData.products
+		transactionData.products;
 
-		this.emailService.send(email, "", "Thank you for your purchase!")
+		this.emailService.send(email, "FoodFlow Purchase", "Thank you for your purchase!");
 		const newTransaction = await this.transactionDao.createTransaction(transactionData);
 		res.status(201).json(newTransaction);
 	}

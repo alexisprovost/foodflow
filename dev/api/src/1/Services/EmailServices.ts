@@ -1,33 +1,29 @@
-import nodemailer from "nodemailer";
+import Mailgun from "mailgun.js";
+import formData from "form-data";
 
 class EmailService {
-  private transporter: nodemailer.Transporter;
+	private client: any;
 
-  constructor() {
-    this.transporter = nodemailer.createTransport({
-      service: "outlook",
-      auth: {
-        user: "",
-        pass: "",
-      },
-    });
-  }
+	constructor() {
+		const mailgun = new Mailgun(formData);
+		this.client = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY || "key-yourkeyhere" });
+	}
 
-  public async send(to: string, subject: string, message: string): Promise<void> {
-    const mailOptions = {
-      from: "thomaspelletier@hotmail.ca",
-      to,
-      subject,
-      text: message,
-    };
+	public async send(to: string, subject: string, message: string): Promise<void> {
+		const data = {
+			from: "foodflow@foodflow.sshort.net",
+			to: to,
+			subject: subject,
+			text: message,
+		};
 
-    try {
-      await this.transporter.sendMail(mailOptions);
-      console.log(`Email sent to ${to}: ${subject}`);
-    } catch (err) {
-      console.error(`Error sending email to ${to}: ${err}`);
-    }
-  }
+		try {
+			await this.client.messages.create("YOUR_DOMAIN", data);
+			console.log(`Email sent to ${to}: ${subject}`);
+		} catch (err: any) {
+			console.error(`Error sending email to ${to}: ${err.message}`);
+		}
+	}
 }
 
 export default EmailService;
