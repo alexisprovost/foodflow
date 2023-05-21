@@ -47,6 +47,8 @@ to stop use
 docker-compose -f docker-compose.dev.yml down --remove-orphans
 ```
 
+You can access /api/1/setup/add-samples with a get request to insert sample products into the database.
+
 #### Tips
 
 When the node js packages changes. You need to run this command to rebuild the docker image with the updated packages in it.

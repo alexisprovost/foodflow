@@ -15,9 +15,9 @@ class ProductController extends Controller {
 	protected initializeRoutes(): void {
 		this.router.get("/", this.handleAsync(this.getAllProducts.bind(this)));
 		this.router.get("/:id", this.handleAsync(this.getProductById.bind(this)));
-		this.router.post("/", this.handleAsync(this.createProduct.bind(this)));
-		this.router.put("/:id", this.handleAsync(this.updateProduct.bind(this)));
-		this.router.delete("/:id", this.handleAsync(this.deleteProduct.bind(this)));
+		this.router.post("/", requireAuth, requireRole(90), this.handleAsync(this.createProduct.bind(this)));
+		this.router.put("/:id", requireAuth, requireRole(90), this.handleAsync(this.updateProduct.bind(this)));
+		this.router.delete("/:id", requireAuth, requireRole(90), this.handleAsync(this.deleteProduct.bind(this)));
 	}
 
 	private async getAllProducts(req: Request, res: Response): Promise<void> {

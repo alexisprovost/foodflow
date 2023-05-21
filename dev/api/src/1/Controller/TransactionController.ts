@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Controller from ".";
 import ProductDao from "../DAO/ProductDAO";
 import TransactionDAO from "../DAO/TransactionDAO";
-import { requireAuth } from "./authMiddleware";
+import { requireAuth, requireRole } from "./authMiddleware";
 import EmailService from "../Services/EmailServices";
 import UserDao from "../DAO/UserDao";
 
@@ -25,8 +25,7 @@ class TransactionController extends Controller {
 		this.router.get("/", requireAuth, this.handleAsync(this.getTransactionsByUserId.bind(this)));
 		this.router.get("/single/:id", requireAuth, this.handleAsync(this.getTransactionById.bind(this)));
 		this.router.post("/", requireAuth, this.handleAsync(this.createTransaction.bind(this)));
-		// We need to check the permission to ensure that this path is protected as admin only
-		//this.router.delete("/:id", this.handleAsync(this.deleteTransaction.bind(this)));
+		this.router.delete("/:id", requireAuth, requireRole(90), this.handleAsync(this.deleteTransaction.bind(this)));
 	}
 
 	private async getTransactionsByUserId(req: Request, res: Response): Promise<void> {

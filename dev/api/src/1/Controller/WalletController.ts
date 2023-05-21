@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Controller from ".";
 import WalletDao from "../DAO/WalletDAO";
 
-import { requireAuth } from "./authMiddleware";
+import { requireAuth, requireRole } from "./authMiddleware";
 
 class WalletController extends Controller {
 	private walletDao: WalletDao;
@@ -14,7 +14,7 @@ class WalletController extends Controller {
 
 	protected initializeRoutes(): void {
 		this.router.get("/balance", requireAuth, this.handleAsync(this.getBalance.bind(this)));
-		this.router.post("/add", requireAuth, this.handleAsync(this.addMoney.bind(this)));
+		this.router.post("/add", requireAuth, requireRole(90), this.handleAsync(this.addMoney.bind(this)));
 		this.router.post("/withdraw", requireAuth, this.handleAsync(this.withdrawMoney.bind(this)));
 		this.router.post("/tip", requireAuth, this.handleAsync(this.tipMoney.bind(this)));
 	}

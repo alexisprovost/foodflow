@@ -13,7 +13,7 @@ class ProductSuggestionController extends Controller {
     }
 
     protected initializeRoutes(): void {
-        this.router.get("/suggestions", requireAuth, this.handleAsync(this.getSuggestions.bind(this)));
+        this.router.get("/", requireAuth, this.handleAsync(this.getSuggestions.bind(this)));
     }
 
     private async getSuggestions(req: Request, res: Response): Promise<void> {

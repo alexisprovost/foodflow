@@ -36,7 +36,7 @@ class ControllerV1 extends Controller {
 		this.router.use("/transaction", transactionController.router);
 		this.router.use("/wallet", walletController.router);
 		this.router.use("/stats", statsController.router);
-		this.router.use("/product-suggestion", productSuggestionController.router);
+		this.router.use("/suggestions", productSuggestionController.router);
 		this.router.get("/", this.defaultMessage.bind(this));
 	}
 

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Controller from ".";
 import UserDao from "../DAO/UserDao";
 
-import { requireAuth } from "./authMiddleware";
+import { requireAuth, requireRole } from "./authMiddleware";
 
 class UserController extends Controller {
 	private userDao: UserDao;
@@ -37,21 +37,33 @@ class UserController extends Controller {
 	private async updateUser(req: Request, res: Response): Promise<void> {
 		const userid: number = parseInt(req.params.id);
 		const updateData = req.body;
-	
-		
-			const userInfos = await this.userDao.updateUser(userid, updateData);
-			if (!userInfos) {
-				return super.errorResponse(res, "User not found", 404);
-			}
+		const user: any = req.user;
 
-			super.successResponse(res, userInfos);
-	
+		//verify that the connected user is the same as the one being updated
+		if (user.id !== userid) {
+			return super.errorResponse(res, "Unauthorized", 401);
+		}
+
+		const userInfos = await this.userDao.updateUser(userid, updateData);
+		if (!userInfos) {
+			return super.errorResponse(res, "User not found", 404);
+		}
+
+		super.successResponse(res, userInfos);
 	}
 
-	private async deleteUser(req: Request, res: Response): Promise<void>{
+	private async deleteUser(req: Request, res: Response): Promise<void> {
 		const userid: number = parseInt(req.params.id);
+		const user: any = req.user;
+
+		//verify that the connected user is the same as the one being updated
+		if (user.id !== userid) {
+			return super.errorResponse(res, "Unauthorized", 401);
+		}
+
 		const deleteUser = await this.userDao.deleteUser(userid);
-		if (!deleteUser){
+
+		if (!deleteUser) {
 			return super.errorResponse(res, "No Deletion", 404);
 		}
 
