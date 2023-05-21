@@ -7,7 +7,7 @@ export interface User {
 	name: string;
 	email: string;
 	date_of_birth: string;
-	role: string;
+	role: number;
 	refresh_token: string;
 	refresh_token_expires: string;
 }

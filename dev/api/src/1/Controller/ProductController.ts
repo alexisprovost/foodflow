@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Controller from ".";
 import ProductDao from "../DAO/ProductDAO";
+import { requireAuth, requireRole } from "./authMiddleware";
 
 class ProductController extends Controller {
 	private productDao: ProductDao;
