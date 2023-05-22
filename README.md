@@ -12,9 +12,23 @@ FoodFlow is a web app designed to streamline the buying and selling of snacks an
 
 [https://documenter.getpostman.com/view/26616031/2s93RRvYjD](https://documenter.getpostman.com/view/26616031/2s93RRvYjD)
 
-## How to run it
+## Usage and Installation
 
-1. To ensure proper execution of this project, it is necessary to create an .env file using the provided template. In the dev directory you'll see a file called .env.template. Rename the file to .env and set the correct values in it.
+1. To run this project you need to have [Docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/install/) installed. docker-compose is included in Docker Desktop. You can test if you have the requirements using these commands.
+
+```bash
+docker --version
+```
+v2
+```bash
+docker compose --version
+```
+v1
+```bash
+docker-compose --version
+```
+
+2. To ensure proper execution of this project, it is necessary to create an .env file using the provided template. In the dev directory you'll see a file called .env.template. Rename the file to .env and set the correct values in it.
 
 ```env
 POSTGRES_USER="CHANGE_THIS_DB_USER"
@@ -34,7 +48,7 @@ tip. you can use this command to generate jwt secrets [Source](https://mojitocod
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-2. To launch the project with Docker, use the docker-compose.yml file for the production version. For the development version, use the docker-compose.dev.yml file.
+3. To launch the project with Docker, use the docker-compose.yml file for the production version. For the development version, use the docker-compose.dev.yml file.
 
 **!! Run these commands in the ./dev folder !!**
 
@@ -87,3 +101,7 @@ This project may contain elements derived from various resources including [YouT
 ## Authors
 
 FoodFlow was created by [Thomas](https://github.com/Thomkiller) and [Alexis](https://github.com/alexisprovost).
+
+## License
+
+This project is licensed under the Apache License, Version 2.0. See the LICENSE file for details.
