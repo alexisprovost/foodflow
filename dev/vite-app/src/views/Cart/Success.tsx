@@ -1,11 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import lottie, { AnimationItem } from "lottie-web";
 import confetti from "../../assets/lotties/confetti.json";
 
-import { Link, useNavigate } from "react-router-dom";
+import { CartContext } from "../../hooks/CartProvider";
+
+import { useNavigate } from "react-router-dom";
 
 const Success = () => {
 	const animation2Container = useRef<HTMLDivElement | null>(null);
+
+	const { emptyCart } = useContext(CartContext);
+
 	const [animLoaded, setAnimLoaded] = useState(false);
 	const navigate = useNavigate();
 
@@ -24,6 +29,10 @@ const Success = () => {
 			setAnimLoaded(true);
 		}
 	}, [animLoaded]);
+
+	useEffect(() => {
+		emptyCart();
+	}, []);
 
 	return (
 		<div className="flex flex-col items-center justify-center z-10 relative h-[inherit]">
