@@ -34,28 +34,55 @@ tip. you can use this command to generate jwt secrets [Source](https://mojitocod
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-2. To launch the project with Docker, use the docker-compose.yml file for the production version. For the development version, use the docker-compose.dev.yml file. Run these commands in the ./dev folder
+2. To launch the project with Docker, use the docker-compose.yml file for the production version. For the development version, use the docker-compose.dev.yml file.
 
-development
+**!! Run these commands in the ./dev folder !!**
 
+The differences between the development version and the production version are as follows:
+
+### **Development:**
+- The code is not compacted, so it may be slower to load the page initially.
+- Employs file save detection to auto-reload any changes instantly, enhancing the developer experience.
+- Utilizes Vite server for the /api reverse proxy.
+
+To start use
 ```bash
 docker-compose -f docker-compose.dev.yml up
 ```
 
-to stop use
+To stop use
 ```bash
 docker-compose -f docker-compose.dev.yml down --remove-orphans
 ```
 
-You can access /api/1/setup/add-samples with a get request to insert sample products into the database.
+### **Production:**
+- Runs with a production build of React, so it's compacted more efficiently to run smoothly in any browser.
+- Doesn't support file detection for hot reload.
+- Utilizes Nginx for the /api reverse proxy.
 
-#### Tips
+The production build utilizes an image repository for storing images that are built via GitHub Actions. When a pull request is successfully merged into the production branch, the system initiates a compilation process and updates the resulting build to the DigitalOcean droplet. So its harder to run the prod build on your local machine but not possible.
+
+If you really want to you can use:
+
+```bash
+docker login ghcr.io --username github-account
+```
+
+You can access `/api/v1/setup/add-samples` using a GET request to insert sample products into the database.
+
+The database will create the tables if they aren't already present during the initial page load. However, this process might cause the first page load to crash.
+
+#### Add new packages
 
 When the node js packages changes. You need to run this command to rebuild the docker image with the updated packages in it.
 
 ```bash
 docker-compose -f docker-compose.dev.yml build
 ```
+
+## References
+
+This project may contain elements derived from various resources including [YouTube video tutorials](https://youtube.com/), [Google searches](https://google.com/), inquiries addressed to [ChatGPT](https://chat.openai.com), insights gained from [Copilot](https://github.com/features/copilot), and the extensive information provided by numerous library documentation websites (checkout the dev/vite-app/package.json for the complete list).
 
 ## Authors
 
