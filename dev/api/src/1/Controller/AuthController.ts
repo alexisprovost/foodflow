@@ -7,6 +7,7 @@ import WalletDao from "../DAO/WalletDAO";
 
 import { configureJwtStrategy, jwtRoutes } from "../Strategies/JWT";
 import { configureLocalStrategy } from "../Strategies/Local";
+import e from "express";
 
 class AuthController extends Controller {
 	private accessTokenExpiresInStr = process.env.ACCESS_TOKEN_EXPIRES;
@@ -65,7 +66,11 @@ class AuthController extends Controller {
 			}
 			return decodedToken.sub as number;
 		} catch (err) {
-			return null;
+			if (err instanceof jwt.JsonWebTokenError) {
+				throw new Error("Invalid token");
+			} else {
+				throw err;
+			}
 		}
 	}
 }

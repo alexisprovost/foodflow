@@ -20,18 +20,13 @@ class UserController extends Controller {
 
 	private async getUser(req: Request, res: Response): Promise<void> {
 		const user: any = req.user;
+		const userInfos = await this.userDao.getUserById(parseInt(user.id));
 
-		try {
-			const userInfos = await this.userDao.getUserById(parseInt(user.id));
-			if (!userInfos) {
-				return super.errorResponse(res, "User not found", 404);
-			}
-
-			super.successResponse(res, userInfos);
-		} catch (err) {
-			console.error("Error getting user:", err);
-			super.errorResponse(res, "Internal server error", 500);
+		if (!userInfos) {
+			return super.errorResponse(res, "User not found", 404);
 		}
+
+		return super.successResponse(res, userInfos);
 	}
 
 	private async updateUser(req: Request, res: Response): Promise<void> {
@@ -45,11 +40,12 @@ class UserController extends Controller {
 		}
 
 		const userInfos = await this.userDao.updateUser(userid, updateData);
+
 		if (!userInfos) {
 			return super.errorResponse(res, "User not found", 404);
 		}
 
-		super.successResponse(res, userInfos);
+		return super.successResponse(res, userInfos);
 	}
 
 	private async deleteUser(req: Request, res: Response): Promise<void> {
@@ -67,7 +63,7 @@ class UserController extends Controller {
 			return super.errorResponse(res, "No Deletion", 404);
 		}
 
-		super.successResponse(res, deleteUser);
+		return super.successResponse(res, deleteUser);
 	}
 }
 

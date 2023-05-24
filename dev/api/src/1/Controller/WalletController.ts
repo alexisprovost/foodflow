@@ -21,54 +21,30 @@ class WalletController extends Controller {
 
 	private async getBalance(req: Request, res: Response): Promise<void> {
 		const user: any = req.user;
-
-		try {
-			const balance = await this.walletDao.getBalance(user.id);
-			super.successResponse(res, { balance });
-		} catch (err) {
-			console.error("Error getting balance:", err);
-			super.errorResponse(res, "Internal server error", 500);
-		}
+		const balance = await this.walletDao.getBalance(user.id);
+		return super.successResponse(res, { balance });
 	}
 
 	private async addMoney(req: Request, res: Response): Promise<void> {
 		const user: any = req.user;
 		const amount: number = parseFloat(req.body.amount);
-
-		try {
-			const newBalance = await this.walletDao.addMoney(user.id, amount);
-			super.successResponse(res, { balance: newBalance });
-		} catch (err) {
-			console.error("Error adding money:", err);
-			super.errorResponse(res, "Internal server error", 500);
-		}
+		const newBalance = await this.walletDao.addMoney(user.id, amount);
+		return super.successResponse(res, { balance: newBalance });
 	}
 
 	private async withdrawMoney(req: Request, res: Response): Promise<void> {
 		const user: any = req.user;
 		const amount: number = parseFloat(req.body.amount);
-
-		try {
-			const newBalance = await this.walletDao.withdrawMoney(user.id, amount);
-			super.successResponse(res, { balance: newBalance });
-		} catch (err) {
-			console.error("Error withdrawing money:", err);
-			super.errorResponse(res, "Internal server error", 500);
-		}
+		const newBalance = await this.walletDao.withdrawMoney(user.id, amount);
+		return super.successResponse(res, { balance: newBalance });
 	}
 
 	private async tipMoney(req: Request, res: Response): Promise<void> {
 		const user: any = req.user;
 		const receiverId: number = parseInt(req.body.receiverId);
 		const amount: number = parseFloat(req.body.amount);
-
-		try {
-			await this.walletDao.tipMoney(user.id, receiverId, amount);
-			super.successResponse(res, { message: "Money tipped successfully" });
-		} catch (err) {
-			console.error("Error tipping money:", err);
-			super.errorResponse(res, "Internal server error", 500);
-		}
+		await this.walletDao.tipMoney(user.id, receiverId, amount);
+		return super.successResponse(res, { message: "Money tipped successfully" });
 	}
 }
 
