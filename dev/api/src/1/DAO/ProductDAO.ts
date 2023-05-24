@@ -40,20 +40,19 @@ class ProductDao {
 		LEFT JOIN price pr ON p.id = pr.id_product AND pr.effective_date = (SELECT MAX(effective_date) FROM price WHERE id_product = p.id)
 		WHERE t.user_id = $1;
 		`;
-	  
+
 		try {
-		  const result = await db.query(query, [user_id]);
-		  const purchasedProducts = result.map(this.mapProduct);
+			const result = await db.query(query, [user_id]);
+			const purchasedProducts = result.map(this.mapProduct);
 
-		  console.log('Purchased products:', purchasedProducts);
-		  return purchasedProducts;
+			return purchasedProducts;
 		} catch (err) {
-		  console.error('Error fetching purchased products:', err);
-		  throw err;
+			console.error("Error fetching purchased products:", err);
+			throw err;
 		}
-	  }
+	}
 
-	  public async getAllPurchasedProducts(): Promise<Product[]> {
+	public async getAllPurchasedProducts(): Promise<Product[]> {
 		const query = `
 		  SELECT p.*, 
 		  COALESCE(
@@ -72,7 +71,7 @@ class ProductDao {
 		  ORDER BY p.name;
 		`;
 		return this.fetchProducts(query);
-	  }
+	}
 
 	public async getAllProducts(itemsPerPage: number = 12, currentPage: number = 1, searchQuery: string = "", categoryFilter: string[] = [], minPrice: number = 0, maxPrice: number = Number.MAX_SAFE_INTEGER): Promise<Product[]> {
 		const offset = (currentPage - 1) * itemsPerPage;
@@ -222,17 +221,15 @@ class ProductDao {
 		  FROM products
 		  WHERE id = $1;
 		`;
-	
+
 		const result = await db.query(query, [productId]);
-	
+
 		if (result.length === 0) {
-		  throw new Error(`Product with ID: ${productId} not found.`);
+			throw new Error(`Product with ID: ${productId} not found.`);
 		}
-	
+
 		return result[0].quantity;
-	  }
-	
-	
+	}
 
 	public async getProductByBarcode(barcode: string) {
 		const query = `
