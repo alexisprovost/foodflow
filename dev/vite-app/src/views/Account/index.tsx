@@ -23,7 +23,7 @@ const Account = () => {
 	);
 
 	if (isAuthenticated && userInfo) {
-		const { id, firstName, name, email, date_of_birth, role } = userInfo;
+		const { id, firstname: firstName, name, email, date_of_birth, role } = userInfo;
 
 		content = (
 			<div className="mt-8">
