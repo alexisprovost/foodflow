@@ -48,7 +48,7 @@ const Account = () => {
 							title="Account Settings"
 							links={[
 								{ title: "Edit my profile", link: "/account/profile" },
-								{ title: "Change my password", link: "/account/password" },
+								{ title: "Change my password", link: "/account/password", disable: true },
 							]}
 						/>
 

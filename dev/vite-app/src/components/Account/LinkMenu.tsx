@@ -7,6 +7,7 @@ export interface LinkProps {
 	link?: string;
 	onClick?: () => void;
 	icon?: ReactElement<IconType>;
+	disable?: boolean;
 }
 
 export interface LinkMenuProps {
@@ -20,11 +21,26 @@ const LinkMenu = ({ title, links, className }: LinkMenuProps) => {
 	const navigate = useNavigate();
 
 	return (
-		<div className={`rounded-3xl cursor-pointer bg-secondary flex flex-col items-center ${classes}`}>
+		<div className={`rounded-3xl bg-secondary flex flex-col items-center ${classes}`}>
 			{title && <h2 className="text-xl w-full py-4 px-6 font-semibold">{title}</h2>}
 			<ul className="w-full">
 				{links.map((link) => (
-					<li className={`text-lg font-normal py-4 shadow-inner px-6 hover:bg-black/25 ${link === links[links.length - 1] ? "rounded-b-3xl" : ""} ${!title ? "rounded-t-3xl" : ""} w-full`} onClick={link.onClick ? link.onClick : () => navigate(link.link ? link.link : "/")} style={{ display: "flex", alignItems: "center" }} key={link.title}>
+					<li
+						className={`text-lg font-normal py-4 shadow-inner px-6  ${link === links[links.length - 1] ? "rounded-b-3xl" : ""} ${!title ? "rounded-t-3xl" : ""} ${link.disable ? "bg-black/25 cursor-default" : "hover:bg-black/25 cursor-pointer"} w-full`}
+						onClick={() => {
+							if (!link.disable) {
+								if (link.onClick) {
+									link.onClick();
+								} else if (link.link) {
+									navigate(link.link);
+								} else {
+									navigate("/");
+								}
+							}
+						}}
+						style={{ display: "flex", alignItems: "center" }}
+						key={link.title}
+					>
 						{link.icon && <span className="inline-block mr-4 text-xl">{link.icon}</span>}
 						{link.title}
 					</li>
