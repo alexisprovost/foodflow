@@ -15,7 +15,6 @@ const Success = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		console.log("Success component mounted");
 		if (!animLoaded && animation2Container.current !== null) {
 			const animation = lottie.loadAnimation({
 				container: animation2Container.current,

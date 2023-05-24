@@ -16,6 +16,7 @@ const Home = () => {
 	const [products, setProducts] = useState<ItemProps[]>([]);
 	const [suggestions, setSuggestions] = useState<ItemProps[]>([]);
 	const [searchQuery, setSearchQuery] = useState<string>("");
+	const [suggestionsLoading, setSuggestionsLoading] = useState(true);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 
@@ -54,6 +55,19 @@ const Home = () => {
 		}
 	}, [isAuthenticated]);
 
+	const renderSuggestions = (itemList: ItemProps[]) => {
+		return (
+			<div className="flex no-scrollbar overflow-scroll overflow-scrolling-touch mb-8 animate__animated animate__fadeIn animate__faster">
+				{Array.isArray(suggestions) &&
+					suggestions.map((product) => (
+						<div key={product.id} className="w-auto min-w-[22rem] mx-8 first:ml-0 last:mr-0">
+							<StoreItem {...product} />
+						</div>
+					))}
+			</div>
+		);
+	};
+
 	const renderItem = (itemList: ItemProps[]) => {
 		return (
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate__animated animate__fadeIn animate__faster">
@@ -78,17 +92,15 @@ const Home = () => {
 					<Title text="Suggestions" customSize="text-3xl" className="pb-8" />
 					<WarningHolder>No suggestions found</WarningHolder>
 				</>
+			) : suggestions.length === 0 ? (
+				<>
+					<Title text="Suggestions" customSize="text-3xl" className="pb-8" />
+					<WarningHolder>No suggestions found</WarningHolder>
+				</>
 			) : (
 				<>
 					<Title text="Suggestions" customSize="text-3xl" className="pb-8" />
-					<div className="flex no-scrollbar overflow-scroll overflow-scrolling-touch mb-8 animate__animated animate__fadeIn animate__faster">
-						{Array.isArray(suggestions) &&
-							suggestions.map((product) => (
-								<div key={product.id} className="w-auto min-w-[22rem] mx-8 first:ml-0 last:mr-0">
-									<StoreItem {...product} />
-								</div>
-							))}
-					</div>
+					{renderSuggestions(suggestions)}
 				</>
 			)}
 

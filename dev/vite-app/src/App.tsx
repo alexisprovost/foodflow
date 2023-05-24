@@ -20,9 +20,11 @@ import Account from "./views/Account";
 
 import { CartContext } from "./hooks/CartProvider";
 import Checkout from "./views/Cart/Checkout";
+import Statistics from "./views/Admin/Statistics";
+import Users from "./views/Admin/Users";
 
 function App() {
-	const { getCartItems, getNbCartItems } = useContext(CartContext);
+	const { getCartItems } = useContext(CartContext);
 	const [nbCartItems, setNbCartItems] = useState(0);
 	let cartItems = getCartItems();
 
@@ -67,6 +69,10 @@ function App() {
 					<Route path="/cart/checkout" element={<Checkout />} />
 					<Route path="/cart/checkout/success" element={<Success />} />
 					<Route path="/account" element={<Account />} />
+
+					<Route path="/admin/users" element={<Users />} />
+					<Route path="/admin/statistics" element={<Statistics />} />
+
 					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</MainFrame>
