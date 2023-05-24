@@ -14,7 +14,6 @@ class ProductSuggestionDAO {
 		}
 
 		const allProducts = await this.productDao.getAllProducts();
-		console.log("purchased products" + purchasedProducts);
 
 		const suggestions: SuggestedProduct[] = [];
 

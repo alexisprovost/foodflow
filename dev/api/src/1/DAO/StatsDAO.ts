@@ -27,7 +27,6 @@ class StatsDAO {
         `;
 
         const result = await db.query(query);
-        console.log(result);
         return result;
     }
 
@@ -50,7 +49,6 @@ class StatsDAO {
         `;
 
         const result = await db.query(query);
-        console.log(result);
         return result;
     }
 
@@ -70,7 +68,6 @@ class StatsDAO {
         `;
 
         const result = await db.query(query);
-        console.log(result);
         return result[0].total_sales;
     }
 }
