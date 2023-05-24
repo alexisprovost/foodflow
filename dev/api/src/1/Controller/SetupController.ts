@@ -2,6 +2,16 @@ import { Request, Response } from "express";
 import Controller from ".";
 import SetupDAO from "../DAO/SetupDAO";
 
+/**
+ * ============================================
+ * Filename: SetupController.ts
+ * Author(s): Alexis Provost, Thomas Pelletier
+ * Description: This file contains the logic for the setup controller. It is used to handle all requests related to the setup of the database.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
+
 class SetupController extends Controller {
 	private db: SetupDAO;
 

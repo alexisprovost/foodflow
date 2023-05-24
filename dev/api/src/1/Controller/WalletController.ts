@@ -4,6 +4,15 @@ import WalletDao from "../DAO/WalletDAO";
 
 import { requireAuth, requireRole } from "./authMiddleware";
 
+/**
+ * ============================================
+ * Filename: WalletController.ts
+ * Author(s): Alexis Provost, Thomas Pelletier
+ * Description: This file contains the logic for the wallet controller. It is used to handle all requests related to the wallet.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
 class WalletController extends Controller {
 	private walletDao: WalletDao;
 

@@ -3,6 +3,16 @@ import Controller from ".";
 import ProductSuggestionDAO from "../DAO/ProductSuggestionDAO";
 import { requireAuth } from "./authMiddleware";
 
+
+/**
+ * ============================================
+ * Filename: ProductSuggestionController.ts
+ * Author(s): Thomas Pelletier, Alexis Provost
+ * Description: This file contains the logic for the product suggestion controller. It is used to handle all requests related to product suggestions.
+ * Sources: 
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
 class ProductSuggestionController extends Controller {
     private productSuggestionDAO: ProductSuggestionDAO;
 

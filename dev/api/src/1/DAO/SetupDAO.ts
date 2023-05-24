@@ -1,5 +1,15 @@
 import db from "./Database";
 
+/**
+ * ============================================
+ * Filename: SetupDAO.ts
+ * Author(s): Alexis Provost, Thomas Pelletier
+ * Description: This file contains the sampledata which is used to populate the database with sample data. It also contains the queries to create the tables. It also contains the logic for the setup of the database.
+ * Sources: 
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
+
 export const createDBTablesQuery = `
 	CREATE TABLE "organisation" (
 		"id" serial PRIMARY KEY,

@@ -4,6 +4,17 @@ import passportJwt from "passport-jwt";
 
 import UserDao, { User } from "../DAO/UserDao";
 
+/**
+ * ============================================
+ * Filename: authMiddleware.ts
+ * Author(s): Alexis Provost
+ * Description: This file contains the logic for the authentication middleware. It is used to authenticate users and check their roles.
+ * Sources: 
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * 2. Passport.js: http://www.passportjs.org/docs/
+ * ============================================
+ */
+
 const JwtStrategy = passportJwt.Strategy;
 
 const userDao = new UserDao();

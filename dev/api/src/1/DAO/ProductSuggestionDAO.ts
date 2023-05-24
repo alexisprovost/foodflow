@@ -2,6 +2,16 @@ import type { Product } from "./ProductDAO";
 import ProductDao from "./ProductDAO";
 type SuggestedProduct = Product & { distance: number };
 
+/**
+ * ============================================
+ * Filename: ProductSuggestionDAO.ts
+ * Author(s): Thomas Pelletier
+ * Description: This file contains the DAO for the product suggestion controller. It is used to handle the queries and the euclidean distance calculation for SuggestionController.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
+
 class ProductSuggestionDAO {
 	private productDao = new ProductDao();
 

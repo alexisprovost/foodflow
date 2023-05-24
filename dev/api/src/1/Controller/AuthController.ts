@@ -9,6 +9,17 @@ import { configureJwtStrategy, jwtRoutes } from "../Strategies/JWT";
 import { configureLocalStrategy } from "../Strategies/Local";
 import e from "express";
 
+/**
+ * ============================================
+ * Filename: AuthController.ts
+ * Author(s): Alexis Provost, Thomas Pelletier
+ * Description: This file contains a TypeScript class that extends the Controller class. This class is used to handle all the routes related to authentication. It also contains the logic for the authentication strategies.
+ * Sources: 
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * 2. Passport.js: http://www.passportjs.org/docs/
+ * ============================================
+ */
+
 class AuthController extends Controller {
 	private accessTokenExpiresInStr = process.env.ACCESS_TOKEN_EXPIRES;
 	private refreshTokenExpiresInStr = process.env.REFRESH_TOKEN_EXPIRES;

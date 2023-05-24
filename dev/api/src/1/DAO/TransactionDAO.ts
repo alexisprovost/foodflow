@@ -3,6 +3,16 @@ import type { Product } from "./ProductDAO";
 import WalletDao from "../DAO/WalletDAO";
 import ProductDao from "./ProductDAO";
 
+/*
+ * ============================================
+ * Filename: TransactionDAO.ts
+ * Author(s): Thomas Pelletier
+ * Description: This file contains the DAO for the transaction controller. It is used to handle the queries for TransactionController.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
+
 interface ProductTransaction {
 	product: Product;
 	quantity: number;
