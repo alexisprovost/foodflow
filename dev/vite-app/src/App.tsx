@@ -20,9 +20,15 @@ import Account from "./views/Account";
 
 import { CartContext } from "./hooks/CartProvider";
 import Checkout from "./views/Cart/Checkout";
+import Statistics from "./views/Admin/Statistics";
+import Users from "./views/Admin/Users";
+import Orders from "./views/Admin/Orders";
+import Products from "./views/Admin/Products";
+import Profile from "./views/Account/Profile";
+import Password from "./views/Account/Password";
 
 function App() {
-	const { getCartItems, getNbCartItems } = useContext(CartContext);
+	const { getCartItems } = useContext(CartContext);
 	const [nbCartItems, setNbCartItems] = useState(0);
 	let cartItems = getCartItems();
 
@@ -66,7 +72,16 @@ function App() {
 					<Route path="/cart" element={<Cart />} />
 					<Route path="/cart/checkout" element={<Checkout />} />
 					<Route path="/cart/checkout/success" element={<Success />} />
+
 					<Route path="/account" element={<Account />} />
+					<Route path="/account/profile" element={<Profile />} />
+					<Route path="/account/password" element={<Password />} />
+
+					<Route path="/admin/products" element={<Products />} />
+					<Route path="/admin/users" element={<Users />} />
+					<Route path="/admin/orders" element={<Orders />} />
+					<Route path="/admin/statistics" element={<Statistics />} />
+
 					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</MainFrame>

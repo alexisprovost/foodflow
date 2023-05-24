@@ -1,6 +1,16 @@
+/**
+ * ============================================
+ * Filename: ProductController.ts
+ * Author(s): Thomas Pelletier, Alexis Provost
+ * Description: This file contains the logic for the product controller. It is used to handle all requests related to products.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
 import { Request, Response } from "express";
 import Controller from ".";
 import ProductDao from "../DAO/ProductDAO";
+import { requireAuth, requireRole } from "./authMiddleware";
 
 class ProductController extends Controller {
 	private productDao: ProductDao;
@@ -14,9 +24,9 @@ class ProductController extends Controller {
 	protected initializeRoutes(): void {
 		this.router.get("/", this.handleAsync(this.getAllProducts.bind(this)));
 		this.router.get("/:id", this.handleAsync(this.getProductById.bind(this)));
-		this.router.post("/", this.handleAsync(this.createProduct.bind(this)));
-		this.router.put("/:id", this.handleAsync(this.updateProduct.bind(this)));
-		this.router.delete("/:id", this.handleAsync(this.deleteProduct.bind(this)));
+		this.router.post("/", requireAuth, requireRole(90), this.handleAsync(this.createProduct.bind(this)));
+		this.router.put("/:id", requireAuth, requireRole(90), this.handleAsync(this.updateProduct.bind(this)));
+		this.router.delete("/:id", requireAuth, requireRole(90), this.handleAsync(this.deleteProduct.bind(this)));
 	}
 
 	private async getAllProducts(req: Request, res: Response): Promise<void> {

@@ -1,3 +1,12 @@
+/**
+ * ============================================
+ * Filename: SetupController.ts
+ * Author(s): Alexis Provost, Thomas Pelletier
+ * Description: This file contains the logic for the setup controller. It is used to handle all requests related to the setup of the database.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
 import { Request, Response } from "express";
 import Controller from ".";
 import SetupDAO from "../DAO/SetupDAO";
@@ -16,23 +25,13 @@ class SetupController extends Controller {
 	}
 
 	private async setup(req: Request, res: Response): Promise<void> {
-		try {
-			await this.db.CreateTablesIfNotExist();
-			this.successResponse(res, "Success");
-		} catch (err) {
-			console.error("Error creating table:", err);
-			this.errorResponse(res, "Internal server error", 500);
-		}
+		await this.db.CreateTablesIfNotExist();
+		return this.successResponse(res, "Success");
 	}
 
 	private async addSampleData(req: Request, res: Response): Promise<void> {
-		try {
-			await this.db.addSampleData();
-			this.successResponse(res, "Success");
-		} catch (err) {
-			console.error("Error creating table:", err);
-			this.errorResponse(res, "Internal server error", 500);
-		}
+		await this.db.addSampleData();
+		return this.successResponse(res, "Success");
 	}
 }
 

@@ -52,7 +52,7 @@ interface UserInfo {
 	name: string;
 	email: string;
 	date_of_birth: string;
-	role: string;
+	role: number;
 }
 
 const AuthProvider: React.FC<AuthProps> = ({ children }) => {

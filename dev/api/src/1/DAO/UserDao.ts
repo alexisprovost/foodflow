@@ -1,3 +1,12 @@
+/*
+ * ============================================
+ * Filename: UserDao.ts
+ * Author(s): Alexis Provost, Thomas Pelletier
+ * Description: This file contains the logic for the user DAO. It is used to handle all requests related to users.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
 import db from "./Database";
 import Utils from "../Controller/Utils";
 
@@ -7,14 +16,27 @@ export interface User {
 	name: string;
 	email: string;
 	date_of_birth: string;
-	role: string;
+	role: number;
 	refresh_token: string;
 	refresh_token_expires: string;
 }
 
 class UserDao {
-	protected async getAllUsers() {
-		const result = await db.query("SELECT * FROM users");
+	public async getAllUsers() {
+		const result = await db.query(`
+			SELECT users.*, wallet.balance
+			FROM users
+			LEFT JOIN wallet
+			ON users.id = wallet.owner
+		`);
+
+		// remove the sensitive data from the result
+		result.forEach((user: any) => {
+			delete user.password;
+			delete user.refresh_token;
+			delete user.refresh_token_expires;
+		});
+
 		return result;
 	}
 
@@ -79,6 +101,17 @@ class UserDao {
 				throw new Error("Wrong password");
 			}
 		}
+		return result[0];
+	}
+
+	public async updateUserRole(userId: number, newRole: number): Promise<User | null> {
+		const query = "UPDATE users SET role = $1 WHERE id = $2 RETURNING *;";
+		const result = await db.query(query, [newRole, userId]);
+
+		if (result.length === 0) {
+			return null;
+		}
+
 		return result[0];
 	}
 

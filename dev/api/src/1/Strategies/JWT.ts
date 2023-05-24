@@ -9,6 +9,7 @@ import AuthController from "../Controller/AuthController";
 import Utils from "../Controller/Utils";
 
 const JwtStrategy = passportJwt.Strategy;
+const EMAILREGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 export function configureJwtStrategy(userDao: UserDao) {
 	return new JwtStrategy(
@@ -43,6 +44,12 @@ export function jwtRoutes(router: Router, authController: AuthController): void 
 
 async function handleLogin(req: Request, res: Response, next: NextFunction, controller: Controller): Promise<void> {
 	passport.authenticate("local", { session: false }, async (err: any, user: any, info: any) => {
+		const { email, password } = req.body;
+
+		if (!EMAILREGEX.test(email)) {
+			return controller.errorResponse(res, "Invalid email format", 400);
+		}
+
 		if (err) {
 			console.error("Error authenticating user:", err);
 			return controller.errorResponse(res, "Internal server error", 500);
@@ -64,6 +71,10 @@ async function handleLogin(req: Request, res: Response, next: NextFunction, cont
 
 async function handleRegister(req: Request, res: Response, authController: AuthController): Promise<void> {
 	const { email, password } = req.body;
+
+	if (!EMAILREGEX.test(email)) {
+		return authController.errorResponse(res, "Invalid email format", 400);
+	}
 
 	try {
 		const user = await authController.userDao.getUserByEmail(email);

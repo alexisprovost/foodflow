@@ -1,3 +1,12 @@
+/*
+ * ============================================
+ * Filename: Database.ts
+ * Author(s): Alexis Provost, Thomas Pelletier
+ * Description: this files contains the database class which is used to connect to the database and execute queries. It is a singleton. it also contains the pool configuration.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
 import { Pool, PoolConfig } from "pg";
 import { createDBTablesQuery } from "./SetupDAO";
 
@@ -21,7 +30,7 @@ class Database {
 
 		// Add event listener for successful connections
 		this.pool.on("connect", (client) => {
-			console.log("PostgreSQL connected");
+			//Connected to the db
 		});
 
 		// Add event listener for errors

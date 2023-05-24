@@ -8,6 +8,7 @@ interface CartContextType {
 	getCartItems: () => Record<number, number>;
 	onCartItemsChange: (callback: (items: Record<number, number>) => void) => void;
 	getNbCartItems: (itemId: number) => number;
+	emptyCart: () => void;
 }
 
 export const CartContext = createContext<CartContextType>({
@@ -17,6 +18,7 @@ export const CartContext = createContext<CartContextType>({
 	onCartItemsChange: () => {},
 	getNbCartItems: () => 0,
 	setCartItem: () => {},
+	emptyCart: () => {},
 });
 
 interface CartProps {
@@ -81,6 +83,10 @@ const CartProvider: React.FC<CartProps> = ({ children }) => {
 		setItemChangeCallbacks((prev) => [...prev, callback]);
 	};
 
+	const emptyCart = () => {
+		setCartItems({});
+	};
+
 	const loadFromLocalStorage = () => {
 		const savedCartItems = localStorage.getItem(CART_STORAGE_KEY);
 		if (savedCartItems) {
@@ -109,6 +115,7 @@ const CartProvider: React.FC<CartProps> = ({ children }) => {
 		getCartItems,
 		onCartItemsChange,
 		getNbCartItems,
+		emptyCart,
 	};
 
 	return <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>;

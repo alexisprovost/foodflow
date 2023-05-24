@@ -1,8 +1,18 @@
+/**
+ * ============================================
+ * Filename: authMiddleware.ts
+ * Author(s): Alexis Provost
+ * Description: This file contains the logic for the authentication middleware. It is used to authenticate users and check their roles.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * 2. Passport.js: http://www.passportjs.org/docs/
+ * ============================================
+ */
 import { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import passportJwt from "passport-jwt";
 
-import UserDao from "../DAO/UserDao";
+import UserDao, { User } from "../DAO/UserDao";
 
 const JwtStrategy = passportJwt.Strategy;
 
@@ -17,7 +27,7 @@ passport.use(
 		async (payload, done) => {
 			try {
 				const user = await userDao.getUserById(payload.sub);
-				
+
 				if (user) {
 					return done(null, user);
 				} else {
@@ -45,4 +55,13 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
 		req.user = user;
 		next();
 	})(req, res, next);
+}
+
+export function requireRole(role: number) {
+	return function (req: Request, res: Response, next: NextFunction) {
+		if (!req.user || (req.user as User).role < role) {
+			return res.status(403).json({ message: "Forbidden" });
+		}
+		next();
+	};
 }

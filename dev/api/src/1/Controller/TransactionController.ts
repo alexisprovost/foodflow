@@ -1,8 +1,17 @@
+/**
+ * ============================================
+ * Filename: TransactionController.ts
+ * Author(s): Thomas Pelletier, Alexis Provost
+ * Description: This file contains the logic for the transaction controller. It is used to handle all requests related to transactions.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
 import { Request, Response } from "express";
 import Controller from ".";
 import ProductDao from "../DAO/ProductDAO";
 import TransactionDAO from "../DAO/TransactionDAO";
-import { requireAuth } from "./authMiddleware";
+import { requireAuth, requireRole } from "./authMiddleware";
 import EmailService from "../Services/EmailServices";
 import UserDao from "../DAO/UserDao";
 
@@ -24,9 +33,9 @@ class TransactionController extends Controller {
 	protected initializeRoutes(): void {
 		this.router.get("/", requireAuth, this.handleAsync(this.getTransactionsByUserId.bind(this)));
 		this.router.get("/single/:id", requireAuth, this.handleAsync(this.getTransactionById.bind(this)));
+		this.router.get("/all", requireAuth, requireRole(90), this.handleAsync(this.getAll.bind(this)));
 		this.router.post("/", requireAuth, this.handleAsync(this.createTransaction.bind(this)));
-		// We need to check the permission to ensure that this path is protected as admin only
-		//this.router.delete("/:id", this.handleAsync(this.deleteTransaction.bind(this)));
+		this.router.delete("/:id", requireAuth, requireRole(90), this.handleAsync(this.deleteTransaction.bind(this)));
 	}
 
 	private async getTransactionsByUserId(req: Request, res: Response): Promise<void> {
@@ -39,6 +48,11 @@ class TransactionController extends Controller {
 		const { id } = req.params;
 		const transaction = await this.transactionDao.getTransactionById(Number(id));
 		this.successResponse(res, transaction);
+	}
+
+	private async getAll(req: Request, res: Response): Promise<void> {
+		const transactions = await this.transactionDao.getAll();
+		this.successResponse(res, transactions);
 	}
 
 	private async createTransaction(req: Request, res: Response): Promise<void> {
