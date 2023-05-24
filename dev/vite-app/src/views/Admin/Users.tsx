@@ -66,7 +66,9 @@ const Users = () => {
 									<select className="bg-secondary" defaultValue={user.role} onChange={(e) => changeRole(user.id, e.target.value)} {...(user.role === 100 && { disabled: true })}>
 										<option value="0">User</option>
 										<option value="90">Admin</option>
-										<option value="100">Super Admin</option>
+										<option value="100" disabled>
+											Super Admin
+										</option>
 									</select>
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap">

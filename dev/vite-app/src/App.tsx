@@ -22,6 +22,7 @@ import { CartContext } from "./hooks/CartProvider";
 import Checkout from "./views/Cart/Checkout";
 import Statistics from "./views/Admin/Statistics";
 import Users from "./views/Admin/Users";
+import Orders from "./views/Admin/Orders";
 
 function App() {
 	const { getCartItems } = useContext(CartContext);
@@ -71,6 +72,7 @@ function App() {
 					<Route path="/account" element={<Account />} />
 
 					<Route path="/admin/users" element={<Users />} />
+					<Route path="/admin/orders" element={<Orders />} />
 					<Route path="/admin/statistics" element={<Statistics />} />
 
 					<Route path="*" element={<NotFound />} />

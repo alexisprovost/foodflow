@@ -33,6 +33,7 @@ class TransactionController extends Controller {
 	protected initializeRoutes(): void {
 		this.router.get("/", requireAuth, this.handleAsync(this.getTransactionsByUserId.bind(this)));
 		this.router.get("/single/:id", requireAuth, this.handleAsync(this.getTransactionById.bind(this)));
+		this.router.get("/all", requireAuth, requireRole(90), this.handleAsync(this.getAll.bind(this)));
 		this.router.post("/", requireAuth, this.handleAsync(this.createTransaction.bind(this)));
 		this.router.delete("/:id", requireAuth, requireRole(90), this.handleAsync(this.deleteTransaction.bind(this)));
 	}
@@ -47,6 +48,11 @@ class TransactionController extends Controller {
 		const { id } = req.params;
 		const transaction = await this.transactionDao.getTransactionById(Number(id));
 		this.successResponse(res, transaction);
+	}
+
+	private async getAll(req: Request, res: Response): Promise<void> {
+		const transactions = await this.transactionDao.getAll();
+		this.successResponse(res, transactions);
 	}
 
 	private async createTransaction(req: Request, res: Response): Promise<void> {

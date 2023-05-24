@@ -57,7 +57,7 @@ class TransactionDAO {
 		const walletBalance = await this.walletDao.getBalance(user_id);
 
 		if (walletBalance < totalAmount) {
-			throw new Error("Insufficient funds in the wallet.");
+			throw new Error(`Insufficient funds for user with ID: ${user_id}`);
 		}
 
 		await this.walletDao.withdrawMoney(user_id, totalAmount);
@@ -162,6 +162,59 @@ class TransactionDAO {
           ) pr ON true
           WHERE pt.id_transaction = $1;
         `,
+					[row.id]
+				);
+
+				const products: ProductTransaction[] = productsResult.map((row: any) => ({
+					product: {
+						id: row.id,
+						name: row.name,
+						url_image: row.url_image,
+						barcode: row.barcode,
+						added_date: new Date(row.added_date),
+						quantity: row.quantity,
+						format: row.format,
+						price: parseFloat(row.price),
+						categories: row.categories,
+					},
+					quantity: row.quantity,
+				}));
+
+				return {
+					id: row.id,
+					date: row.date,
+					products,
+					user_id: row.user_id,
+				};
+			})
+		);
+
+		return transactions;
+	}
+
+	async getAll(): Promise<Transaction[]> {
+		const transactionQuery = `
+				SELECT * FROM transaction ORDER BY date DESC;
+			`;
+
+		const transactionResult = await db.query(transactionQuery);
+
+		const transactions: Transaction[] = await Promise.all(
+			transactionResult.map(async (row: any) => {
+				const productsResult = await db.query(
+					`
+					SELECT p.*, pt.quantity, pr.price
+					FROM product_transaction pt
+					JOIN products p ON pt.id_product = p.id
+					JOIN LATERAL (
+						SELECT value as price
+						FROM price
+						WHERE id_product = p.id
+						ORDER BY effective_date DESC
+						LIMIT 1
+					) pr ON true
+					WHERE pt.id_transaction = $1;
+				`,
 					[row.id]
 				);
 
