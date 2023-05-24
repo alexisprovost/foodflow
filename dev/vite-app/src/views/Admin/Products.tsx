@@ -4,15 +4,23 @@ import { useContext, useEffect, useState, Fragment } from "react";
 import { AuthContext } from "../../hooks/AuthProvider";
 import Title from "../../components/Title";
 
-import { ItemProps } from "../../components/StoreItem";
+interface ProductsProps {
+	id?: number;
+	name?: string;
+	barcode?: string;
+	quantity?: number;
+	format?: string;
+	price?: number;
+	url_image?: string;
+}
 
 const Products = () => {
 	const { isAuthenticated, accessToken } = useContext(AuthContext);
-	const [products, setProducts] = useState<ItemProps[]>([]);
-	const [newProduct, setNewProduct] = useState<ItemProps | null>(null);
+	const [products, setProducts] = useState<ProductsProps[]>([]);
+	const [newProduct, setNewProduct] = useState<ProductsProps | null>(null);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [currentProduct, setCurrentProduct] = useState<ItemProps>();
+	const [currentProduct, setCurrentProduct] = useState<ProductsProps>();
 
 	const closeModal = () => {
 		setIsModalOpen(false);
@@ -20,7 +28,7 @@ const Products = () => {
 		setNewProduct(null);
 	};
 
-	const openModal = (product: ItemProps) => {
+	const openModal = (product: ProductsProps) => {
 		setIsModalOpen(true);
 		setCurrentProduct(product);
 		setNewProduct(product);
@@ -39,7 +47,7 @@ const Products = () => {
 		}
 	};
 
-	const handleCreate = async (product: ItemProps) => {
+	const handleCreate = async (product: ProductsProps) => {
 		try {
 			await axios.post("/api/1/products", product, {
 				headers: { Authorization: `Bearer ${accessToken}` },
@@ -50,7 +58,7 @@ const Products = () => {
 		}
 	};
 
-	const handleEdit = async (product: ItemProps) => {
+	const handleEdit = async (product: ProductsProps) => {
 		try {
 			const updateData = {
 				name: product.name,
