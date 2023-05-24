@@ -1,8 +1,3 @@
-import { Request, Response } from "express";
-import Controller from ".";
-import StatsDAO from "../DAO/StatsDAO";
-import { requireAuth, requireRole } from "./authMiddleware";
-
 /**
  * ============================================
  * Filename: StatsController.ts
@@ -12,6 +7,10 @@ import { requireAuth, requireRole } from "./authMiddleware";
  * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
  * ============================================
  */
+import { Request, Response } from "express";
+import Controller from ".";
+import StatsDAO from "../DAO/StatsDAO";
+import { requireAuth, requireRole } from "./authMiddleware";
 
 class StatsController extends Controller {
 	private statisticsDao: StatsDAO;

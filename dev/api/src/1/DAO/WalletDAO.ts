@@ -1,5 +1,3 @@
-import db from "./Database";
-
 /*
  * ============================================
  * Filename: WalletDAO.ts
@@ -9,6 +7,7 @@ import db from "./Database";
  * 		1. ChatGPT: https://chat.openai.com/?model=gpt-4
  * ============================================
  * */
+import db from "./Database";
 
 interface Wallet {
 	id: number;

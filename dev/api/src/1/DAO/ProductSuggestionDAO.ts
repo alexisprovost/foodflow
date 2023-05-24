@@ -1,7 +1,3 @@
-import type { Product } from "./ProductDAO";
-import ProductDao from "./ProductDAO";
-type SuggestedProduct = Product & { distance: number };
-
 /**
  * ============================================
  * Filename: ProductSuggestionDAO.ts
@@ -11,6 +7,9 @@ type SuggestedProduct = Product & { distance: number };
  * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
  * ============================================
  */
+import type { Product } from "./ProductDAO";
+import ProductDao from "./ProductDAO";
+type SuggestedProduct = Product & { distance: number };
 
 class ProductSuggestionDAO {
 	private productDao = new ProductDao();

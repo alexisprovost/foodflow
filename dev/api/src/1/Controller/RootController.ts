@@ -1,3 +1,12 @@
+/**
+ * ============================================
+ * Filename: RootController.ts
+ * Author(s): Alexis Provost, Thomas Pelletier
+ * Description: This file contains the logic for the root controller class. It is used to handle all requests related to the root of the API.It is where all other controllers are initialized and routes assigned.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
 import { Router, Response, Request } from "express";
 import Controller from ".";
 
@@ -9,16 +18,6 @@ import TransactionController from "./TransactionController";
 import WalletController from "./WalletController";
 import StatsController from "./StatsController";
 import ProductSuggestionController from "./ProductSuggestionController";
-
-/**
- * ============================================
- * Filename: RootController.ts
- * Author(s): Alexis Provost, Thomas Pelletier
- * Description: This file contains the logic for the root controller class. It is used to handle all requests related to the root of the API.It is where all other controllers are initialized and routes assigned.
- * Sources:
- * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
- * ============================================
- */ 
 
 class ControllerV1 extends Controller {
 	public router: Router;
@@ -37,7 +36,7 @@ class ControllerV1 extends Controller {
 		const setupController = new SetupController();
 		const transactionController = new TransactionController();
 		const statsController = new StatsController();
-		const productSuggestionController = new ProductSuggestionController(); 
+		const productSuggestionController = new ProductSuggestionController();
 
 		this.router.use("/users", userController.router);
 		this.router.use("/auth", authController.router);

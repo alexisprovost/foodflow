@@ -1,7 +1,3 @@
-import { Request, Response } from "express";
-import Controller from ".";
-import SetupDAO from "../DAO/SetupDAO";
-
 /**
  * ============================================
  * Filename: SetupController.ts
@@ -11,6 +7,9 @@ import SetupDAO from "../DAO/SetupDAO";
  * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
  * ============================================
  */
+import { Request, Response } from "express";
+import Controller from ".";
+import SetupDAO from "../DAO/SetupDAO";
 
 class SetupController extends Controller {
 	private db: SetupDAO;

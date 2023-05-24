@@ -1,17 +1,16 @@
-import { Request, Response } from "express";
-import Controller from ".";
-import ProductDao from "../DAO/ProductDAO";
-import { requireAuth, requireRole } from "./authMiddleware";
-
 /**
  * ============================================
  * Filename: ProductController.ts
  * Author(s): Thomas Pelletier, Alexis Provost
  * Description: This file contains the logic for the product controller. It is used to handle all requests related to products.
- * Sources: 
+ * Sources:
  * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
  * ============================================
  */
+import { Request, Response } from "express";
+import Controller from ".";
+import ProductDao from "../DAO/ProductDAO";
+import { requireAuth, requireRole } from "./authMiddleware";
 
 class ProductController extends Controller {
 	private productDao: ProductDao;

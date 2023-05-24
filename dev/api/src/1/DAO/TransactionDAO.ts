@@ -1,8 +1,3 @@
-import db from "./Database";
-import type { Product } from "./ProductDAO";
-import WalletDao from "../DAO/WalletDAO";
-import ProductDao from "./ProductDAO";
-
 /*
  * ============================================
  * Filename: TransactionDAO.ts
@@ -12,6 +7,10 @@ import ProductDao from "./ProductDAO";
  * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
  * ============================================
  */
+import db from "./Database";
+import type { Product } from "./ProductDAO";
+import WalletDao from "../DAO/WalletDAO";
+import ProductDao from "./ProductDAO";
 
 interface ProductTransaction {
 	product: Product;

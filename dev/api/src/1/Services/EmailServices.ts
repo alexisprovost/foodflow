@@ -1,6 +1,3 @@
-import Mailgun from "mailgun.js";
-import formData from "form-data";
-
 /**
  * ============================================
  * Filename: EmailServices.ts
@@ -10,6 +7,8 @@ import formData from "form-data";
  * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
  * ============================================
  * */
+import Mailgun from "mailgun.js";
+import formData from "form-data";
 
 class EmailService {
 	private client: any;

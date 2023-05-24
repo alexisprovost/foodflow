@@ -1,15 +1,14 @@
-import express, { Router, Response, Request, NextFunction } from "express";
-
 /**
  * ============================================
  * Filename: index.ts
  * Author(s): Alexis Provost, Thomas Pelletier
  * Description: This file contains the logic for the base controller class. It gives the structure for all controllers.
- * Sources: 
+ * Sources:
  * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
  * 2. Passport.js: http://www.passportjs.org/docs/
  * ============================================
  */
+import express, { Router, Response, Request, NextFunction } from "express";
 
 abstract class Controller {
 	public router: Router;

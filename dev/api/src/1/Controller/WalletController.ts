@@ -1,9 +1,3 @@
-import { Request, Response } from "express";
-import Controller from ".";
-import WalletDao from "../DAO/WalletDAO";
-
-import { requireAuth, requireRole } from "./authMiddleware";
-
 /**
  * ============================================
  * Filename: WalletController.ts
@@ -13,6 +7,12 @@ import { requireAuth, requireRole } from "./authMiddleware";
  * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
  * ============================================
  */
+import { Request, Response } from "express";
+import Controller from ".";
+import WalletDao from "../DAO/WalletDAO";
+
+import { requireAuth, requireRole } from "./authMiddleware";
+
 class WalletController extends Controller {
 	private walletDao: WalletDao;
 

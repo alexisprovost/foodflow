@@ -1,11 +1,3 @@
-import { Request, Response } from "express";
-import Controller from ".";
-import ProductDao from "../DAO/ProductDAO";
-import TransactionDAO from "../DAO/TransactionDAO";
-import { requireAuth, requireRole } from "./authMiddleware";
-import EmailService from "../Services/EmailServices";
-import UserDao from "../DAO/UserDao";
-
 /**
  * ============================================
  * Filename: TransactionController.ts
@@ -15,6 +7,13 @@ import UserDao from "../DAO/UserDao";
  * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
  * ============================================
  */
+import { Request, Response } from "express";
+import Controller from ".";
+import ProductDao from "../DAO/ProductDAO";
+import TransactionDAO from "../DAO/TransactionDAO";
+import { requireAuth, requireRole } from "./authMiddleware";
+import EmailService from "../Services/EmailServices";
+import UserDao from "../DAO/UserDao";
 
 class TransactionController extends Controller {
 	private productDao: ProductDao;

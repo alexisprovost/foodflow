@@ -1,6 +1,3 @@
-import db from "./Database";
-import Utils from "../Controller/Utils";
-
 /*
  * ============================================
  * Filename: UserDao.ts
@@ -9,7 +6,9 @@ import Utils from "../Controller/Utils";
  * Sources:
  * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
  * ============================================
- * */
+ */
+import db from "./Database";
+import Utils from "../Controller/Utils";
 
 export interface User {
 	id: number;

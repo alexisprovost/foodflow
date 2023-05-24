@@ -1,6 +1,3 @@
-import { Pool, PoolConfig } from "pg";
-import { createDBTablesQuery } from "./SetupDAO";
-
 /*
  * ============================================
  * Filename: Database.ts
@@ -10,6 +7,8 @@ import { createDBTablesQuery } from "./SetupDAO";
  * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
  * ============================================
  */
+import { Pool, PoolConfig } from "pg";
+import { createDBTablesQuery } from "./SetupDAO";
 
 const poolConfig: PoolConfig = {
 	host: process.env.DB_HOST,
