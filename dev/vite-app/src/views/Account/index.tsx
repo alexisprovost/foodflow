@@ -1,13 +1,13 @@
 import { useContext } from "react";
-import useDocumentTitle from "../hooks/useDocumentTitle";
-import Title from "../components/Title";
-import { AuthContext } from "../hooks/AuthProvider";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+import Title from "../../components/Title";
+import { AuthContext } from "../../hooks/AuthProvider";
 
-import Gravatar from "../hooks/Gravatar";
+import Gravatar from "../../hooks/Gravatar";
 
 import { FaSignOutAlt } from "react-icons/fa";
 
-import LinkMenu from "../components/Account/LinkMenu";
+import LinkMenu from "../../components/Account/LinkMenu";
 
 const Account = () => {
 	useDocumentTitle("Account");

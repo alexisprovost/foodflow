@@ -6,8 +6,9 @@ import { CartContext } from "../../hooks/CartProvider";
 
 import axios from "axios";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ItemProps } from "../../components/StoreItem";
+import { AuthContext } from "../../hooks/AuthProvider";
 
 export interface CartItemProps {
 	item: ItemProps;
@@ -17,9 +18,12 @@ export interface CartItemProps {
 
 const Cart = () => {
 	useDocumentTitle("Cart");
+	const { isAuthenticated } = useContext(AuthContext);
 	const { getCartItems, addCartItem, removeCartItem, setCartItem } = useContext(CartContext);
 	const cartItems = getCartItems();
 	const [products, setProducts] = useState<ItemProps[]>([]);
+
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchProducts = async () => {
@@ -78,11 +82,18 @@ const Cart = () => {
 						<div className="flex flex-row md:justify-end">
 							<div className="flex flex-col justify-end w-full md:w-[25rem]">
 								<p className="text-white font-semibold py-4 px-4 pt-0 text-right text-xl">Total: ${subtotal}</p>
-								<Link to="/cart/checkout">
-									<div className="flex flex-col items-center justify-content-center p-1 mt-1 bg-primaryButton rounded-3xl">
-										<button className="flex items-center justify-center text-white text-base font-semibold py-2">Checkout</button>
-									</div>
-								</Link>
+								<div
+									className="flex flex-col items-center justify-content-center p-1 mt-1 bg-primaryButton rounded-3xl"
+									onClick={() => {
+										if (isAuthenticated) {
+											navigate("/cart/checkout");
+										} else {
+											navigate("/account");
+										}
+									}}
+								>
+									<button className="flex items-center justify-center text-white text-base font-semibold py-2">{isAuthenticated ? "Checkout" : "Login to Checkout"}</button>
+								</div>
 							</div>
 						</div>
 					</>
