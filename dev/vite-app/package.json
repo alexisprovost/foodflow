@@ -10,6 +10,7 @@
     "yarn": "npm install --global yarn"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.14",
     "animate.css": "^4.1.1",
     "axios": "^1.3.4",
     "jwt-decode": "^3.1.2",
