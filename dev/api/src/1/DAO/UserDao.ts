@@ -104,6 +104,17 @@ class UserDao {
 		return result[0];
 	}
 
+	public async updateUserRole(userId: number, newRole: number): Promise<User | null> {
+		const query = "UPDATE users SET role = $1 WHERE id = $2 RETURNING *;";
+		const result = await db.query(query, [newRole, userId]);
+
+		if (result.length === 0) {
+			return null;
+		}
+
+		return result[0];
+	}
+
 	public async getUserByRefreshToken(refreshToken: string) {
 		const hashedToken = await Utils.hash(refreshToken);
 		const query = `

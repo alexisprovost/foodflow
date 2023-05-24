@@ -8,6 +8,7 @@
  * ============================================
  */
 import { Request, Response } from "express";
+import { isNumber } from "util";
 import Controller from ".";
 import UserDao from "../DAO/UserDao";
 
@@ -25,6 +26,7 @@ class UserController extends Controller {
 		this.router.get("/", requireAuth, this.handleAsync(this.getUser.bind(this)));
 		this.router.get("/all", requireAuth, requireRole(90), this.handleAsync(this.getAllUsers.bind(this)));
 		this.router.put("/:id", requireAuth, this.handleAsync(this.updateUser.bind(this)));
+		this.router.put("/:id/role", requireAuth, requireRole(90), this.handleAsync(this.updateUserRole.bind(this)));
 		this.router.delete("/:id", requireAuth, this.handleAsync(this.deleteUser.bind(this)));
 	}
 
@@ -66,6 +68,22 @@ class UserController extends Controller {
 		}
 
 		return super.successResponse(res, userInfos);
+	}
+
+	private async updateUserRole(req: Request, res: Response): Promise<void> {
+		const userid: number = parseInt(req.params.id);
+		const newRole: number = parseInt(req.body.role);
+		if (!isNumber(newRole)) {
+			return super.errorResponse(res, "Invalid role", 400);
+		}
+
+		const updatedUser = await this.userDao.updateUserRole(userid, newRole);
+
+		if (!updatedUser) {
+			return super.errorResponse(res, "User not found", 404);
+		}
+
+		return super.successResponse(res, updatedUser);
 	}
 
 	private async deleteUser(req: Request, res: Response): Promise<void> {

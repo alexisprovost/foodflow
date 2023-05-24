@@ -22,6 +22,24 @@ const Users = () => {
 		return parseFloat(amount).toLocaleString("fr-CA", { style: "currency", currency: "CAD" });
 	};
 
+	const changeRole = async (userId: number, newRole: string) => {
+		try {
+			const response = await axios.put(`/api/1/users/${userId}/role`, { role: newRole }, { headers: { Authorization: `Bearer ${accessToken}` } });
+			fetchApiData("/api/1/users/all", setUsers);
+		} catch (error) {
+			console.log("There was an error: ", error);
+		}
+	};
+
+	const changeBalance = async (userId: number, newBalance: number) => {
+		try {
+			const response = await axios.put(`/api/1/wallet/${userId}/balance`, { balance: newBalance }, { headers: { Authorization: `Bearer ${accessToken}` } });
+			fetchApiData("/api/1/users/all", setUsers);
+		} catch (error) {
+			console.log("There was an error: ", error);
+		}
+	};
+
 	useEffect(() => {
 		if (isAuthenticated) {
 			fetchApiData("/api/1/users/all", setUsers);
@@ -44,8 +62,16 @@ const Users = () => {
 						{users.map((user: any, index) => (
 							<tr key={index}>
 								<td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-								<td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
-								<td className="px-6 py-4 whitespace-nowrap">{formatCurrency(user.balance)}</td>
+								<td className="px-6 py-4 whitespace-nowrap">
+									<select className="bg-secondary" defaultValue={user.role} onChange={(e) => changeRole(user.id, e.target.value)} {...(user.role === 100 && { disabled: true })}>
+										<option value="0">User</option>
+										<option value="90">Admin</option>
+										<option value="100">Super Admin</option>
+									</select>
+								</td>
+								<td className="px-6 py-4 whitespace-nowrap">
+									<input className="bg-secondary" type="number" defaultValue={user.balance} onBlur={(e) => changeBalance(user.id, parseFloat(e.target.value))} />$
+								</td>
 							</tr>
 						))}
 					</tbody>

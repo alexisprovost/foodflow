@@ -45,6 +45,15 @@ class WalletDao {
 		return parseFloat(result[0].balance);
 	}
 
+	public async setBalance(userId: number, newBalance: number): Promise<number | null> {
+		const query = "UPDATE wallet SET balance = $1 WHERE owner = $2 RETURNING balance;";
+		const result = await db.query(query, [newBalance, userId]);
+		if (result.length === 0) {
+			return null;
+		}
+		return parseFloat(result[0].balance);
+	}
+
 	async withdrawMoney(userId: number, amount: number) {
 		const query = `
       UPDATE wallet
