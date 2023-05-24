@@ -1,6 +1,16 @@
 import { Pool, PoolConfig } from "pg";
 import { createDBTablesQuery } from "./SetupDAO";
 
+/*
+ * ============================================
+ * Filename: Database.ts
+ * Author(s): Alexis Provost, Thomas Pelletier
+ * Description: this files contains the database class which is used to connect to the database and execute queries. It is a singleton. it also contains the pool configuration.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
+
 const poolConfig: PoolConfig = {
 	host: process.env.DB_HOST,
 	user: process.env.DB_USER,

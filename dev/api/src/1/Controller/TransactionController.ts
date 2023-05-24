@@ -6,6 +6,16 @@ import { requireAuth, requireRole } from "./authMiddleware";
 import EmailService from "../Services/EmailServices";
 import UserDao from "../DAO/UserDao";
 
+/**
+ * ============================================
+ * Filename: TransactionController.ts
+ * Author(s): Thomas Pelletier, Alexis Provost
+ * Description: This file contains the logic for the transaction controller. It is used to handle all requests related to transactions.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
+
 class TransactionController extends Controller {
 	private productDao: ProductDao;
 	private transactionDao: TransactionDAO;

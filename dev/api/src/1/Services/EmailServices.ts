@@ -1,6 +1,16 @@
 import Mailgun from "mailgun.js";
 import formData from "form-data";
 
+/**
+ * ============================================
+ * Filename: EmailServices.ts
+ * Author(s): Alexis Provost, Thomas Pelletier
+ * Description: This file contains the logic for the email service. It is used to send emails to users that contains confirmation for transaction.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ * */
+
 class EmailService {
 	private client: any;
 	private mailgun_api_key: string;

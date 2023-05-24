@@ -3,6 +3,16 @@ import Controller from ".";
 import StatsDAO from "../DAO/StatsDAO";
 import { requireAuth, requireRole } from "./authMiddleware";
 
+/**
+ * ============================================
+ * Filename: StatsController.ts
+ * Author(s): Thomas Pelletier, Alexis Provost
+ * Description: This file contains the logic for the stats controller. It is used to handle all requests related to statistics.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
+
 class StatsController extends Controller {
 	private statisticsDao: StatsDAO;
 

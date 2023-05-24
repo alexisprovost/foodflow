@@ -1,5 +1,15 @@
 import db from "./Database";
 
+/*
+ * ============================================
+ * Filename: WalletDAO.ts
+ * Author(s): Thomas Pelletier
+ * Description: This file contains the DAO for the wallet controller. It is used to handle the queries for WalletController.
+ * Sources:
+ * 		1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ * */
+
 interface Wallet {
 	id: number;
 	balance: number;

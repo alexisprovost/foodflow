@@ -1,6 +1,14 @@
 import db from "./Database";
 
-
+/*
+* ============================================
+* Filename: StatsDAO.ts
+* Author(s): Alexis Provost, Thomas Pelletier
+* Description: This file contains the Dao for the stats. It is used to handle all queries related to stats.
+* Sources:
+* 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+* ============================================
+*/
 interface ProductStats {
     name: string;
     total_quantity: number;

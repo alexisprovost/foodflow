@@ -1,6 +1,16 @@
 import db from "./Database";
 import Utils from "../Controller/Utils";
 
+/*
+ * ============================================
+ * Filename: UserDao.ts
+ * Author(s): Alexis Provost, Thomas Pelletier
+ * Description: This file contains the logic for the user DAO. It is used to handle all requests related to users.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ * */
+
 export interface User {
 	id: number;
 	firstname: string;

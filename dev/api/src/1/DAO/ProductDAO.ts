@@ -1,5 +1,14 @@
 import db from "./Database";
 
+/**
+ * ============================================
+ * Filename: ProductDAO.ts
+ * Author(s): Thomas Pelletier, Alexis Provost
+ * Description: This is the DAO for the product. It is used to handle all database queries related to products.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
 export interface Product {
 	id: number;
 	name: string;
@@ -73,7 +82,14 @@ class ProductDao {
 		return this.fetchProducts(query);
 	}
 
-	public async getAllProducts(itemsPerPage: number = 12, currentPage: number = 1, searchQuery: string = "", categoryFilter: string[] = [], minPrice: number = 0, maxPrice: number = Number.MAX_SAFE_INTEGER): Promise<Product[]> {
+	public async getAllProducts(
+		itemsPerPage: number = 12,
+		currentPage: number = 1,
+		searchQuery: string = "",
+		categoryFilter: string[] = [],
+		minPrice: number = 0,
+		maxPrice: number = Number.MAX_SAFE_INTEGER
+	): Promise<Product[]> {
 		const offset = (currentPage - 1) * itemsPerPage;
 		const query = `
 			SELECT p.*, 

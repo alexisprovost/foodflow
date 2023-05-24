@@ -4,6 +4,16 @@ import UserDao from "../DAO/UserDao";
 
 import { requireAuth, requireRole } from "./authMiddleware";
 
+/**
+ * ============================================
+ * Filename: UserController.ts
+ * Author(s): Thomas Pelletier, Alexis Provost
+ * Description: This file contains the logic for the user controller. It is used to handle all requests related to users.
+ * Sources:
+ * 1. ChatGPT: https://chat.openai.com/?model=gpt-4
+ * ============================================
+ */
+
 class UserController extends Controller {
 	private userDao: UserDao;
 
