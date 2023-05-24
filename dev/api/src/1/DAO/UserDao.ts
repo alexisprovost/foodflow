@@ -22,8 +22,21 @@ export interface User {
 }
 
 class UserDao {
-	protected async getAllUsers() {
-		const result = await db.query("SELECT * FROM users");
+	public async getAllUsers() {
+		const result = await db.query(`
+			SELECT users.*, wallet.balance
+			FROM users
+			LEFT JOIN wallet
+			ON users.id = wallet.owner
+		`);
+
+		// remove the sensitive data from the result
+		result.forEach((user: any) => {
+			delete user.password;
+			delete user.refresh_token;
+			delete user.refresh_token_expires;
+		});
+
 		return result;
 	}
 

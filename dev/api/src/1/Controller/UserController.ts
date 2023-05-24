@@ -23,6 +23,7 @@ class UserController extends Controller {
 
 	protected initializeRoutes(): void {
 		this.router.get("/", requireAuth, this.handleAsync(this.getUser.bind(this)));
+		this.router.get("/all", requireAuth, requireRole(90), this.handleAsync(this.getAllUsers.bind(this)));
 		this.router.put("/:id", requireAuth, this.handleAsync(this.updateUser.bind(this)));
 		this.router.delete("/:id", requireAuth, this.handleAsync(this.deleteUser.bind(this)));
 	}
@@ -36,6 +37,16 @@ class UserController extends Controller {
 		}
 
 		return super.successResponse(res, userInfos);
+	}
+
+	private async getAllUsers(req: Request, res: Response): Promise<void> {
+		const users = await this.userDao.getAllUsers();
+
+		if (!users) {
+			return super.errorResponse(res, "No users found", 404);
+		}
+
+		return super.successResponse(res, users);
 	}
 
 	private async updateUser(req: Request, res: Response): Promise<void> {
