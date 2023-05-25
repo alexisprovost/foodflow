@@ -30,7 +30,7 @@ const Profile = () => {
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 		try {
-			const response = await axios.put("/api/1/users/1", updatedInfo, {
+			const response = await axios.put(`/api/1/users/${userInfo?.id}`, updatedInfo, {
 				headers: { Authorization: `Bearer ${accessToken}` },
 			});
 
