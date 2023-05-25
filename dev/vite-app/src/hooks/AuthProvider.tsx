@@ -6,6 +6,7 @@ interface AuthContextType {
 	isAuthenticated: boolean;
 	accessToken: string;
 	userInfo: UserInfo | null;
+	setUser: (userInfo: UserInfo) => void;
 	login: (email: string, password: string) => Promise<void>;
 	register: (email: string, password: string) => Promise<void>;
 	logout: () => void;
@@ -16,6 +17,7 @@ export const AuthContext = createContext<AuthContextType>({
 	isAuthenticated: false,
 	accessToken: "",
 	userInfo: null,
+	setUser: () => {},
 	login: async () => {},
 	register: async () => {},
 	logout: () => {},
@@ -46,9 +48,9 @@ interface AuthResponse {
 	};
 }
 
-interface UserInfo {
+export interface UserInfo {
 	id: string;
-	firstName: string;
+	firstname: string;
 	name: string;
 	email: string;
 	date_of_birth: string;
@@ -85,6 +87,13 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
 				refreshAccessToken();
 			}, expiresIn);
 		}
+	};
+
+	const setUser = async (userInfo: UserInfo) => {
+		setAuthState((prevState) => ({
+			...prevState,
+			userInfo,
+		}));
 	};
 
 	const login = async (email: string, password: string) => {
@@ -180,6 +189,7 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
 				isAuthenticated: authState.isAuthenticated,
 				accessToken: authState.accessToken,
 				userInfo: authState.userInfo,
+				setUser,
 				login,
 				register,
 				logout,

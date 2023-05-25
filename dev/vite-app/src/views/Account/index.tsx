@@ -23,7 +23,7 @@ const Account = () => {
 	);
 
 	if (isAuthenticated && userInfo) {
-		const { id, firstName, name, email, date_of_birth, role } = userInfo;
+		const { id, firstname: firstName, name, email, date_of_birth, role } = userInfo;
 
 		content = (
 			<div className="mt-8">
@@ -44,13 +44,7 @@ const Account = () => {
 						</div>
 					</div>
 					<div className="h-full md:h-auto">
-						<LinkMenu
-							title="Account Settings"
-							links={[
-								{ title: "Edit my profile", link: "/account/profile" },
-								{ title: "Change my password", link: "/account/password", disable: false },
-							]}
-						/>
+						<LinkMenu title="Account Settings" links={[{ title: "Edit my profile", link: "/account/profile" }]} />
 
 						{role >= 90 && (
 							<LinkMenu
