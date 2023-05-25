@@ -44,13 +44,7 @@ const Account = () => {
 						</div>
 					</div>
 					<div className="h-full md:h-auto">
-						<LinkMenu
-							title="Account Settings"
-							links={[
-								{ title: "Edit my profile", link: "/account/profile" },
-								{ title: "Change my password", link: "/account/password", disable: false },
-							]}
-						/>
+						<LinkMenu title="Account Settings" links={[{ title: "Edit my profile", link: "/account/profile" }]} />
 
 						{role >= 90 && (
 							<LinkMenu
