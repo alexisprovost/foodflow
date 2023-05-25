@@ -140,11 +140,17 @@ const Products = () => {
 								</Dialog.Title>
 
 								<div className="mt-2">
+									<label className="block text-sm text-white">Name</label>
 									<input type="text" placeholder="Product name" value={newProduct?.name || ""} onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} className="border-2 bg-secondary border-none text-white rounded p-2 mb-2 w-full" />
+									<label className="block text-sm text-white">Barcode</label>
 									<input type="text" placeholder="Product barcode" value={newProduct?.barcode || ""} onChange={(e) => setNewProduct({ ...newProduct, barcode: e.target.value })} className="border-2 bg-secondary border-none text-white rounded p-2 mb-2 w-full" />
-									<input type="text" placeholder="Product quantity" value={newProduct?.quantity || ""} onChange={(e) => setNewProduct({ ...newProduct, quantity: parseInt(e.target.value) })} className="border-2 bg-secondary border-none text-white rounded p-2 mb-2 w-full" />
+									<label className="block text-sm text-white">Quantity</label>
+									<input type="number" placeholder="Product quantity" value={newProduct?.quantity || ""} onChange={(e) => setNewProduct({ ...newProduct, quantity: parseInt(e.target.value) })} className="border-2 bg-secondary border-none text-white rounded p-2 mb-2 w-full" />
+									<label className="block text-sm text-white">Format</label>
 									<input type="text" placeholder="Product format" value={newProduct?.format || ""} onChange={(e) => setNewProduct({ ...newProduct, format: e.target.value })} className="border-2 bg-secondary border-none text-white rounded p-2 mb-2 w-full" />
-									<input type="text" placeholder="Product price" value={newProduct?.price || ""} onChange={(e) => setNewProduct({ ...newProduct, price: parseInt(e.target.value) })} className="border-2 bg-secondary border-none text-white rounded p-2 mb-2 w-full" />
+									<label className="block text-sm text-white">Price</label>
+									<input type="number" placeholder="Product price" value={newProduct?.price || ""} onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })} className="border-2 bg-secondary border-none text-white rounded p-2 mb-2 w-full" />
+									<label className="block text-sm text-white">Image</label>
 									<input type="text" placeholder="Product image" value={newProduct?.url_image || ""} onChange={(e) => setNewProduct({ ...newProduct, url_image: e.target.value })} className="border-2 bg-secondary border-none text-white rounded p-2 mb-2 w-full" />
 								</div>
 

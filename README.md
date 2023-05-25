@@ -94,6 +94,19 @@ When the node js packages changes. You need to run this command to rebuild the d
 docker-compose -f docker-compose.dev.yml build
 ```
 
+#### To be admin
+Since no users are superadmin by default if you want to add a super admin user you can execute this command to enter the database container. [source](https://stackoverflow.com/a/63962237)
+```bash
+docker exec -it <container-name> bash
+```
+```bash
+psql -U <dataBaseUserName> <dataBaseName>
+```
+or just this one-liner :
+```bash
+docker exec -it  <container-name> psql -U <dataBaseUserName> <dataBaseName>
+```
+
 ## References
 
 This project may contain elements derived from various resources including [YouTube video tutorials](https://youtube.com/), [Google searches](https://google.com/), inquiries addressed to [ChatGPT](https://chat.openai.com), insights gained from [Copilot](https://github.com/features/copilot), and the extensive information provided by numerous library documentation websites (checkout the dev/vite-app/package.json for the complete list).
